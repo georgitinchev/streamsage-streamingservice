@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicClassLibrary", "..\..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "..\..\..\Data Access Code Layer\DataAccessLibrary\DataAccessLibrary.csproj", "{652A3297-301D-4C6F-BAB8-06A5A9B0BC92}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PresentationLayerLibrary", "..\..\PresentationLayerLibrary\PresentationLayerLibrary.csproj", "{B587FBBB-0F6F-4390-962A-CD66E7054F27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{652A3297-301D-4C6F-BAB8-06A5A9B0BC92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{652A3297-301D-4C6F-BAB8-06A5A9B0BC92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{652A3297-301D-4C6F-BAB8-06A5A9B0BC92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B587FBBB-0F6F-4390-962A-CD66E7054F27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B587FBBB-0F6F-4390-962A-CD66E7054F27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B587FBBB-0F6F-4390-962A-CD66E7054F27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B587FBBB-0F6F-4390-962A-CD66E7054F27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,54 +28,74 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			groupBox1 = new GroupBox();
+			textBoxGroupBox = new GroupBox();
+			label1 = new Label();
 			passwordLoginTextBox = new RichTextBox();
 			userNameLoginTextBox = new RichTextBox();
 			pictureBox1 = new PictureBox();
 			pictureBox2 = new PictureBox();
 			pictureBox3 = new PictureBox();
 			loginBtn = new Button();
-			groupBox1.SuspendLayout();
+			noCredentialsBtn = new Button();
+			label2 = new Label();
+			textBoxGroupBox.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
 			((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
 			((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
 			SuspendLayout();
 			// 
-			// groupBox1
+			// textBoxGroupBox
 			// 
-			groupBox1.BackColor = Color.RoyalBlue;
-			groupBox1.Controls.Add(passwordLoginTextBox);
-			groupBox1.Controls.Add(userNameLoginTextBox);
-			groupBox1.Location = new Point(335, 200);
-			groupBox1.Name = "groupBox1";
-			groupBox1.Size = new Size(531, 311);
-			groupBox1.TabIndex = 0;
-			groupBox1.TabStop = false;
+			textBoxGroupBox.BackColor = Color.RoyalBlue;
+			textBoxGroupBox.Controls.Add(label2);
+			textBoxGroupBox.Controls.Add(label1);
+			textBoxGroupBox.Controls.Add(passwordLoginTextBox);
+			textBoxGroupBox.Controls.Add(userNameLoginTextBox);
+			textBoxGroupBox.Location = new Point(479, 333);
+			textBoxGroupBox.Margin = new Padding(4, 5, 4, 5);
+			textBoxGroupBox.Name = "textBoxGroupBox";
+			textBoxGroupBox.Padding = new Padding(4, 5, 4, 5);
+			textBoxGroupBox.Size = new Size(759, 518);
+			textBoxGroupBox.TabIndex = 0;
+			textBoxGroupBox.TabStop = false;
+			// 
+			// label1
+			// 
+			label1.AutoSize = true;
+			label1.Font = new Font("Rockwell", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label1.Location = new Point(189, 87);
+			label1.Name = "label1";
+			label1.Size = new Size(358, 33);
+			label1.TabIndex = 2;
+			label1.Text = "👤 Enter your username:";
 			// 
 			// passwordLoginTextBox
 			// 
 			passwordLoginTextBox.Font = new Font("Rockwell", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-			passwordLoginTextBox.Location = new Point(132, 203);
+			passwordLoginTextBox.Location = new Point(189, 338);
+			passwordLoginTextBox.Margin = new Padding(4, 5, 4, 5);
 			passwordLoginTextBox.Name = "passwordLoginTextBox";
-			passwordLoginTextBox.Size = new Size(259, 37);
+			passwordLoginTextBox.Size = new Size(368, 59);
 			passwordLoginTextBox.TabIndex = 1;
 			passwordLoginTextBox.Text = "";
 			// 
 			// userNameLoginTextBox
 			// 
 			userNameLoginTextBox.Font = new Font("Rockwell", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-			userNameLoginTextBox.Location = new Point(132, 75);
+			userNameLoginTextBox.Location = new Point(189, 125);
+			userNameLoginTextBox.Margin = new Padding(4, 5, 4, 5);
 			userNameLoginTextBox.Name = "userNameLoginTextBox";
-			userNameLoginTextBox.Size = new Size(259, 37);
+			userNameLoginTextBox.Size = new Size(368, 59);
 			userNameLoginTextBox.TabIndex = 0;
 			userNameLoginTextBox.Text = "";
 			// 
 			// pictureBox1
 			// 
 			pictureBox1.Image = Properties.Resources.sage_transparent;
-			pictureBox1.Location = new Point(487, 0);
+			pictureBox1.Location = new Point(696, 0);
+			pictureBox1.Margin = new Padding(4, 5, 4, 5);
 			pictureBox1.Name = "pictureBox1";
-			pictureBox1.Size = new Size(231, 194);
+			pictureBox1.Size = new Size(330, 323);
 			pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
 			pictureBox1.TabIndex = 1;
 			pictureBox1.TabStop = false;
@@ -83,9 +103,10 @@
 			// pictureBox2
 			// 
 			pictureBox2.Image = Properties.Resources.japanese_cloud_transparent;
-			pictureBox2.Location = new Point(724, 12);
+			pictureBox2.Location = new Point(1034, 20);
+			pictureBox2.Margin = new Padding(4, 5, 4, 5);
 			pictureBox2.Name = "pictureBox2";
-			pictureBox2.Size = new Size(121, 91);
+			pictureBox2.Size = new Size(173, 152);
 			pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
 			pictureBox2.TabIndex = 2;
 			pictureBox2.TabStop = false;
@@ -93,9 +114,10 @@
 			// pictureBox3
 			// 
 			pictureBox3.Image = Properties.Resources.movie;
-			pictureBox3.Location = new Point(362, 12);
+			pictureBox3.Location = new Point(517, 20);
+			pictureBox3.Margin = new Padding(4, 5, 4, 5);
 			pictureBox3.Name = "pictureBox3";
-			pictureBox3.Size = new Size(119, 91);
+			pictureBox3.Size = new Size(170, 152);
 			pictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
 			pictureBox3.TabIndex = 3;
 			pictureBox3.TabStop = false;
@@ -103,28 +125,57 @@
 			// loginBtn
 			// 
 			loginBtn.Font = new Font("Rockwell", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-			loginBtn.Location = new Point(476, 534);
+			loginBtn.Location = new Point(680, 890);
+			loginBtn.Margin = new Padding(4, 5, 4, 5);
 			loginBtn.Name = "loginBtn";
-			loginBtn.Size = new Size(242, 57);
+			loginBtn.Size = new Size(346, 95);
 			loginBtn.TabIndex = 4;
 			loginBtn.Text = "Login";
 			loginBtn.UseVisualStyleBackColor = true;
+			loginBtn.Click += loginBtn_Click;
+			// 
+			// noCredentialsBtn
+			// 
+			noCredentialsBtn.BackColor = Color.LightGreen;
+			noCredentialsBtn.FlatAppearance.BorderColor = Color.Black;
+			noCredentialsBtn.FlatAppearance.BorderSize = 2;
+			noCredentialsBtn.Font = new Font("Rockwell", 9.25F);
+			noCredentialsBtn.Location = new Point(1481, 948);
+			noCredentialsBtn.Margin = new Padding(4, 5, 4, 5);
+			noCredentialsBtn.Name = "noCredentialsBtn";
+			noCredentialsBtn.Size = new Size(247, 75);
+			noCredentialsBtn.TabIndex = 5;
+			noCredentialsBtn.Text = "Don't have credentials? Contact administrator";
+			noCredentialsBtn.UseVisualStyleBackColor = false;
+			// 
+			// label2
+			// 
+			label2.AutoSize = true;
+			label2.Font = new Font("Rockwell", 14F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			label2.Location = new Point(189, 300);
+			label2.Name = "label2";
+			label2.Size = new Size(351, 33);
+			label2.TabIndex = 3;
+			label2.Text = "🔑 Enter your password:";
 			// 
 			// Authentication
 			// 
-			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleDimensions = new SizeF(10F, 25F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = Color.FromArgb(192, 255, 255);
-			ClientSize = new Size(1219, 622);
+			ClientSize = new Size(1734, 1030);
+			Controls.Add(noCredentialsBtn);
 			Controls.Add(loginBtn);
 			Controls.Add(pictureBox3);
 			Controls.Add(pictureBox2);
 			Controls.Add(pictureBox1);
-			Controls.Add(groupBox1);
+			Controls.Add(textBoxGroupBox);
 			ForeColor = Color.Black;
+			Margin = new Padding(4, 5, 4, 5);
 			Name = "Authentication";
 			Text = "Authentication";
-			groupBox1.ResumeLayout(false);
+			textBoxGroupBox.ResumeLayout(false);
+			textBoxGroupBox.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
 			((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
 			((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
@@ -133,12 +184,15 @@
 
 		#endregion
 
-		private GroupBox groupBox1;
+		private GroupBox textBoxGroupBox;
 		private RichTextBox userNameLoginTextBox;
 		private RichTextBox passwordLoginTextBox;
 		private PictureBox pictureBox1;
 		private PictureBox pictureBox2;
 		private PictureBox pictureBox3;
 		private Button loginBtn;
+		private Button noCredentialsBtn;
+		private Label label1;
+		private Label label2;
 	}
 }

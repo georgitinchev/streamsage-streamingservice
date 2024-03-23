@@ -1,6 +1,6 @@
 ﻿namespace DesktopApp.Forms
 {
-	partial class ReviewManagement
+	partial class Analytics
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,16 +28,10 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			SuspendLayout();
-			// 
-			// ReviewManagement
-			// 
-			AutoScaleDimensions = new SizeF(7F, 15F);
-			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(1164, 625);
-			Name = "ReviewManagement";
-			Text = "ReviewManagement";
-			ResumeLayout(false);
+			this.components = new System.ComponentModel.Container();
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(800, 450);
+			this.Text = "Analytics";
 		}
 
 		#endregion

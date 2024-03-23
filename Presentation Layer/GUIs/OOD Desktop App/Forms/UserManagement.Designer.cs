@@ -1,6 +1,6 @@
 ﻿namespace DesktopApp.Forms
 {
-	partial class ReviewManagement
+	partial class UserManagement
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -30,13 +30,13 @@
 		{
 			SuspendLayout();
 			// 
-			// ReviewManagement
+			// UserManagement
 			// 
 			AutoScaleDimensions = new SizeF(7F, 15F);
 			AutoScaleMode = AutoScaleMode.Font;
-			ClientSize = new Size(1164, 625);
-			Name = "ReviewManagement";
-			Text = "ReviewManagement";
+			ClientSize = new Size(1168, 614);
+			Name = "UserManagement";
+			Text = "UserManagement";
 			ResumeLayout(false);
 		}
 

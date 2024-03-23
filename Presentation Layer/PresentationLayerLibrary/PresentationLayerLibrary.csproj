@@ -10,7 +10,8 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
   </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\Data Access Code Layer\DataAccessLibrary\DataAccessLibrary.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Logic Code Layer\LogicClassLibrary\LogicClassLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

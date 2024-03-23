@@ -9,7 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Logic Code Layer\LogicClassLibrary\LogicClassLibrary.csproj" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\PresentationLayerLibrary\PresentationLayerLibrary.csproj" />
   </ItemGroup>
 
   <ItemGroup>
