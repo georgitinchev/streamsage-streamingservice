@@ -8,5 +8,9 @@ namespace LogicClassLibrary.Managers
 {
     internal class ReviewManager
     {
+        internal void getMovieReviews(int movieId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
