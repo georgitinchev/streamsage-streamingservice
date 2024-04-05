@@ -1,5 +1,5 @@
 using DesktopApp.Forms;
-using PresentationLayerLibrary;
+using LogicClassLibrary;
 
 namespace DesktopApp
 {
