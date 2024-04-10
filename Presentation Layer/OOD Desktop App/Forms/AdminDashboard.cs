@@ -5,11 +5,11 @@ namespace DesktopApp
 {
 	public partial class AdminDashboard : Form
 	{
-		private UserInterfaceImplementation _myInterface;
-		public AdminDashboard(UserInterfaceImplementation myInterface)
+		private  DesktopController _desktopController;
+		public AdminDashboard(DesktopController desktopController)
 		{
 			InitializeComponent();
-			_myInterface = myInterface;
+			_desktopController = desktopController;
 			moviesBtnPicture.Cursor = Cursors.Hand;
 		}
 
@@ -21,7 +21,7 @@ namespace DesktopApp
 
 		private void moviesBtnPicture_Click(object sender, EventArgs e)
 		{
-			MovieDashboard movieDashboard = new MovieDashboard(_myInterface);
+			MovieDashboard movieDashboard = new MovieDashboard(_desktopController);
 			Program.SwitchToForm(movieDashboard); 
 		}
 	}

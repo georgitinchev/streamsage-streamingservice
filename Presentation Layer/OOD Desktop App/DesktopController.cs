@@ -22,7 +22,9 @@ namespace DesktopApp
 
         public void loginUser(string username, string password)
         {
-
+            if (username == "admin" && password == "admin")
+            {
+            }
         }
 
         public void logoutUser()
