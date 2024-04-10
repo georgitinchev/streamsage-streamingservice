@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Managers
 {
-    internal class ReviewManager
+    public class ReviewManager
     {
         internal void getMovieReviews(int movieId)
         {

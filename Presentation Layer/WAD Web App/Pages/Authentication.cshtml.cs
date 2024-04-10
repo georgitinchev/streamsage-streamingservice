@@ -34,16 +34,13 @@ namespace StreamSageWAD.Pages
         {
             new Claim(ClaimTypes.Name, Username)
         };
-
                 var claimsIdentity = new ClaimsIdentity(
                     claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
-
                 Console.WriteLine($"User {Username} authenticated successfully.");
-
                 return RedirectToPage("/Index");
             }
             else
