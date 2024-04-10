@@ -1,5 +1,4 @@
-﻿using PresentationLayerLibrary;
-using System;
+﻿using System;
 using DesktopApp;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,12 +15,12 @@ namespace DesktopApp.Forms
 {
 	public partial class Authentication : Form
 	{
-		private UserInterfaceImplementation userInterfaceImplementation;
+		private DesktopController _desktopController;
 		public Authentication()
 		{
 			InitializeComponent();
 			CustomizeButton(loginBtn);
-			userInterfaceImplementation = new UserInterfaceImplementation();
+			_desktopController = new DesktopController();
 		}
 
 		private void CustomizeButton(Button button)
@@ -43,7 +42,7 @@ namespace DesktopApp.Forms
 
 		private void loginBtn_Click(object sender, EventArgs e)
 		{
-			bool isAuthenticated = userInterfaceImplementation.desktopLogin(userNameLoginTextBox.Text, passwordLoginTextBox.Text);
+			bool isAuthenticated = _desktopController.loginUser(userNameLoginTextBox.Text, passwordLoginTextBox.Text);
 			if (isAuthenticated)
 			{
 				AdminDashboard adminDashboard = new AdminDashboard(userInterfaceImplementation);
