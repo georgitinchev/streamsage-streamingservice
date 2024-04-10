@@ -7,7 +7,7 @@ namespace DataAccessLibrary
 {
     public class BaseDAL
     {
-        private string connectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id=dbi524441_streamsage;Password=e9999619;TrustServerCertificate=true;";
+        internal string connectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id=dbi524441_streamsage;Password=e9999619;TrustServerCertificate=true;";
 
         public BaseDAL() { }
 
