@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace StreamSageWAD.Pages
 {
 
-    [AllowAnonymous]
     public class AuthenticationModel : PageModel
     {
         private static readonly List<(string Username, string Password)> Users = new List<(string, string)>
