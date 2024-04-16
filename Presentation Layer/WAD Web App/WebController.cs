@@ -1,31 +1,33 @@
-﻿using LogicClassLibrary.Entities;
+﻿using DesktopApp;
+using LogicClassLibrary.Entities;
 using LogicClassLibrary.Managers;
 
 namespace StreamSageWAD
 {
-    public class WebController
+    public class WebController : UserInterface
     {
-        private MovieManager movieManager;
-        private ReviewManager? reviewManager;
-        public WebController()
+        private User loggedInUser;
+        private string searchCriteria;
+        public void displayHomePage()
         {
-            movieManager = new MovieManager();
+            // implement
         }
-        public List<Movie> BrowseMovies()
+        public WebController() { }
+        public void displayMoviePage()
         {
-            return movieManager.GetMovies();
+            // implement
         }
-        public void viewMovieDetails(int movieId)
+        public void loginUser(string username, string password)
         {
-            //return movieManager.Get(movieId);
+            // implement
         }
-        public void viewReviews(int movieId)
+        public void registerUser(string username, string password, string email)
         {
-            //return reviewManager.getMovieReviews(movieId);
+            // implement
         }
-        public void viewInterpretations(int movieId)
+        public void logoutUser()
         {
-
+            // implement
         }
     }
 }
