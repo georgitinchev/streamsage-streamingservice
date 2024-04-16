@@ -13,11 +13,42 @@ namespace DataAccessLibrary
     {
         public class MovieDAL : BaseDAL
         {
+
             public MovieDAL(string connectionString) : base(connectionString)
             {
             }
 
-            public void CreateMovie(MovieDTO movie)
+			public List<MovieDTO> ReadAllMovies()
+			{
+				string query = "SELECT * FROM Movie";
+				List<MovieDTO> movies = new List<MovieDTO>();
+				using (SqlConnection connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+					using (SqlCommand command = new SqlCommand(query, connection))
+					{
+						using (SqlDataReader reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								MovieDTO movie = new MovieDTO();
+								movie.Id = reader.GetInt32(0);
+								movie.Title = reader.GetString(1);
+								movie.Year = reader.GetDateTime(2);
+								movie.Description = reader.GetString(3);
+								movie.PosterImageURL = reader.GetString(4);
+								movie.TrailerURL = reader.GetString(5);
+								movie.RuntimeMinutes = reader.GetInt32(6);
+								movie.AverageRating = reader.GetDecimal(7);
+								movies.Add(movie);
+							}
+						}
+					}
+				}
+				return movies;
+			}
+
+			public void CreateMovie(MovieDTO movie)
             {
                 throw new NotImplementedException();
             }

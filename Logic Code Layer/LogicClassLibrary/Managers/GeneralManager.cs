@@ -1,4 +1,5 @@
-﻿using LogicClassLibrary.Entities;
+﻿using DTOs;
+using LogicClassLibrary.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,13 @@ namespace LogicClassLibrary.Managers
 {
 	public class GeneralManager
 	{
-		private User currentUser;
-		private List<Movie> searhcResults;
+		private User? currentUser;
+		private List<Movie>? searchResults;
 
+        public virtual Entity? TransformDTOtoEntity(object dto)
+        {
+            return null;
+		}
         public void Create()
         {
             throw new NotImplementedException();
