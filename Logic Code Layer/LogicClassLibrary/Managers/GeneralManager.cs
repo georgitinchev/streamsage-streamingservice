@@ -7,32 +7,74 @@ using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Managers
 {
-	public class GeneralManager<T> where T : Entity
+	public class GeneralManager
 	{
-		public List<T> entities = new List<T>();
-		public virtual void Add(T entity)
+		private User currentUser;
+		private List<Movie> searhcResults;
+
+        public void Create()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Read()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void fetchUserData(int userId)
 		{
-			entities.Add(entity);
+
 		}
 
-		public virtual void Remove(T entity)
+		public void fetchMovieData(int movieId)
 		{
-			entities.Remove(entity);
-		}
 
-		public virtual void Update(T entity)
-		{
-			// Default update logic here
-		}
+        }
 
-		public virtual T Get(int id)
+		public void fetchReviewData(int reviewId)
 		{
-			return entities.FirstOrDefault(e => e.GetId() == id);
-		}
 
-		public virtual List<T> Search(Func<T, bool> predicate)
+        }
+
+		public void fetchInterpretationData(int interpretationId)
 		{
-			return entities.Where(predicate).ToList();
-		}
+
+        }	
+
+		public void searchMovies(string searchQuery)
+		{
+
+        }
+
+		public void executeQuery(string query)
+		{
+
+        }
+
+		public void fetchResults()
+		{
+
+        }
+
+		public void executeAnalysis()
+		{
+
+        }
+
+		public void generateRecommendations()
+		{
+
+        }
 	}
 }

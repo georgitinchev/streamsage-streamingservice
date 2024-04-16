@@ -7,28 +7,28 @@ using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Managers
 {
-	public class MovieManager : GeneralManager<Movie>
-	{
-		private BackendService backendService = new BackendService();
-		public override void Add(Movie movie)
-		{
-			movie.GenerateId();
-			base.Add(movie);
-		}
+    public class MovieManager : GeneralManager
+    {
+        private List<Movie> movies;
 
-		public List<Movie> GetMovies()
-		{
-			return backendService.GetMovies();
-		}
+        public void CreateMovie(Movie movie)
+        {
+            throw new NotImplementedException();
+        }
 
-		public void EditMovieDetails(Movie movie, string newDetails)
-		{
-			//edit movie logic
-		}
+        public Movie ReadMovie(int movieId)
+        {
+            throw new NotImplementedException();
+        }
 
-		public void DeleteMovie(Movie movie)
-		{
-			//delete movie logic
-		}
-	}
+        public void UpdateMovie(Movie movie)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteMovie(int movieId)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

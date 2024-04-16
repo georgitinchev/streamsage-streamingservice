@@ -7,15 +7,29 @@ namespace DataAccessLibrary
 {
     public class BaseDAL
     {
-        internal string connectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id=dbi524441_streamsage;Password=e9999619;TrustServerCertificate=true;";
-
-        public BaseDAL() { }
+        internal string connectionString;
+        public BaseDAL(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
 
         public void CreateConnection()
         {
-            SqlConnection connection = new SqlConnection(connectionString);
-            connection.Open();
-            connection.ConnectionString = connectionString;
+            try
+            {
+                SqlConnection connection = new SqlConnection(connectionString);
+                connection.Open();
+                connection.ConnectionString = connectionString;
+            }
+            catch (SqlException ex)
+            {
+                Console.WriteLine("An error occurred while connecting to the database: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+            }
         }
+
     }
 }

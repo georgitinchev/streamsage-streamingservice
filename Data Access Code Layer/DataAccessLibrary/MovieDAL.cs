@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DTOs;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,24 +9,33 @@ using System.Threading.Tasks;
 
 namespace DataAccessLibrary
 {
-    public class MovieDAL : BaseDAL
+    namespace DataAccessLibrary
     {
-
-        public DataTable GetMovies()
+        public class MovieDAL : BaseDAL
         {
-            var dataTable = new DataTable();
-            using (var connection = new SqlConnection(connectionString))
+            public MovieDAL(string connectionString) : base(connectionString)
             {
-                connection.Open();
-                using (var command = new SqlCommand("SELECT * FROM Movie", connection))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        dataTable.Load(reader);
-                    }
-                }
             }
-            return dataTable;
+
+            public void CreateMovie(MovieDTO movie)
+            {
+                throw new NotImplementedException();
+            }
+
+            public MovieDTO ReadMovie(int movieId)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void UpdateMovie(MovieDTO movie)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void DeleteMovie(int movieId)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

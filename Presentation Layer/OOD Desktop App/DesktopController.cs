@@ -10,23 +10,19 @@ namespace DesktopApp
 {
     public class DesktopController : UserInterface
     {
-        private User loggedInUser;
-        private string searchCriteria;
+        private User? loggedInUser;
+        private string? searchCriteria;
         public void displayHomePage()
         {
         }
-        public void displayMovieDashboard()
+        public void displayMoviePage()
         {
 
         }
-
         public void loginUser(string username, string password)
         {
-            if (username == "admin" && password == "admin")
-            {
-            }
+       
         }
-
         public void logoutUser()
         {
 

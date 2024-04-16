@@ -12,5 +12,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Data Access Code Layer\DataAccessLibrary\DataAccessLibrary.csproj" />
+		<ProjectReference Include="..\..\DTOs\DTOs.csproj" />
 	</ItemGroup>
 </Project>
