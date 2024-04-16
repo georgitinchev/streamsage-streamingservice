@@ -10,7 +10,7 @@ namespace DesktopApp
     public interface UserInterface
     {
         public void displayHomePage();
-        public void displayMovieDashboard();
+        public void displayMoviePage();
         public void loginUser(string username, string password);
         public void logoutUser();
     }

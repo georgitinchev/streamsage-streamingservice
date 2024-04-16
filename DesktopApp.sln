@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopApp", "DesktopApp.csproj", "{7B89AC1E-0E9D-4CE9-9898-FF58B3041082}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopApp", "Presentation Layer\OOD Desktop App\DesktopApp.csproj", "{7B89AC1E-0E9D-4CE9-9898-FF58B3041082}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicClassLibrary", "..\..\Logic Code Layer\LogicClassLibrary\LogicClassLibrary.csproj", "{C15FC95D-D2FD-4049-B1A4-102F1CC1D283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicClassLibrary", "Logic Code Layer\LogicClassLibrary\LogicClassLibrary.csproj", "{C15FC95D-D2FD-4049-B1A4-102F1CC1D283}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "..\..\Data Access Code Layer\DataAccessLibrary\DataAccessLibrary.csproj", "{CF39E6DC-6E27-474B-93E6-AF17DA129236}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "Data Access Code Layer\DataAccessLibrary\DataAccessLibrary.csproj", "{CF39E6DC-6E27-474B-93E6-AF17DA129236}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
