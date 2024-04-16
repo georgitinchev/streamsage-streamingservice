@@ -13,6 +13,7 @@ namespace DataAccessLibrary
         {
             public ReviewDAL(string connectionString) : base(connectionString)
             {
+
             }
 
             public void CreateReview(ReviewDTO review)
