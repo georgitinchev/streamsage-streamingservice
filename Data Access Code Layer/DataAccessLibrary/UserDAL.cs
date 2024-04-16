@@ -17,25 +17,21 @@ namespace DataAccessLibrary
 
             public void CreateUser(UserDTO user)
             {
-                // Implement your logic here
                 throw new NotImplementedException();
             }
 
             public UserDTO ReadUser(int userId)
             {
-                // Implement your logic here
                 throw new NotImplementedException();
             }
 
             public void UpdateUser(UserDTO user)
             {
-                // Implement your logic here
                 throw new NotImplementedException();
             }
 
             public void DeleteUser(int userId)
             {
-                // Implement your logic here
                 throw new NotImplementedException();
             }
         }
