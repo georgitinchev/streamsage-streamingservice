@@ -1,0 +1,22 @@
+﻿@page
+@model EmployeesProject.Pages.EmployeeDetailsModel
+@{
+}
+Employee
+@if (User != null && User.Identity != null)
+{
+	<li>@Model.Employee.</li>
+}
+<h4>@Html.ValidationMessage("errormsg")</h4>
+@if (Model.Employee is not null)
+{
+	<ul>
+		<li>
+			@Model.Employee.Id
+			@Model.Employee.FirstName
+			@Model.Employee.LastName
+			<img src="@Model.Employee.Avatar" />
+		</li>
+	</ul>
+}
+

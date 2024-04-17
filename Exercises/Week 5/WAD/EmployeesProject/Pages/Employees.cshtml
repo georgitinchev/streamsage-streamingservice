@@ -1,0 +1,10 @@
+﻿@page
+@model EmployeesProject.Pages.EmployeesModel
+@{
+}
+<ul>
+	@foreach (var emp in Model.Employees)
+	{
+		<li>@emp.Id @emp.FirstName @emp.LastName <img src="@emp.Avatar" /> <a asp-page="/Employee" asp-route-id="@emp.Id">details</a></li>
+	}
+</ul>

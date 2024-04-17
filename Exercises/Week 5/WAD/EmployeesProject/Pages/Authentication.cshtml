@@ -1,0 +1,17 @@
+﻿@page
+@model EmployeesProject.Pages.AuthenticationModel
+@{
+}
+<form>
+	<div class="mb-3" novalidate>
+		<label asp-for="UserDTO.Email" class="form-label">Email Address</label>
+		<input asp-for="UserDTO.Email" class="form-control" />
+		<span asp-validation-for="UserDTO.Email" class="text-danger"></span>
+	</div>
+	<div class="mb-3">
+		<label asp-for="UserDTO.Password" class="form-label">Password</label>
+		<input asp-for="UserDTO.Password" class="form-control" />
+		<span asp-validation-for="UserDTO.Password" class="text-danger"></span>
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+</form>
