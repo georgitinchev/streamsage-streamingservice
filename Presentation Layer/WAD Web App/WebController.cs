@@ -16,13 +16,20 @@ namespace StreamSageWAD
 			searchCriteria = "";
 			backendService = new BackendService();
 		}
+
+		public WebController()
+		{
+			loggedInUser = null;
+			searchCriteria = "";
+			backendService = new BackendService();
+		}
 		public void displayHomePage()
 		{
 			// implement
 		}
-		public void displayMoviePage()
+		public List<Movie> displayMoviePage()
 		{
-			// implement
+			return backendService.GetAllMovies();
 		}
 		public void loginUser(string username, string password)
 		{
