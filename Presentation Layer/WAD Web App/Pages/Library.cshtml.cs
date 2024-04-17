@@ -11,7 +11,7 @@ namespace StreamSageWAD.Pages
 		public List<Movie>? FeaturedMovies { get; private set; }
 		public List<Movie>? RandomMovies { get; private set; }
 		public List<Movie>? UsageBasedMovies { get; private set; }
-		public string ErrorMessage { get; private set; }
+		public string? ErrorMessage { get; private set; }
 		public void OnGet()
 		{
 			try
