@@ -3,13 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccessLibrary;
 using LogicClassLibrary.Entities;
 
 namespace LogicClassLibrary.Managers
 {
-    internal class InterpretationManager
+    public class InterpretationManager
     {
         public List<Interpretation>? interpretations;
+        public InterpretationDAL? interpretationDAL;
+        public InterpretationManager(InterpretationDAL _interpretationDAL)
+        {
+			interpretations = new List<Interpretation>();
+            interpretationDAL = _interpretationDAL;
+		}
 
         private void createInterpretation(int userId, int movieId, string interpretationText)
         {

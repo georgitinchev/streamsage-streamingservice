@@ -21,6 +21,10 @@ body {
   margin-bottom: 60px;
 }
 
+.card-title {
+    color: black;
+}
+
 .custom-navbar {
     background-color: #3D518C !important;
 }

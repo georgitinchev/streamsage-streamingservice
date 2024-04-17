@@ -17,18 +17,20 @@ namespace LogicClassLibrary.Managers
 		public MovieManager(MovieDAL movieDAL)
 		{
 			this.movieDAL = movieDAL;
+			this.movies = new List<Movie>();
 			PopulateMovies();
 		}
 
 		public void PopulateMovies()
 		{
-			foreach(MovieDTO movie in movieDAL.ReadAllMovies())
+			foreach (MovieDTO movie in movieDAL.ReadAllMovies())
 			{
 				Movie movieEntity = TransformDTOtoEntity(movie) as Movie;
 				if (movieEntity != null)
 				{
 					movies?.Add(movieEntity);
-				} else
+				}
+				else
 				{
 					throw new Exception("Movie could not be created");
 				}
@@ -38,10 +40,10 @@ namespace LogicClassLibrary.Managers
 		public override Entity? TransformDTOtoEntity(object dto)
 		{
 			MovieDTO? movie = dto as MovieDTO;
-            if (movie != null)
-            {
-            return new Movie(movie.Id, movie.Title, movie.Year, movie.Description, movie.PosterImageURL, movie.TrailerURL, movie.RuntimeMinutes, movie.AverageRating);
-            }
+			if (movie != null)
+			{
+				return new Movie(movie.Id, movie.Title, movie.Year, movie.Description, movie.PosterImageURL, movie.TrailerURL, movie.RuntimeMinutes, movie.AverageRating);
+			}
 			return null;
 		}
 		public void CreateMovie(Movie movie)

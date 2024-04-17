@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "Data A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogicClassLibrary", "Logic Code Layer\LogicClassLibrary\LogicClassLibrary.csproj", "{39F0883C-69C6-420C-99B3-F7A32D011D97}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOs", "DTOs\DTOs.csproj", "{7CA0A414-F4BB-44DA-8DC9-C25564065AD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{39F0883C-69C6-420C-99B3-F7A32D011D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39F0883C-69C6-420C-99B3-F7A32D011D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39F0883C-69C6-420C-99B3-F7A32D011D97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CA0A414-F4BB-44DA-8DC9-C25564065AD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CA0A414-F4BB-44DA-8DC9-C25564065AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CA0A414-F4BB-44DA-8DC9-C25564065AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CA0A414-F4BB-44DA-8DC9-C25564065AD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
