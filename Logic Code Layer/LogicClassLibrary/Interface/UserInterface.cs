@@ -12,7 +12,7 @@ namespace DesktopApp
     {
         public void displayHomePage();
         public List<Movie> displayMoviePage();
-        public void loginUser(string username, string password);
+        public bool loginUser(string username, string password);
         public void logoutUser();
     }
 }
