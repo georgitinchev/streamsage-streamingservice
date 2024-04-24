@@ -1,5 +1,4 @@
 ﻿using LogicClassLibrary.Entities;
-using PresentationLayerLibrary;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,11 +13,11 @@ namespace DesktopApp.Forms
 {
 	public partial class MovieDashboard : Form
 	{
-		private UserInterface userInterface;
-		public MovieDashboard(UserInterface userInterface)
+		private UserInterface desktopController;
+		public MovieDashboard(UserInterface _desktopController)
 		{
 			InitializeComponent();
-			this.userInterface = userInterface;
+			this.desktopController = _desktopController;
 			RefreshMovies();
 		}
 
@@ -45,9 +44,8 @@ namespace DesktopApp.Forms
 
 		private void RefreshMovies()
 		{
-			List<Movie> movies = userInterface.DisplayMovies();
+			List<Movie> movies = desktopController.displayMoviePage();
 			moviesDataGrid.DataSource = movies;
-
 			moviesDataGrid.AutoResizeColumns();
 			moviesDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 			moviesDataGrid.BackgroundColor = Color.LightGray;
