@@ -57,7 +57,6 @@
 			searchBarMovies.Name = "searchBarMovies";
 			searchBarMovies.Size = new Size(573, 30);
 			searchBarMovies.TabIndex = 2;
-			searchBarMovies.TextChanged += textBox1_TextChanged;
 			// 
 			// filterBarMovies
 			// 
