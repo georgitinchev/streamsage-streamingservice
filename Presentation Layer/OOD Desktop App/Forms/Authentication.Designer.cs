@@ -156,6 +156,7 @@
             passwordLoginTextBox.PasswordChar = '*';
             passwordLoginTextBox.Size = new Size(368, 57);
             passwordLoginTextBox.TabIndex = 4;
+            passwordLoginTextBox.UseSystemPasswordChar = true;
             // 
             // Authentication
             // 
