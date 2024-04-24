@@ -12,7 +12,7 @@ namespace DesktopApp
     {
         private User? loggedInUser;
         private string? searchCriteria;
-        private BackendService? backendService;
+        internal BackendService? backendService;
 
         public DesktopController()
         {
@@ -31,11 +31,11 @@ namespace DesktopApp
         }
         public bool loginUser(string username, string password)
         {
-           return backendService.userManager.AuthenticateUser(username, password);
+           return backendService.AuthenticateUser(username, password);
         }
         public void registerUser(string username, string email, string password, string firstName, string lastName, string settings)
         {
-            backendService?.userManager.RegisterUser(username, email, password, firstName, lastName, settings);
+            backendService?.RegisterUser(username, email, password, firstName, lastName, settings);
         }
 
         public void logoutUser()
@@ -44,9 +44,3 @@ namespace DesktopApp
         }
     }
 }
-
-// 1. Method to Login User
-// 2. Method to Logout User
-// 3. Method to Display Home Page
-// 4. Method to Display Each Separate Page
-// 5. Method to Display Movie Page
