@@ -15,8 +15,9 @@ namespace LogicClassLibrary.Managers
 
         public virtual Entity? TransformDTOtoEntity(object dto)
         {
-            return null;
-		}
+            throw new NotImplementedException("This method should be overridden in a derived class.");
+        }
+
         public void Create()
         {
             throw new NotImplementedException();
