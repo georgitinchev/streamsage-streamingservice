@@ -1,4 +1,5 @@
-﻿using LogicClassLibrary.Entities;
+﻿using DTOs;
+using LogicClassLibrary.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,36 +14,45 @@ namespace DesktopApp.Forms
 {
 	public partial class MovieDashboard : Form
 	{
-		private UserInterface desktopController;
-		public MovieDashboard(UserInterface _desktopController)
+		private DesktopController desktopController;
+		public MovieDashboard(DesktopController _desktopController)
 		{
 			InitializeComponent();
 			this.desktopController = _desktopController;
 			RefreshMovies();
 		}
 
-		private void textBox1_TextChanged(object sender, EventArgs e)
-		{
+        private void moviesDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
+            {
+                Movie movie = (Movie)senderGrid.Rows[e.RowIndex].DataBoundItem;
+                MovieDTO movieDto = new MovieDTO
+                {
+                    Id = movie.Id,
+                    Title = movie.Title,
+                    Year = movie.Year,
+                    Description = movie.Description,
+                    PosterImageURL = movie.PosterImageURL,
+                    TrailerURL = movie.TrailerURL,
+                    RuntimeMinutes = movie.RuntimeMinutes,
+                    AverageRating = movie.AverageRating
+                };
+                if (senderGrid.Columns[e.ColumnIndex].Name == "Edit")
+                {
+                   
+					desktopController.backendService?.UpdateMovie(movieDto);
+                }
+                else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
+                {
+					desktopController.backendService?.DeleteMovie(movieDto.Id);
+                }
+            }
+        }
 
-		}
 
-		private void moviesDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-		{
-			var senderGrid = (DataGridView)sender;
-			if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
-			{
-				if (senderGrid.Columns[e.ColumnIndex].Name == "Edit")
-				{
-					MessageBox.Show("Edit button clicked");
-				}
-				else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
-				{
-					MessageBox.Show("Delete button clicked");
-				}
-			}
-		}
-
-		private void RefreshMovies()
+        private void RefreshMovies()
 		{
 			List<Movie> movies = desktopController.displayMoviePage();
 			moviesDataGrid.DataSource = movies;
