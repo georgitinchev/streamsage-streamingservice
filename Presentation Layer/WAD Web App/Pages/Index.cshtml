@@ -1,14 +1,25 @@
 ﻿@page
+@using StreamSageWAD.Models
+@using System.Security.Claims
 @model IndexModel
 @{
 	ViewData["Title"] = "Home";
 }
 
-<body>
-	<div class="d-flex flex-column justify-content-center align-items-center vh-100">
-		<img src="./img/sage-transparent.png" alt="Stream Sage Logo" class="mb-4 float-animation" />
-		<h1 class="display-4 mb-4 float-animation">Stream Sage</h1>
-		<p class="lead text-lg mb-4 float-animation"><strong>Redefining movie streaming by integrating entertainment with educational content, social engagement, and critical analysis.</strong></p>
-		<a class="btn btn-primary btn-lg btn-block w-50 float-animation big-button" asp-page="/Library">Browse Movies</a>
-	</div>
-</body>
+<div class="text-center">
+		<h1 class="display-4">Welcome to StreamSage</h1>
+	<p class="lead">The best place to find your favorite movies and TV shows</p
+</div>
+
+@if(Request.Cookies.ContainsKey(nameof(LoginDTO.Email)))
+{
+	<h3>Cookie Email: @Request.Cookies[nameof(LoginDTO.Email)]</h3>
+}
+@if(HttpContext.Session.Get(nameof(LoginDTO.Email)) != null)
+{
+	<h3>Session Email: @HttpContext.Session.GetString(nameof(LoginDTO.Email))</h3>
+}
+@if(User.FindFirst(ClaimTypes.Email) != null)
+{
+	<h3>Claim Email: @User.FindFirst(ClaimTypes.Email).Value</h3>
+}
