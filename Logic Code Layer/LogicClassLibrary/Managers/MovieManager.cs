@@ -36,17 +36,21 @@ namespace LogicClassLibrary.Managers
 				}
 			}
 		}
+        public override Entity TransformDTOtoEntity(object dto)
+        {
+            MovieDTO movieDto = dto as MovieDTO;
+            if (movieDto != null)
+            {
+                return new Movie(movieDto.Id, movieDto.Title, movieDto.Year, movieDto.Description, movieDto.PosterImageURL, movieDto.TrailerURL, movieDto.RuntimeMinutes, movieDto.AverageRating);
+            }
+            else
+            {
+                throw new ArgumentException("dto is not of type MovieDTO");
+            }
+        }
 
-		public override Entity? TransformDTOtoEntity(object dto)
-		{
-			MovieDTO? movie = dto as MovieDTO;
-			if (movie != null)
-			{
-				return new Movie(movie.Id, movie.Title, movie.Year, movie.Description, movie.PosterImageURL, movie.TrailerURL, movie.RuntimeMinutes, movie.AverageRating);
-			}
-			return null;
-		}
-		public void CreateMovie(Movie movie)
+
+        public void CreateMovie(Movie movie)
 		{
 			throw new NotImplementedException();
 		}
