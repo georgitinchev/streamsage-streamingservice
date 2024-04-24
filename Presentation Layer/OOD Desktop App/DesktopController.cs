@@ -12,20 +12,41 @@ namespace DesktopApp
     {
         private User? loggedInUser;
         private string? searchCriteria;
+        private BackendService? backendService;
+
+        public DesktopController()
+        {
+            backendService = new BackendService();
+        }
         public void displayHomePage()
         {
         }
-        public void displayMoviePage()
+        public List<Movie> displayMoviePage()
         {
+            if (backendService != null)
+            {
+                return backendService.GetAllMovies();
+            }
+            return new List<Movie>();
+        }
+        public bool loginUser(string username, string password)
+        {
+           return backendService.userManager.AuthenticateUser(username, password);
+        }
+        public void registerUser(string username, string email, string password, string firstName, string lastName, string settings)
+        {
+            backendService?.userManager.RegisterUser(username, email, password, firstName, lastName, settings);
+        }
 
-        }
-        public void loginUser(string username, string password)
-        {
-       
-        }
         public void logoutUser()
         {
 
         }
     }
 }
+
+// 1. Method to Login User
+// 2. Method to Logout User
+// 3. Method to Display Home Page
+// 4. Method to Display Each Separate Page
+// 5. Method to Display Movie Page
