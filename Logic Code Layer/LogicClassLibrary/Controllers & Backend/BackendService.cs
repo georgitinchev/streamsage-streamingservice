@@ -3,12 +3,13 @@ using DataAccessLibrary;
 using System.Data;
 using LogicClassLibrary.Managers;
 using DataAccessLibrary.DataAccessLibrary;
+using DTOs;
 
 namespace LogicClassLibrary
 {
     public class BackendService
     {
-        public UserManager userManager;
+        private UserManager userManager;
         private MovieManager movieManager;
         private ReviewManager reviewManager;
         private InterpretationManager interpretationManager;
@@ -41,14 +42,24 @@ namespace LogicClassLibrary
             movieManager.CreateMovie(movie);
 		}
 
-		public void UpdateMovie(Movie movie)
+        public void UpdateMovie(MovieDTO movieDto)
         {
-			movieManager.UpdateMovie(movie);
-		}
+            movieManager.UpdateMovie(movieDto);
+        }
 
-		public void DeleteMovie(int id)
+        public void DeleteMovie(int id)
         {
 			movieManager.DeleteMovie(id);
+        }
+
+        public bool AuthenticateUser(string username, string password)
+        {
+            return userManager.AuthenticateUser(username,password);
+        }
+
+        public void RegisterUser(string username, string email, string password, string firstName, string lastName, string settings)
+        {
+            userManager.RegisterUser(username, email, password, firstName, lastName, settings);
         }
 		
         public List<Movie> GetAllMovies()

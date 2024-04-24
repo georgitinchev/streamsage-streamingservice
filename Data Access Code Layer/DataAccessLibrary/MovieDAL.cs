@@ -47,23 +47,39 @@ namespace DataAccessLibrary
 				}
 				return movies;
 			}
-
-			public void CreateMovie(MovieDTO movie)
-            {
-                throw new NotImplementedException();
-            }
-
-            public MovieDTO ReadMovie(int movieId)
-            {
-                throw new NotImplementedException();
-            }
-
             public void UpdateMovie(MovieDTO movie)
             {
+                string query = "UPDATE Movie SET Title = @Title, Year = @Year, Description = @Description, PosterImageURL = @PosterImageURL, TrailerURL = @TrailerURL, RuntimeMinutes = @RuntimeMinutes WHERE Id = @Id";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Id", movie.Id);
+                        command.Parameters.AddWithValue("@Title", movie.Title);
+                        command.Parameters.AddWithValue("@Year", movie.Year);
+                        command.Parameters.AddWithValue("@Description", movie.Description);
+                        command.Parameters.AddWithValue("@PosterImageURL", movie.PosterImageURL);
+                        command.Parameters.AddWithValue("@TrailerURL", movie.TrailerURL);
+                        command.Parameters.AddWithValue("@RuntimeMinutes", movie.RuntimeMinutes);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+
+
+            public void DeleteMovie(int movieId)
+            {
                 throw new NotImplementedException();
             }
 
-            public void DeleteMovie(int movieId)
+            public void CreateMovie(MovieDTO movie)
+            {
+                throw new NotImplementedException();
+            }
+
+            public MovieDTO GetMovie(int movieId)
             {
                 throw new NotImplementedException();
             }
