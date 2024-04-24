@@ -8,7 +8,7 @@ namespace LogicClassLibrary
 {
     public class BackendService
     {
-        private UserManager userManager;
+        public UserManager userManager;
         private MovieManager movieManager;
         private ReviewManager reviewManager;
         private InterpretationManager interpretationManager;
@@ -25,7 +25,7 @@ namespace LogicClassLibrary
             reviewDAL = new ReviewDAL(connectionString);
             interpretationDAL = new InterpretationDAL(connectionString);
             movieManager = new MovieManager(movieDAL);
-            userManager = new UserManager(userDAL);
+            userManager = new UserManager(userDAL, movieManager);
             reviewManager = new ReviewManager(reviewDAL);
             interpretationManager = new InterpretationManager(interpretationDAL);
             recommendationManager = new RecommendationManager();
