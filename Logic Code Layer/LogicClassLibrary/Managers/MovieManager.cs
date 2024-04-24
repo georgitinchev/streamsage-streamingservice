@@ -48,7 +48,17 @@ namespace LogicClassLibrary.Managers
                 throw new ArgumentException("dto is not of type MovieDTO");
             }
         }
-
+		public void UpdateMovie(MovieDTO movie)
+		{
+			try
+			{
+				movieDAL.UpdateMovie(movie);
+			}
+            catch (Exception ex)
+			{
+                throw new Exception("Movie could not be updated: " + ex.Message);
+            }
+		}
 
         public void CreateMovie(Movie movie)
 		{
@@ -56,10 +66,6 @@ namespace LogicClassLibrary.Managers
 		}
 
 		public Movie ReadMovie(int movieId)
-		{
-			throw new NotImplementedException();
-		}
-		public void UpdateMovie(Movie movie)
 		{
 			throw new NotImplementedException();
 		}
