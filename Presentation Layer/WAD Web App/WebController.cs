@@ -31,9 +31,10 @@ namespace StreamSageWAD
 		{
 			return backendService.GetAllMovies();
 		}
-		public void loginUser(string username, string password)
+		public bool loginUser(string username, string password)
 		{
-			// implement
+			// implement 
+			return true;
 		}
 		public void registerUser(string username, string password, string email)
 		{

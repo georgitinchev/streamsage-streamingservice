@@ -17,6 +17,12 @@
                 <!-- Left nav items -->
                 <div>
                     <ul class="navbar-nav">
+                        @if (User.Identity == null)
+                        {
+                            <li class="nav-item">
+                            <a class = "nav-link text-dark" asp-area="" asp-page="/Login">Login</a> 
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-page="/Index">
                                 <div class="d-flex flex-column align-items-center">
