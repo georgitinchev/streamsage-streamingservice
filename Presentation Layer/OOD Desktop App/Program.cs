@@ -1,54 +1,58 @@
-using System.Windows.Forms;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace DesktopApp
 {
-	public static class Program
-	{
-		// method for form navigation
-		public static void SwitchToForm(Form currentForm, Form newForm)
-		{
-			if (currentForm != null)
-			{
-				if (currentForm != newForm)
-				{
-					currentForm.Close(); 
-				}
-				else
-				{
-					return;
-				}
-			}
-			newForm.Show();
-		}
+    public static class Program
+    {
+        private static Stack<Form> formStack = new Stack<Form>();
 
-		public static void SwitchToForm(Form newForm)
-		{
-			Form currentForm = Application.OpenForms.Cast<Form>().FirstOrDefault();
-			if (currentForm != null)
-			{
-				if (currentForm != newForm)
-				{
-					currentForm.Hide(); // Close the current form
-				}
-				else
-				{
-					return;
-				}
-			}
-			newForm.Show();
-		}
+        public static void SwitchToForm(Form newForm)
+        {
+            Form currentForm = formStack.Count > 0 ? formStack.Peek() : null;
+            if (currentForm != null)
+            {
+                currentForm.Hide();
+            }
+            formStack.Push(newForm);
+            newForm.Show();
+            newForm.FormClosed += (s, args) => CloseForm();
+        }
 
-		/// <summary>
-		///  The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main()
-		{
-			// To customize application configuration such as set high DPI settings or default font,
-			// see https://aka.ms/applicationconfiguration.
-			ApplicationConfiguration.Initialize();
-			Application.Run(new ApplicationContext(new Forms.Authentication()));
-		}
-	}
+        private static void CloseForm()
+        {
+            if (formStack.Count > 0)
+            {
+                Form closedForm = formStack.Pop();
+                if (closedForm is Forms.Authentication)
+                {
+                    Application.Exit();
+                }
+                else if (formStack.Count > 0)
+                {
+                    Form previousForm = formStack.Peek();
+                    previousForm.Show();
+                }
+                else
+                {
+                    Application.Exit();
+                }
+            }
+        }
+
+        public static void ClearFormStack()
+        {
+            formStack.Clear();
+        }
+
+        [STAThread]
+        static void Main()
+        {
+            ApplicationConfiguration.Initialize();
+            SwitchToForm(new Forms.Authentication());
+            Application.Run();
+        }
+    }
 }
