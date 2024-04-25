@@ -10,7 +10,7 @@ namespace DTOs
 	{
 		public int Id { get; set; }
 		public string? Title { get; set; }
-		public DateTime Year { get; set; }
+		public DateTime ReleaseDate { get; set; }
 		public string? Description { get; set; }
 		public string? PosterImageURL { get; set; }
 		public string? TrailerURL { get; set; }

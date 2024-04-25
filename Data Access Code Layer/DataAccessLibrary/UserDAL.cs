@@ -66,7 +66,7 @@ namespace DataAccessLibrary
                                 {
                                     Id = (int)reader["MovieID"],
                                     Title = reader["Title"] as string,
-                                    Year = (DateTime)reader["ReleaseDate"],
+                                    ReleaseDate = (DateTime)reader["ReleaseDate"],
                                     Description = reader["Description"] as string,
                                     PosterImageURL = reader["PosterImageURL"] as string,
                                     TrailerURL = reader["TrailerURL"] as string,
