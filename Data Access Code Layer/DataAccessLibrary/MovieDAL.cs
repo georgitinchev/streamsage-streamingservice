@@ -20,8 +20,8 @@ namespace DataAccessLibrary
 
 			public List<MovieDTO> ReadAllMovies()
 			{
-				string query = "SELECT * FROM Movie";
-				List<MovieDTO> movies = new List<MovieDTO>();
+                string query = "SELECT MovieID, Title, ReleaseDate, Description, PosterImageURL, TrailerURL, RuntimeMinutes, AverageRating FROM Movie";
+                List<MovieDTO> movies = new List<MovieDTO>();
 				using (SqlConnection connection = new SqlConnection(connectionString))
 				{
 					connection.Open();
@@ -34,7 +34,7 @@ namespace DataAccessLibrary
 								MovieDTO movie = new MovieDTO();
 								movie.Id = reader.GetInt32(0);
 								movie.Title = reader.GetString(1);
-								movie.Year = reader.GetDateTime(2);
+								movie.ReleaseDate = reader.GetDateTime(2);
 								movie.Description = reader.GetString(3);
 								movie.PosterImageURL = reader.GetString(4);
 								movie.TrailerURL = reader.GetString(5);
@@ -49,7 +49,7 @@ namespace DataAccessLibrary
 			}
             public void UpdateMovie(MovieDTO movie)
             {
-                string query = "UPDATE Movie SET Title = @Title, Year = @Year, Description = @Description, PosterImageURL = @PosterImageURL, TrailerURL = @TrailerURL, RuntimeMinutes = @RuntimeMinutes WHERE Id = @Id";
+                string query = "UPDATE Movie SET Title = @Title, ReleaseDate = @ReleaseDate, Description = @Description, PosterImageURL = @PosterImageURL, TrailerURL = @TrailerURL, RuntimeMinutes = @RuntimeMinutes, AverageRating = @AverageRating WHERE MovieID = @Id";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -58,11 +58,12 @@ namespace DataAccessLibrary
                     {
                         command.Parameters.AddWithValue("@Id", movie.Id);
                         command.Parameters.AddWithValue("@Title", movie.Title);
-                        command.Parameters.AddWithValue("@Year", movie.Year);
+                        command.Parameters.AddWithValue("@ReleaseDate", movie.ReleaseDate);
                         command.Parameters.AddWithValue("@Description", movie.Description);
                         command.Parameters.AddWithValue("@PosterImageURL", movie.PosterImageURL);
                         command.Parameters.AddWithValue("@TrailerURL", movie.TrailerURL);
                         command.Parameters.AddWithValue("@RuntimeMinutes", movie.RuntimeMinutes);
+                        command.Parameters.AddWithValue("@AverageRating", movie.AverageRating);
                         command.ExecuteNonQuery();
                     }
                 }

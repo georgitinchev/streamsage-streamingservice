@@ -41,7 +41,7 @@ namespace LogicClassLibrary.Managers
             MovieDTO movieDto = dto as MovieDTO;
             if (movieDto != null)
             {
-                return new Movie(movieDto.Id, movieDto.Title, movieDto.Year, movieDto.Description, movieDto.PosterImageURL, movieDto.TrailerURL, movieDto.RuntimeMinutes, movieDto.AverageRating);
+                return new Movie(movieDto.Id, movieDto.Title, movieDto.ReleaseDate, movieDto.Description, movieDto.PosterImageURL, movieDto.TrailerURL, movieDto.RuntimeMinutes, movieDto.AverageRating);
             }
             else
             {
@@ -72,7 +72,7 @@ namespace LogicClassLibrary.Managers
 
 		public void DeleteMovie(int movieId)
 		{
-			throw new NotImplementedException();
+			
 		}
 	}
 }
