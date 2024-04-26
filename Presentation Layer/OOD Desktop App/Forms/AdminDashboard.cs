@@ -15,9 +15,10 @@ namespace DesktopApp
 
         private void logoutBtn_Click(object sender, EventArgs e)
         {
-            Authentication authForm = new Authentication();
-            Program.SwitchToForm(this, authForm);
+            this.Close();
+            Program.SwitchToForm(new Authentication());
         }
+
 
         private void moviesBtnPicture_Click(object sender, EventArgs e)
         {
@@ -28,7 +29,31 @@ namespace DesktopApp
         private void usersBtnPic_Click(object sender, EventArgs e)
         {
             UserManagement userManagement = new UserManagement(_desktopController);
-            Program.SwitchToForm(this, userManagement);
+            Program.SwitchToForm(userManagement);
+        }
+
+        private void reviewsBtnPic_Click(object sender, EventArgs e)
+        {
+            ReviewManagement reviewManagement = new ReviewManagement(_desktopController);
+            Program.SwitchToForm(reviewManagement);
+        }
+
+        private void interpretationsBtnPic_Click(object sender, EventArgs e)
+        {
+            InterpretationManagement interpretationManagement = new InterpretationManagement(_desktopController);
+            Program.SwitchToForm(interpretationManagement);
+        }
+
+        private void analyticsBtnPic_Click(object sender, EventArgs e)
+        {
+            Analytics analytics = new Analytics(_desktopController);
+            Program.SwitchToForm(analytics);
+        }
+
+        private void settingsBtnPic_Click(object sender, EventArgs e)
+        {
+            SettingsForm settingsForm = new SettingsForm(_desktopController);
+            Program.SwitchToForm(settingsForm);
         }
     }
 }
