@@ -29,6 +29,15 @@ namespace DesktopApp
             }
             return new List<Movie>();
         }
+
+        public List<User> displayUserPage()
+        {
+            if(backendService != null)
+            {
+                return backendService.GetAllUsers();
+            }
+            return new List<User>();
+        }
         public bool loginUser(string username, string password)
         {
            return backendService.AuthenticateUser(username, password);
