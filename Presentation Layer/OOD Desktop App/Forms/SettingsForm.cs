@@ -12,9 +12,11 @@ namespace DesktopApp.Forms
 {
 	public partial class SettingsForm : Form
 	{
-		public SettingsForm()
+		public DesktopController desktopController { get; private set; }
+		public SettingsForm(DesktopController _desktopController)
 		{
 			InitializeComponent();
+			this.desktopController = _desktopController;
 		}
 	}
 }
