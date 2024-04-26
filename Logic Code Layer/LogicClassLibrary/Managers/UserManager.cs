@@ -12,9 +12,9 @@ namespace LogicClassLibrary.Managers
 {
     public class UserManager : GeneralManager
     {
-        private List<User>? users;
-        private UserDAL? userDAL;
-        private MovieManager movieManager;
+        public List<User>? users { get; private set; }
+        public UserDAL? userDAL { get; private set; }
+        public MovieManager movieManager { get; private set; }
 
         public UserManager(UserDAL userDAL, MovieManager movieManager)
         {

@@ -66,5 +66,10 @@ namespace LogicClassLibrary
         {
             return movieManager.movies;
 		}
+
+        public List<User> GetAllUsers()
+        {
+            return userManager.users;
+        }
     }
 }
