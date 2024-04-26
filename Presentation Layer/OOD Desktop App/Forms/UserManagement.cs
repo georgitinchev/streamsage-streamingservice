@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogicClassLibrary.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,15 +19,15 @@ namespace DesktopApp.Forms
         {
             InitializeComponent();
             _desktopController = desktopController;
+            RefreshUsers();
         }
-        private void createUserBtn_Click(object sender, EventArgs e)
+        private async void createUserBtn_Click(object sender, EventArgs e)
         {
             string username = usernameTextBox.Text;
             string email = userEmailTextBox.Text;
             string password = userPasswordTextBox.Text;
             string firstName = userFirstNameTextBox.Text;
             string lastName = userLastNameTextBox.Text;
-            ResetLabels();
             if (string.IsNullOrEmpty(username)) usernameLabel.Text += "*";
             if (string.IsNullOrEmpty(email)) emailLabel.Text += "*";
             if (string.IsNullOrEmpty(password)) passwordLabel.Text += "*";
@@ -36,6 +37,8 @@ namespace DesktopApp.Forms
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 errorLabel.Text = errorMessage;
+                await Task.Delay(3000);
+                errorLabel.Text = "";
                 return;
             }
             try
@@ -43,12 +46,66 @@ namespace DesktopApp.Forms
                 _desktopController.registerUser(username, email, password, firstName, lastName, "");
                 errorLabel.ForeColor = Color.Green;
                 errorLabel.Text = "User created successfully!";
-                ResetLabels();
+                ClearInputFields();
+                await Task.Delay(3000);
+                errorLabel.Text = "";
             }
             catch (Exception ex)
             {
                 errorLabel.ForeColor = Color.Red;
                 errorLabel.Text = ex.Message;
+                await Task.Delay(3000);
+                errorLabel.Text = "";
+            }
+        }
+        private void RefreshUsers()
+        {
+            List<User> users = _desktopController.displayUserPage();
+            userManagementDataGrid.AutoGenerateColumns = false;
+            userManagementDataGrid.Columns.Clear();
+            // Add columns for the properties of the Movie class that you want to display
+            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID" });
+            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Username", HeaderText = "Username" });
+            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Email", HeaderText = "Email" });
+            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "FirstName", HeaderText = "FirstName" });
+            userManagementDataGrid.CellContentClick += userManagementDataGrid_CellContentClick;
+            DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn();
+            editButtonColumn.Name = "Edit";
+            editButtonColumn.Text = "Edit";
+            editButtonColumn.UseColumnTextForButtonValue = true;
+            editButtonColumn.Width = 100;
+            DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn();
+            deleteButtonColumn.Name = "Delete";
+            deleteButtonColumn.Text = "Delete";
+            deleteButtonColumn.UseColumnTextForButtonValue = true;
+            deleteButtonColumn.Width = 100;
+            userManagementDataGrid.Columns.Add(editButtonColumn);
+            userManagementDataGrid.Columns.Add(deleteButtonColumn);
+            userManagementDataGrid.DataSource = users;
+            userManagementDataGrid.AutoResizeColumns();
+            userManagementDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            userManagementDataGrid.BackgroundColor = Color.LightGray;
+            userManagementDataGrid.BorderStyle = BorderStyle.None;
+            userManagementDataGrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
+            userManagementDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            userManagementDataGrid.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;
+            userManagementDataGrid.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
+            userManagementDataGrid.DefaultCellStyle.Font = new Font("Segoe UI", 10);
+            userManagementDataGrid.EnableHeadersVisualStyles = false;
+            userManagementDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+            userManagementDataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
+            userManagementDataGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+            userManagementDataGrid.RowTemplate.Height = 50;
+            totalUsersLabelIcon.Text = $"Total Users:\n{users.Count}";
+        }
+
+        private void userManagementDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            var senderGrid = (DataGridView)sender;
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
+            {
+                User user = (User)senderGrid.Rows[e.RowIndex].DataBoundItem;
+                // Below write logic for updating the user
             }
         }
 
@@ -76,20 +133,18 @@ namespace DesktopApp.Forms
             }
             return "";
         }
-
         private void backToDashBtn_Click(object sender, EventArgs e)
         {
-            Program.SwitchToForm(this, new AdminDashboard(_desktopController));
+            Program.SwitchToForm(new AdminDashboard(_desktopController));
             this.Dispose();
         }
-
-        private void ResetLabels()
+        private void ClearInputFields()
         {
-            usernameLabel.Text = usernameLabel.Text.Replace("*", "");
-            emailLabel.Text = emailLabel.Text.Replace("*", "");
-            passwordLabel.Text = passwordLabel.Text.Replace("*", "");
-            firstNameLabel.Text = firstNameLabel.Text.Replace("*", "");
-            lastNameLabel.Text = lastNameLabel.Text.Replace("*", "");
+            usernameTextBox.Text = "";
+            userEmailTextBox.Text = "";
+            userPasswordTextBox.Text = "";
+            userFirstNameTextBox.Text = "";
+            userLastNameTextBox.Text = "";
         }
     }
 }
