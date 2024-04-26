@@ -21,6 +21,7 @@ namespace DesktopApp.Forms
             InitializeComponent();
             CustomizeButton(loginBtn);
             _desktopController = new DesktopController();
+            this.AcceptButton = loginBtn;
         }
 
         private void CustomizeButton(Button button)
@@ -42,6 +43,11 @@ namespace DesktopApp.Forms
 
         private void loginBtn_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(userNameLoginTextBox.Text) || string.IsNullOrWhiteSpace(passwordLoginTextBox.Text))
+            {
+                MessageBox.Show("Username and password cannot be empty");
+                return;
+            }
             bool isAuthenticated = _desktopController.loginUser(userNameLoginTextBox.Text, passwordLoginTextBox.Text);
             if (isAuthenticated)
             {
@@ -54,8 +60,6 @@ namespace DesktopApp.Forms
             }
             ClearInputs();
         }
-
-
         private void ClearInputs()
         {
             userNameLoginTextBox.Text = "";
