@@ -1,4 +1,7 @@
-Username, Email, Password, FirstName, LastName
+Please ensure that your display's DPI scaling is <= 125% before attempting use.
+
+Credentials that can be used:
+In order -> Username, Email, Password, FirstName, LastName
 
 ('john_doe', 'john.doe@example.com', 'password123', 'John', 'Doe'),
 ('jane_smith', 'jane.smith@example.com', 'password456', 'Jane', 'Smith'),

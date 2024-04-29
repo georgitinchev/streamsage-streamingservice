@@ -20,6 +20,8 @@ namespace DesktopApp.Forms
         {
             InitializeComponent();
             this.desktopController = _desktopController;
+            moviesDataGrid.CellContentClick += moviesDataGrid_CellContentClick;
+            InitializeMoviesGrid();
             RefreshMovies();
         }
 
@@ -52,41 +54,55 @@ namespace DesktopApp.Forms
                 }
                 else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
                 {
-                    desktopController.backendService?.DeleteMovie(movieDto.Id);
+                    try
+                    {
+                        desktopController.backendService?.DeleteMovie(movieDto.Id);
+                        RefreshMovies();
+                        movieMgmtErrorLabel.Text = "Movie deleted successfully!";
+                        // Removes the success message after 3 seconds
+                        Task.Delay(3000).ContinueWith(t => movieMgmtErrorLabel.Text = "");
+                    }
+                    catch (Exception ex)
+                    {
+                        movieMgmtErrorLabel.Text = $"Error deleting movie: {ex.Message}";
+                    }
                 }
             }
         }
 
-
-        private void RefreshMovies()
+        private void InitializeMoviesGrid()
         {
-            List<Movie> movies = desktopController.displayMoviePage();
+            // adding data columns
             moviesDataGrid.AutoGenerateColumns = false;
-            moviesDataGrid.Columns.Clear(); 
+            moviesDataGrid.Columns.Clear();
 
-            // Add columns for the properties of the Movie class that you want to display
             moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID" });
             moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title" });
             moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Year", HeaderText = "Year" });
             moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Description", HeaderText = "Description" });
             moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "RuntimeMinutes", HeaderText = "Runtime" });
 
-
+            // edit button dgrid view
             DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn();
             editButtonColumn.Name = "Edit";
-            editButtonColumn.Text = "Edit";
+            editButtonColumn.Text = "";
             editButtonColumn.UseColumnTextForButtonValue = true;
-            editButtonColumn.Width = 100;
+            editButtonColumn.Width = 125;
+            editButtonColumn.MinimumWidth = 125;
+
+            // delete button dgrid view
             DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn();
             deleteButtonColumn.Name = "Delete";
-            deleteButtonColumn.Text = "Delete";
+            deleteButtonColumn.Text = "";
             deleteButtonColumn.UseColumnTextForButtonValue = true;
-            deleteButtonColumn.Width = 100;
+            deleteButtonColumn.Width = 125;
+            deleteButtonColumn.MinimumWidth = 125;
+
+            //adding them to columns
             moviesDataGrid.Columns.Add(editButtonColumn);
             moviesDataGrid.Columns.Add(deleteButtonColumn);
-            moviesDataGrid.CellContentClick += moviesDataGrid_CellContentClick;
-            moviesDataGrid.DataSource = movies;
-            moviesDataGrid.AutoResizeColumns();
+
+            // cell styling
             moviesDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             moviesDataGrid.BackgroundColor = Color.LightGray;
             moviesDataGrid.BorderStyle = BorderStyle.None;
@@ -100,9 +116,14 @@ namespace DesktopApp.Forms
             moviesDataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
             moviesDataGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             moviesDataGrid.RowTemplate.Height = 50;
-            totalMoviesLabel.Text = $"Total Movies: {movies.Count}";
         }
 
+        private void RefreshMovies()
+        {
+            List<Movie> movies = desktopController.displayMoviePage();
+            moviesDataGrid.DataSource = movies;
+            totalMoviesLabel.Text = $"Total Movies: {movies.Count}";
+        }
 
         private async void updateMovieBtn_Click(object sender, EventArgs e)
         {
@@ -134,6 +155,11 @@ namespace DesktopApp.Forms
             }
             await Task.Delay(3000);
             updateStatusLabel.Text = "";
+        }
+
+        private void movieDashTabCtrl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        moviesDataGrid.Refresh();
         }
 
         private string ValidateMovieFields()
