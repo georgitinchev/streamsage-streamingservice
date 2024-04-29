@@ -43,9 +43,11 @@ namespace DesktopApp.Forms
 
         private void loginBtn_Click(object sender, EventArgs e)
         {
+            errorLabelAuth.Text = ""; // Clear the error label at the start of the method
+
             if (string.IsNullOrWhiteSpace(userNameLoginTextBox.Text) || string.IsNullOrWhiteSpace(passwordLoginTextBox.Text))
             {
-                MessageBox.Show("Username and password cannot be empty");
+                errorLabelAuth.Text = "Username and password cannot be empty";
                 return;
             }
             bool isAuthenticated = _desktopController.loginUser(userNameLoginTextBox.Text, passwordLoginTextBox.Text);
@@ -56,10 +58,11 @@ namespace DesktopApp.Forms
             }
             else
             {
-                MessageBox.Show("Invalid credentials");
+                errorLabelAuth.Text = "Invalid credentials";
             }
             ClearInputs();
         }
+
         private void ClearInputs()
         {
             userNameLoginTextBox.Text = "";

@@ -38,6 +38,7 @@
             pictureBox3 = new PictureBox();
             loginBtn = new Button();
             noCredentialsBtn = new Button();
+            errorLabelAuth = new Label();
             textBoxGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
@@ -136,7 +137,7 @@
             // loginBtn
             // 
             loginBtn.Font = new Font("Rockwell", 30F);
-            loginBtn.Location = new Point(850, 1129);
+            loginBtn.Location = new Point(851, 1169);
             loginBtn.Margin = new Padding(3, 4, 3, 4);
             loginBtn.Name = "loginBtn";
             loginBtn.Size = new Size(473, 133);
@@ -159,12 +160,24 @@
             noCredentialsBtn.Text = "Don't have credentials? Contact administrator";
             noCredentialsBtn.UseVisualStyleBackColor = false;
             // 
+            // errorLabelAuth
+            // 
+            errorLabelAuth.Font = new Font("Rockwell", 16.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            errorLabelAuth.ForeColor = Color.FromArgb(192, 0, 0);
+            errorLabelAuth.Location = new Point(621, 1058);
+            errorLabelAuth.Margin = new Padding(2, 0, 2, 0);
+            errorLabelAuth.Name = "errorLabelAuth";
+            errorLabelAuth.Size = new Size(947, 57);
+            errorLabelAuth.TabIndex = 5;
+            errorLabelAuth.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // Authentication
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 255, 255);
             ClientSize = new Size(2174, 1377);
+            Controls.Add(errorLabelAuth);
             Controls.Add(noCredentialsBtn);
             Controls.Add(pictureBox3);
             Controls.Add(pictureBox2);
@@ -197,5 +210,6 @@
 		private Label label1;
 		private Label label2;
         private TextBox passwordLoginTextBox;
+        private Label errorLabelAuth;
     }
 }
