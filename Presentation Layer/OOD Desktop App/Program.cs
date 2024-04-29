@@ -9,12 +9,14 @@ namespace DesktopApp
     {
         private static Stack<Form> formStack = new Stack<Form>();
 
+        // We use a stack to keep track of the forms that are currently open & we pop closed forms.
         public static void SwitchToForm(Form newForm)
         {
             Form currentForm = formStack.Count > 0 ? formStack.Peek() : null;
             if (currentForm != null)
             {
                 currentForm.Hide();
+                newForm.Location = currentForm.Location; 
             }
             formStack.Push(newForm);
             newForm.Show();
