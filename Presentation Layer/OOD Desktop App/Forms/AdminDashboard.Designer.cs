@@ -47,7 +47,6 @@
             interpretationsBtnPic = new PictureBox();
             reviewsBtnPic = new PictureBox();
             moviesBtnPicture = new PictureBox();
-            logoutBtn = new Button();
             greetingsLabel = new Label();
             label1 = new Label();
             pictureBox7 = new PictureBox();
@@ -73,9 +72,11 @@
             quickStatsGroupBox.Controls.Add(totalMoviesLabel);
             quickStatsGroupBox.Font = new Font("Rockwell", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             quickStatsGroupBox.ForeColor = SystemColors.ActiveCaptionText;
-            quickStatsGroupBox.Location = new Point(23, 340);
+            quickStatsGroupBox.Location = new Point(26, 453);
+            quickStatsGroupBox.Margin = new Padding(3, 4, 3, 4);
             quickStatsGroupBox.Name = "quickStatsGroupBox";
-            quickStatsGroupBox.Size = new Size(192, 376);
+            quickStatsGroupBox.Padding = new Padding(3, 4, 3, 4);
+            quickStatsGroupBox.Size = new Size(219, 501);
             quickStatsGroupBox.TabIndex = 0;
             quickStatsGroupBox.TabStop = false;
             quickStatsGroupBox.Text = "Quick Stats";
@@ -83,36 +84,36 @@
             // label4
             // 
             label4.Font = new Font("Rockwell", 11.25F);
-            label4.Location = new Point(15, 294);
+            label4.Location = new Point(17, 392);
             label4.Name = "label4";
-            label4.Size = new Size(159, 56);
+            label4.Size = new Size(182, 75);
             label4.TabIndex = 2;
             label4.Text = "Total Interpretations";
             // 
             // totalReviewsLabel
             // 
             totalReviewsLabel.Font = new Font("Rockwell", 11.25F);
-            totalReviewsLabel.Location = new Point(15, 214);
+            totalReviewsLabel.Location = new Point(17, 285);
             totalReviewsLabel.Name = "totalReviewsLabel";
-            totalReviewsLabel.Size = new Size(159, 68);
+            totalReviewsLabel.Size = new Size(182, 91);
             totalReviewsLabel.TabIndex = 1;
             totalReviewsLabel.Text = "Total Reviews";
             // 
             // totalUsersLabel
             // 
             totalUsersLabel.Font = new Font("Rockwell", 11.25F);
-            totalUsersLabel.Location = new Point(15, 130);
+            totalUsersLabel.Location = new Point(17, 173);
             totalUsersLabel.Name = "totalUsersLabel";
-            totalUsersLabel.Size = new Size(159, 73);
+            totalUsersLabel.Size = new Size(182, 97);
             totalUsersLabel.TabIndex = 1;
             totalUsersLabel.Text = "Total Users";
             // 
             // totalMoviesLabel
             // 
             totalMoviesLabel.Font = new Font("Rockwell", 11.25F);
-            totalMoviesLabel.Location = new Point(15, 39);
+            totalMoviesLabel.Location = new Point(17, 52);
             totalMoviesLabel.Name = "totalMoviesLabel";
-            totalMoviesLabel.Size = new Size(159, 75);
+            totalMoviesLabel.Size = new Size(182, 100);
             totalMoviesLabel.TabIndex = 0;
             totalMoviesLabel.Text = "Total Movies";
             // 
@@ -132,9 +133,11 @@
             buttonGroupBox.Controls.Add(reviewsBtnPic);
             buttonGroupBox.Controls.Add(moviesBtnPicture);
             buttonGroupBox.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Bold);
-            buttonGroupBox.Location = new Point(234, 99);
+            buttonGroupBox.Location = new Point(267, 132);
+            buttonGroupBox.Margin = new Padding(3, 4, 3, 4);
             buttonGroupBox.Name = "buttonGroupBox";
-            buttonGroupBox.Size = new Size(1555, 830);
+            buttonGroupBox.Padding = new Padding(3, 4, 3, 4);
+            buttonGroupBox.Size = new Size(1777, 1107);
             buttonGroupBox.TabIndex = 1;
             buttonGroupBox.TabStop = false;
             // 
@@ -142,9 +145,9 @@
             // 
             analyticsLabel.AutoSize = true;
             analyticsLabel.Font = new Font("Rockwell", 24F);
-            analyticsLabel.Location = new Point(695, 724);
+            analyticsLabel.Location = new Point(794, 965);
             analyticsLabel.Name = "analyticsLabel";
-            analyticsLabel.Size = new Size(148, 36);
+            analyticsLabel.Size = new Size(190, 46);
             analyticsLabel.TabIndex = 11;
             analyticsLabel.Text = "Analytics";
             // 
@@ -152,9 +155,9 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Rockwell", 24F);
-            label2.Location = new Point(1184, 724);
+            label2.Location = new Point(1353, 965);
             label2.Name = "label2";
-            label2.Size = new Size(131, 36);
+            label2.Size = new Size(166, 46);
             label2.TabIndex = 10;
             label2.Text = "Settings";
             // 
@@ -162,9 +165,9 @@
             // 
             interpretationsLabel.AutoSize = true;
             interpretationsLabel.Font = new Font("Rockwell", 24F);
-            interpretationsLabel.Location = new Point(166, 724);
+            interpretationsLabel.Location = new Point(190, 965);
             interpretationsLabel.Name = "interpretationsLabel";
-            interpretationsLabel.Size = new Size(238, 36);
+            interpretationsLabel.Size = new Size(304, 46);
             interpretationsLabel.TabIndex = 9;
             interpretationsLabel.Text = "Interpretations ";
             // 
@@ -172,9 +175,9 @@
             // 
             usersLabel.AutoSize = true;
             usersLabel.Font = new Font("Rockwell", 24F);
-            usersLabel.Location = new Point(1207, 329);
+            usersLabel.Location = new Point(1379, 439);
             usersLabel.Name = "usersLabel";
-            usersLabel.Size = new Size(98, 36);
+            usersLabel.Size = new Size(123, 46);
             usersLabel.TabIndex = 8;
             usersLabel.Text = "Users";
             // 
@@ -182,9 +185,9 @@
             // 
             reviewsLabel.AutoSize = true;
             reviewsLabel.Font = new Font("Rockwell", 24F);
-            reviewsLabel.Location = new Point(700, 329);
+            reviewsLabel.Location = new Point(800, 439);
             reviewsLabel.Name = "reviewsLabel";
-            reviewsLabel.Size = new Size(143, 36);
+            reviewsLabel.Size = new Size(183, 46);
             reviewsLabel.TabIndex = 7;
             reviewsLabel.Text = "Reviews ";
             // 
@@ -192,18 +195,19 @@
             // 
             moviesLabel.AutoSize = true;
             moviesLabel.Font = new Font("Rockwell", 24F);
-            moviesLabel.Location = new Point(232, 329);
+            moviesLabel.Location = new Point(265, 439);
             moviesLabel.Name = "moviesLabel";
-            moviesLabel.Size = new Size(119, 36);
+            moviesLabel.Size = new Size(153, 46);
             moviesLabel.TabIndex = 6;
             moviesLabel.Text = "Movies";
             // 
             // settingsBtnPic
             // 
             settingsBtnPic.Image = (Image)resources.GetObject("settingsBtnPic.Image");
-            settingsBtnPic.Location = new Point(1124, 473);
+            settingsBtnPic.Location = new Point(1285, 631);
+            settingsBtnPic.Margin = new Padding(3, 4, 3, 4);
             settingsBtnPic.Name = "settingsBtnPic";
-            settingsBtnPic.Size = new Size(282, 232);
+            settingsBtnPic.Size = new Size(322, 309);
             settingsBtnPic.SizeMode = PictureBoxSizeMode.StretchImage;
             settingsBtnPic.TabIndex = 5;
             settingsBtnPic.TabStop = false;
@@ -212,9 +216,10 @@
             // usersBtnPic
             // 
             usersBtnPic.Image = (Image)resources.GetObject("usersBtnPic.Image");
-            usersBtnPic.Location = new Point(1124, 88);
+            usersBtnPic.Location = new Point(1285, 117);
+            usersBtnPic.Margin = new Padding(3, 4, 3, 4);
             usersBtnPic.Name = "usersBtnPic";
-            usersBtnPic.Size = new Size(282, 232);
+            usersBtnPic.Size = new Size(322, 309);
             usersBtnPic.SizeMode = PictureBoxSizeMode.StretchImage;
             usersBtnPic.TabIndex = 4;
             usersBtnPic.TabStop = false;
@@ -223,9 +228,10 @@
             // analyticsBtnPic
             // 
             analyticsBtnPic.Image = (Image)resources.GetObject("analyticsBtnPic.Image");
-            analyticsBtnPic.Location = new Point(622, 473);
+            analyticsBtnPic.Location = new Point(711, 631);
+            analyticsBtnPic.Margin = new Padding(3, 4, 3, 4);
             analyticsBtnPic.Name = "analyticsBtnPic";
-            analyticsBtnPic.Size = new Size(282, 232);
+            analyticsBtnPic.Size = new Size(322, 309);
             analyticsBtnPic.SizeMode = PictureBoxSizeMode.StretchImage;
             analyticsBtnPic.TabIndex = 3;
             analyticsBtnPic.TabStop = false;
@@ -234,9 +240,10 @@
             // interpretationsBtnPic
             // 
             interpretationsBtnPic.Image = (Image)resources.GetObject("interpretationsBtnPic.Image");
-            interpretationsBtnPic.Location = new Point(153, 473);
+            interpretationsBtnPic.Location = new Point(175, 631);
+            interpretationsBtnPic.Margin = new Padding(3, 4, 3, 4);
             interpretationsBtnPic.Name = "interpretationsBtnPic";
-            interpretationsBtnPic.Size = new Size(282, 232);
+            interpretationsBtnPic.Size = new Size(322, 309);
             interpretationsBtnPic.SizeMode = PictureBoxSizeMode.StretchImage;
             interpretationsBtnPic.TabIndex = 2;
             interpretationsBtnPic.TabStop = false;
@@ -245,9 +252,10 @@
             // reviewsBtnPic
             // 
             reviewsBtnPic.Image = (Image)resources.GetObject("reviewsBtnPic.Image");
-            reviewsBtnPic.Location = new Point(622, 88);
+            reviewsBtnPic.Location = new Point(711, 117);
+            reviewsBtnPic.Margin = new Padding(3, 4, 3, 4);
             reviewsBtnPic.Name = "reviewsBtnPic";
-            reviewsBtnPic.Size = new Size(282, 232);
+            reviewsBtnPic.Size = new Size(322, 309);
             reviewsBtnPic.SizeMode = PictureBoxSizeMode.StretchImage;
             reviewsBtnPic.TabIndex = 1;
             reviewsBtnPic.TabStop = false;
@@ -256,32 +264,21 @@
             // moviesBtnPicture
             // 
             moviesBtnPicture.Image = (Image)resources.GetObject("moviesBtnPicture.Image");
-            moviesBtnPicture.Location = new Point(153, 88);
+            moviesBtnPicture.Location = new Point(175, 117);
+            moviesBtnPicture.Margin = new Padding(3, 4, 3, 4);
             moviesBtnPicture.Name = "moviesBtnPicture";
-            moviesBtnPicture.Size = new Size(282, 232);
+            moviesBtnPicture.Size = new Size(322, 309);
             moviesBtnPicture.SizeMode = PictureBoxSizeMode.StretchImage;
             moviesBtnPicture.TabIndex = 0;
             moviesBtnPicture.TabStop = false;
             moviesBtnPicture.Click += moviesBtnPicture_Click;
             // 
-            // logoutBtn
-            // 
-            logoutBtn.BackColor = Color.FromArgb(0, 192, 192);
-            logoutBtn.Font = new Font("Rockwell", 20F, FontStyle.Bold);
-            logoutBtn.Location = new Point(1749, 8);
-            logoutBtn.Name = "logoutBtn";
-            logoutBtn.Size = new Size(143, 55);
-            logoutBtn.TabIndex = 2;
-            logoutBtn.Text = "↪️ Logout";
-            logoutBtn.UseVisualStyleBackColor = false;
-            logoutBtn.Click += logoutBtn_Click;
-            // 
             // greetingsLabel
             // 
             greetingsLabel.Font = new Font("Rockwell", 21.75F);
-            greetingsLabel.Location = new Point(774, 9);
+            greetingsLabel.Location = new Point(885, 12);
             greetingsLabel.Name = "greetingsLabel";
-            greetingsLabel.Size = new Size(496, 31);
+            greetingsLabel.Size = new Size(567, 41);
             greetingsLabel.TabIndex = 3;
             greetingsLabel.Text = "Welcome back Admin";
             greetingsLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -290,18 +287,19 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Rockwell", 21.75F);
-            label1.Location = new Point(774, 40);
+            label1.Location = new Point(885, 53);
             label1.Name = "label1";
-            label1.Size = new Size(528, 32);
+            label1.Size = new Size(675, 42);
             label1.TabIndex = 4;
             label1.Text = "What would you like to manage today?";
             // 
             // pictureBox7
             // 
             pictureBox7.Image = (Image)resources.GetObject("pictureBox7.Image");
-            pictureBox7.Location = new Point(1441, 8);
+            pictureBox7.Location = new Point(1647, 11);
+            pictureBox7.Margin = new Padding(3, 4, 3, 4);
             pictureBox7.Name = "pictureBox7";
-            pictureBox7.Size = new Size(149, 85);
+            pictureBox7.Size = new Size(170, 113);
             pictureBox7.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox7.TabIndex = 5;
             pictureBox7.TabStop = false;
@@ -309,29 +307,29 @@
             // pictureBox8
             // 
             pictureBox8.Image = (Image)resources.GetObject("pictureBox8.Image");
-            pictureBox8.Location = new Point(466, 8);
+            pictureBox8.Location = new Point(533, 11);
+            pictureBox8.Margin = new Padding(3, 4, 3, 4);
             pictureBox8.Name = "pictureBox8";
-            pictureBox8.Size = new Size(149, 85);
+            pictureBox8.Size = new Size(170, 113);
             pictureBox8.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox8.TabIndex = 6;
             pictureBox8.TabStop = false;
             // 
             // AdminDashboard
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 255, 255);
-            ClientSize = new Size(1904, 1041);
+            ClientSize = new Size(2174, 1377);
             Controls.Add(pictureBox8);
             Controls.Add(pictureBox7);
             Controls.Add(label1);
             Controls.Add(greetingsLabel);
-            Controls.Add(logoutBtn);
             Controls.Add(buttonGroupBox);
             Controls.Add(quickStatsGroupBox);
-            Margin = new Padding(2);
-            MaximumSize = new Size(1920, 1080);
-            MinimumSize = new Size(1920, 1080);
+            Margin = new Padding(2, 3, 2, 3);
+            MaximumSize = new Size(2192, 1424);
+            MinimumSize = new Size(2192, 1424);
             Name = "AdminDashboard";
             Text = "l";
             quickStatsGroupBox.ResumeLayout(false);
@@ -357,7 +355,6 @@
 		private Label totalUsersLabel;
 		private Label totalMoviesLabel;
 		private GroupBox buttonGroupBox;
-		private Button logoutBtn;
 		private Label greetingsLabel;
 		private Label label1;
 		private Label moviesLabel;

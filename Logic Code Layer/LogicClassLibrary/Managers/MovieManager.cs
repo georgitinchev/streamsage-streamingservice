@@ -1,78 +1,79 @@
-﻿using DataAccessLibrary.DataAccessLibrary;
+﻿using System;
+using System.Collections.Generic;
+using DataAccessLibrary.DataAccessLibrary;
 using DTOs;
 using LogicClassLibrary.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LogicClassLibrary.Managers
+namespace LogicClassLibrary.Managers;
+
+public class MovieManager : GeneralManager
 {
-	public class MovieManager : GeneralManager
-	{
-		private MovieDAL movieDAL;
-		public List<Movie>? movies { get; private set; }
+    private MovieDAL movieDAL;
+    public List<Movie>? movies { get; private set; }
 
-		public MovieManager(MovieDAL movieDAL)
-		{
-			this.movieDAL = movieDAL;
-			this.movies = new List<Movie>();
-			PopulateMovies();
-		}
+    public MovieManager(MovieDAL movieDAL)
+    {
+        this.movieDAL = movieDAL;
+        movies = new List<Movie>();
+        PopulateMovies();
+    }
 
-		public void PopulateMovies()
-		{
-			foreach (MovieDTO movie in movieDAL.ReadAllMovies())
-			{
-				Movie movieEntity = TransformDTOtoEntity(movie) as Movie;
-				if (movieEntity != null)
-				{
-					movies?.Add(movieEntity);
-				}
-				else
-				{
-					throw new Exception("Movie could not be created");
-				}
-			}
-		}
-        public override Entity TransformDTOtoEntity(object dto)
+    public void PopulateMovies()
+    {
+        foreach (MovieDTO movie in movieDAL.ReadAllMovies())
         {
-            MovieDTO movieDto = dto as MovieDTO;
-            if (movieDto != null)
+            if (TransformDTOtoEntity(movie) is Movie movieEntity)
             {
-                return new Movie(movieDto.Id, movieDto.Title, movieDto.ReleaseDate, movieDto.Description, movieDto.PosterImageURL, movieDto.TrailerURL, movieDto.RuntimeMinutes, movieDto.AverageRating);
+                movies?.Add(movieEntity);
+                continue;
             }
-            else
+            throw new Exception("Movie could not be created");
+        }
+    }
+
+    public override Entity TransformDTOtoEntity(object dto)
+    {
+        if (dto is MovieDTO movieDto)
+        {
+            return new Movie(movieDto.Id, movieDto.Title, movieDto.ReleaseDate, movieDto.Description, movieDto.PosterImageURL, movieDto.TrailerURL, movieDto.RuntimeMinutes, movieDto.AverageRating);
+        }
+        throw new ArgumentException("dto is not of type MovieDTO");
+    }
+
+    public void UpdateMovie(MovieDTO movie)
+    {
+        try
+        {
+            movieDAL.UpdateMovie(movie);
+            PopulateMovies();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Movie could not be updated: " + ex.Message);
+        }
+    }
+
+    public void DeleteMovie(int movieId)
+    {
+        movieDAL.DeleteMovie(movieId);
+        if (movies != null)
+        {
+            Movie? movie = movies.FirstOrDefault(m => m.Id == movieId);
+            if (movie != null)
             {
-                throw new ArgumentException("dto is not of type MovieDTO");
+                movies.Remove(movie);
             }
         }
-		public void UpdateMovie(MovieDTO movie)
-		{
-			try
-			{
-				movieDAL.UpdateMovie(movie);
-			}
-            catch (Exception ex)
-			{
-                throw new Exception("Movie could not be updated: " + ex.Message);
-            }
-		}
+    }
 
-        public void CreateMovie(Movie movie)
-		{
-			throw new NotImplementedException();
-		}
+    public void CreateMovie(Movie movie)
+    {
+        throw new NotImplementedException();
+    }
 
-		public Movie ReadMovie(int movieId)
-		{
-			throw new NotImplementedException();
-		}
+    public Movie ReadMovie(int movieId)
+    {
+        throw new NotImplementedException();
+    }
 
-		public void DeleteMovie(int movieId)
-		{
-			
-		}
-	}
 }

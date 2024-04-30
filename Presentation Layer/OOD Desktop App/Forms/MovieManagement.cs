@@ -59,12 +59,10 @@ namespace DesktopApp.Forms
                         desktopController.backendService?.DeleteMovie(movieDto.Id);
                         RefreshMovies();
                         movieMgmtErrorLabel.Text = "Movie deleted successfully!";
-                        // Removes the success message after 3 seconds
-                        Task.Delay(3000).ContinueWith(t => movieMgmtErrorLabel.Text = "");
                     }
                     catch (Exception ex)
                     {
-                        movieMgmtErrorLabel.Text = $"Error deleting movie: {ex.Message}";
+                        movieMgmtErrorLabel.Text = ex.Message;
                     }
                 }
             }
@@ -85,7 +83,7 @@ namespace DesktopApp.Forms
             // edit button dgrid view
             DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn();
             editButtonColumn.Name = "Edit";
-            editButtonColumn.Text = "";
+            editButtonColumn.Text = "Edit";
             editButtonColumn.UseColumnTextForButtonValue = true;
             editButtonColumn.Width = 125;
             editButtonColumn.MinimumWidth = 125;
@@ -93,7 +91,7 @@ namespace DesktopApp.Forms
             // delete button dgrid view
             DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn();
             deleteButtonColumn.Name = "Delete";
-            deleteButtonColumn.Text = "";
+            deleteButtonColumn.Text = "Delete";
             deleteButtonColumn.UseColumnTextForButtonValue = true;
             deleteButtonColumn.Width = 125;
             deleteButtonColumn.MinimumWidth = 125;
