@@ -44,7 +44,7 @@ namespace LogicClassLibrary.Managers
             foreach (Movie movie in allMovies)
             {
                 // Check if the movie has the same genre as any of the user's favorite movies
-                if (user.FavoriteMovies.Any(favoriteMovie => favoriteMovie.Genre == movie.Genre && !user.FavoriteMovies.Contains(movie) && !recommendedMovies.Contains(movie)))
+                //if (user.FavoriteMovies.Any(favoriteMovie => favoriteMovie.Genre == movie.Genre && !user.FavoriteMovies.Contains(movie) && !recommendedMovies.Contains(movie)))
                 {
                     recommendedMovies.Add(movie);
                     if (recommendedMovies.Count == 5) return recommendedMovies;

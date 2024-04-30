@@ -20,7 +20,7 @@ namespace LogicClassLibrary
         private InterpretationDAL interpretationDAL;
         public BackendService()
         {
-            string connectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id=dbi524441_streamsage;Password=e9999619;TrustServerCertificate=true;";
+            string connectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id=dbi524441_streamsage;Password=e9999619;TrustServerCertificate=true";
             movieDAL = new MovieDAL(connectionString);
             userDAL = new UserDAL(connectionString);
             reviewDAL = new ReviewDAL(connectionString);

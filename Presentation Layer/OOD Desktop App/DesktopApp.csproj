@@ -37,7 +37,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Logic Code Layer\LogicClassLibrary\LogicClassLibrary.csproj" />
-		<ProjectReference Include="..\..\Data Access Code Layer\DataAccessLibrary\DataAccessLibrary.csproj" />
 	</ItemGroup>
 
 </Project>
