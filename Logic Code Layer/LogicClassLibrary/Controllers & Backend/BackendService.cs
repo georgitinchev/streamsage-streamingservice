@@ -37,7 +37,7 @@ namespace LogicClassLibrary
             return movieManager.ReadMovie(id);
         }
 
-        public void AddMovie(Movie movie)
+        public void AddMovie(MovieDTO movie)
         {
             movieManager.CreateMovie(movie);
 		}
@@ -52,14 +52,33 @@ namespace LogicClassLibrary
 			movieManager.DeleteMovie(id);
         }
 
+        public User GetUser(int id)
+        {
+            return userManager.ReadUser(id);
+        }
+
+        public void DeleteUser(int id)
+        {
+            userManager.DeleteUser(id);
+        }
+
+        public void UpdateUser(UserDTO userDto)
+        {
+            userManager.UpdateUser(userDto);
+        }
+
+        public void ChangePassword(string username, string newPassword)
+        {
+            userManager.ChangePassword(username, newPassword);
+        }
         public bool AuthenticateUser(string username, string password)
         {
             return userManager.AuthenticateUser(username,password);
         }
 
-        public void RegisterUser(string username, string email, string password, string firstName, string lastName, string settings)
+        public void RegisterUser(string username, string email, string password, string firstName, string lastName, string profilePicture ,string settings)
         {
-            userManager.RegisterUser(username, email, password, firstName, lastName, settings);
+            userManager.RegisterUser(username, email, password, firstName, lastName,profilePicture, settings);
         }
 		
         public List<Movie> GetAllMovies()
