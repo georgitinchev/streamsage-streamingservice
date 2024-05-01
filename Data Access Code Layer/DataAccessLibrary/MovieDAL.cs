@@ -31,17 +31,21 @@ namespace DataAccessLibrary
                         {
                             while (reader.Read())
                             {
-                                MovieDTO movie = new MovieDTO();
-                                movie.Id = reader.GetInt32(0);
-                                movie.Title = reader.GetString(1);
-                                movie.ReleaseDate = reader.GetDateTime(2);
-                                movie.Description = reader.GetString(3);
-                                movie.PosterImageURL = reader.GetString(4);
-                                movie.TrailerURL = reader.GetString(5);
-                                movie.RuntimeMinutes = reader.GetInt32(6);
-                                movie.AverageRating = reader.GetDecimal(7);
+                                MovieDTO movie = new MovieDTO
+                                {
+                                    Id = reader.GetInt32(0),
+                                    Title = reader.GetString(1),
+                                    ReleaseDate = reader.GetDateTime(2),
+                                    Description = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    PosterImageURL = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                    TrailerURL = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                    RuntimeMinutes = reader.GetInt32(6),
+                                    AverageRating = reader.IsDBNull(7) ? null : reader.GetDecimal(7)
+                                };
                                 movies.Add(movie);
                             }
+
+
                         }
                     }
                 }
@@ -63,7 +67,8 @@ namespace DataAccessLibrary
                         command.Parameters.AddWithValue("@PosterImageURL", movie.PosterImageURL);
                         command.Parameters.AddWithValue("@TrailerURL", movie.TrailerURL);
                         command.Parameters.AddWithValue("@RuntimeMinutes", movie.RuntimeMinutes);
-                        command.Parameters.AddWithValue("@AverageRating", movie.AverageRating);
+                        command.Parameters.Add("@AverageRating", SqlDbType.Decimal);
+                        command.Parameters["@AverageRating"].Value = movie.AverageRating.HasValue ? (object)movie.AverageRating.Value : DBNull.Value;
                         command.ExecuteNonQuery();
                     }
                 }
@@ -116,7 +121,21 @@ namespace DataAccessLibrary
 
             public void CreateMovie(MovieDTO movie)
             {
-                throw new NotImplementedException();
+                string query = "INSERT INTO Movie (Title, ReleaseDate, Description, PosterImageURL, TrailerURL, RuntimeMinutes, AverageRating) VALUES (@Title, @ReleaseDate, @Description, @PosterImageURL, @TrailerURL, @RuntimeMinutes, NULL)";
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@Title", movie.Title);
+                        command.Parameters.AddWithValue("@ReleaseDate", movie.ReleaseDate);
+                        command.Parameters.AddWithValue("@Description", movie.Description);
+                        command.Parameters.AddWithValue("@PosterImageURL", movie.PosterImageURL);
+                        command.Parameters.AddWithValue("@TrailerURL", movie.TrailerURL);
+                        command.Parameters.AddWithValue("@RuntimeMinutes", movie.RuntimeMinutes);
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
 
             public MovieDTO GetMovie(int movieId)
