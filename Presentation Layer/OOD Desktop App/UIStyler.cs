@@ -48,5 +48,14 @@ namespace DesktopApp
             };
             dataGridView.Columns.Add(buttonColumn);
         }
+        public static void StyleCursorFormButtonHands(PictureBox pic1, PictureBox pic2, PictureBox pic3, PictureBox pic4, PictureBox pic5, PictureBox pic6)
+        {
+            pic1.Cursor = Cursors.Hand;
+            pic2.Cursor = Cursors.Hand;
+            pic3.Cursor = Cursors.Hand;
+            pic4.Cursor = Cursors.Hand;
+            pic5.Cursor = Cursors.Hand;
+            pic6.Cursor = Cursors.Hand;
+        }
     }
 }
