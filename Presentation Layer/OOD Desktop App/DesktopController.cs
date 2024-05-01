@@ -42,11 +42,14 @@ namespace DesktopApp
         {
            return backendService.AuthenticateUser(username, password);
         }
-        public void registerUser(string username, string email, string password, string firstName, string lastName, string settings)
+        public void registerUser(string username, string email, string password, string firstName, string lastName,string profilePicture, string settings)
         {
-            backendService?.RegisterUser(username, email, password, firstName, lastName, settings);
+            backendService?.RegisterUser(username, email, password, firstName, lastName,profilePicture , settings);
         }
-
+        public void changeUserPassword(string username, string newPassword)
+        {
+            backendService?.ChangePassword(username, newPassword);
+        }
         public void logoutUser()
         {
 
