@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MovieDashboard));
-            homeBtnMovies = new PictureBox();
             searchBarMovies = new TextBox();
             filterBarMovies = new ComboBox();
             totalMoviesLabel = new Label();
@@ -74,7 +72,6 @@
             label7 = new Label();
             textBox4 = new TextBox();
             movieMgmtErrorLabel = new Label();
-            ((System.ComponentModel.ISupportInitialize)homeBtnMovies).BeginInit();
             movieDashTabCtrl.SuspendLayout();
             movieDashPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)moviesDataGrid).BeginInit();
@@ -87,18 +84,6 @@
             createMovieDetailsGroup.SuspendLayout();
             groupBox1.SuspendLayout();
             SuspendLayout();
-            // 
-            // homeBtnMovies
-            // 
-            homeBtnMovies.BackColor = Color.RoyalBlue;
-            homeBtnMovies.Image = (Image)resources.GetObject("homeBtnMovies.Image");
-            homeBtnMovies.Location = new Point(3, 3);
-            homeBtnMovies.Margin = new Padding(3, 4, 3, 4);
-            homeBtnMovies.Name = "homeBtnMovies";
-            homeBtnMovies.Size = new Size(98, 95);
-            homeBtnMovies.SizeMode = PictureBoxSizeMode.StretchImage;
-            homeBtnMovies.TabIndex = 1;
-            homeBtnMovies.TabStop = false;
             // 
             // searchBarMovies
             // 
@@ -122,10 +107,11 @@
             // totalMoviesLabel
             // 
             totalMoviesLabel.Font = new Font("Rockwell", 14F, FontStyle.Bold);
-            totalMoviesLabel.Location = new Point(138, 27);
+            totalMoviesLabel.Location = new Point(19, 9);
             totalMoviesLabel.Name = "totalMoviesLabel";
-            totalMoviesLabel.Size = new Size(154, 61);
+            totalMoviesLabel.Size = new Size(287, 79);
             totalMoviesLabel.TabIndex = 5;
+            totalMoviesLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // searchBtn
             // 
@@ -581,13 +567,11 @@
             Controls.Add(totalMoviesLabel);
             Controls.Add(filterBarMovies);
             Controls.Add(searchBarMovies);
-            Controls.Add(homeBtnMovies);
             Margin = new Padding(3, 4, 3, 4);
             MaximumSize = new Size(2192, 1424);
             MinimumSize = new Size(2192, 1424);
             Name = "MovieDashboard";
             Text = "MovieDashboard";
-            ((System.ComponentModel.ISupportInitialize)homeBtnMovies).EndInit();
             movieDashTabCtrl.ResumeLayout(false);
             movieDashPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)moviesDataGrid).EndInit();
@@ -606,8 +590,7 @@
         }
 
         #endregion
-        private PictureBox homeBtnMovies;
-		private TextBox searchBarMovies;
+        private TextBox searchBarMovies;
 		private ComboBox filterBarMovies;
 		private Label totalMoviesLabel;
 		private Button searchBtn;
