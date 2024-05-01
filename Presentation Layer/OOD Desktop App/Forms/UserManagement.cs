@@ -1,26 +1,25 @@
-﻿using LogicClassLibrary.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using DTOs;
+using LogicClassLibrary.Entities;
+using LogicClassLibrary.NewFolder;
 
 namespace DesktopApp.Forms
 {
     public partial class UserManagement : Form
     {
-        private DesktopController _desktopController;
+        private readonly DesktopController _desktopController;
+        private int currentUserId;
         public UserManagement(DesktopController desktopController)
         {
             InitializeComponent();
-            _desktopController = desktopController;
+            this._desktopController = desktopController;
+            userManagementDataGrid.CellContentClick += userManagementDataGrid_CellContentClick;
+            InitializeDataGridView();
             RefreshUsers();
         }
+
         private async void createUserBtn_Click(object sender, EventArgs e)
         {
             string username = usernameTextBox.Text;
@@ -28,111 +27,171 @@ namespace DesktopApp.Forms
             string password = userPasswordTextBox.Text;
             string firstName = userFirstNameTextBox.Text;
             string lastName = userLastNameTextBox.Text;
-            if (string.IsNullOrEmpty(username)) usernameLabel.Text += "*";
-            if (string.IsNullOrEmpty(email)) emailLabel.Text += "*";
-            if (string.IsNullOrEmpty(password)) passwordLabel.Text += "*";
-            if (string.IsNullOrEmpty(firstName)) firstNameLabel.Text += "*";
-            if (string.IsNullOrEmpty(lastName)) lastNameLabel.Text += "*";
-            string errorMessage = ValidateInput(username, email, password, firstName, lastName);
+
+            string errorMessage = UserValidation.ValidateCreateInput(username, email, password, firstName, lastName);
             if (!string.IsNullOrEmpty(errorMessage))
             {
+                errorLabel.ForeColor = Color.Red;
                 errorLabel.Text = errorMessage;
                 await Task.Delay(3000);
                 errorLabel.Text = "";
                 return;
             }
+
             try
             {
-                _desktopController.registerUser(username, email, password, firstName, lastName, "");
+                _desktopController.registerUser(username, email, password, firstName, lastName, "", "");
                 errorLabel.ForeColor = Color.Green;
                 errorLabel.Text = "User created successfully!";
                 ClearInputFields();
-                await Task.Delay(3000);
-                errorLabel.Text = "";
             }
             catch (Exception ex)
             {
                 errorLabel.ForeColor = Color.Red;
                 errorLabel.Text = ex.Message;
+            }
+            finally
+            {
+                RefreshUsers();
                 await Task.Delay(3000);
                 errorLabel.Text = "";
             }
         }
+
+        private async void updateUserBtn_Click(object sender, EventArgs e)
+        {
+            string username = updateUsernameBox.Text;
+            string email = updateEmailBox.Text;
+            string password = updatePasswordBox.Text;
+            string firstName = updateFirstNameBox.Text;
+            string lastName = updateLastNameBox.Text;
+            string errorMessage = UserValidation.ValidateUpdateInput(username, email, password, firstName, lastName);
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                updateErrorLabel.Text = errorMessage;
+                await Task.Delay(5000);
+                updateErrorLabel.Text = "";
+                return;
+            }
+            try
+            {
+                User currentUser = _desktopController.backendService.GetUser(currentUserId);
+                bool detailsUnchanged = username == currentUser.Username &&
+                                        email == currentUser.Email &&
+                                        firstName == currentUser.FirstName &&
+                                        lastName == currentUser.LastName;
+
+                if (detailsUnchanged && !string.IsNullOrEmpty(password))
+                {
+                    _desktopController.backendService?.ChangePassword(username, password);
+                    updateErrorLabel.ForeColor = Color.Green;
+                    updateErrorLabel.Text = "Password updated successfully!";
+                    return;
+                }
+                else
+                {
+                    UserDTO userToUpdate = new UserDTO(currentUserId, username, email, firstName, lastName, "", "");
+                    _desktopController.backendService?.UpdateUser(userToUpdate);
+                    if (!string.IsNullOrEmpty(password))
+                    {
+                        _desktopController.backendService?.ChangePassword(username, password);
+                    }
+                    updateErrorLabel.ForeColor = Color.Green;
+                    updateErrorLabel.Text = "User details updated successfully!";
+                }
+            }
+            catch (Exception ex)
+            {
+                updateErrorLabel.ForeColor = Color.Red;
+                updateErrorLabel.Text = ex.Message;
+            }
+            finally
+            {
+                RefreshUsers();
+                await Task.Delay(5000);
+                updateErrorLabel.Text = "";
+                updatePasswordBox.Text = "";
+            }
+        }
+
+        private void backToHomeBtn_Click(object sender, EventArgs e)
+        {
+            userOperationsTabCtrl.SelectedIndex = 0;
+        }
+
+        private void createUserNavigationBtn_Click(object sender, EventArgs e)
+        {
+            userOperationsTabCtrl.SelectedIndex = 1;
+        }
+
+        private void InitializeDataGridView()
+        {
+            // Initialization logic remains the same
+            userManagementDataGrid.AutoGenerateColumns = false;
+            userManagementDataGrid.Columns.Clear();
+            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Username", HeaderText = "Username", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Email", HeaderText = "Email", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "FirstName", HeaderText = "First Name", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "LastName", HeaderText = "Last Name", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            UIStyler.AddButtonColumn(userManagementDataGrid, "Edit", "Edit");
+            UIStyler.AddButtonColumn(userManagementDataGrid, "Delete", "Delete");
+            UIStyler.StyleDataGridView(userManagementDataGrid);
+            UIStyler.StyleButtonColumns(userManagementDataGrid);
+            RefreshUsers();
+        }
+
         private void RefreshUsers()
         {
             List<User> users = _desktopController.displayUserPage();
-            userManagementDataGrid.AutoGenerateColumns = false;
-            userManagementDataGrid.Columns.Clear();
-            // Add columns for the properties of the Movie class that you want to display
-            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID" });
-            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Username", HeaderText = "Username" });
-            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Email", HeaderText = "Email" });
-            userManagementDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "FirstName", HeaderText = "FirstName" });
-            userManagementDataGrid.CellContentClick += userManagementDataGrid_CellContentClick;
-            DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn();
-            editButtonColumn.Name = "Edit";
-            editButtonColumn.Text = "Edit";
-            editButtonColumn.UseColumnTextForButtonValue = true;
-            editButtonColumn.Width = 100;
-            DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn();
-            deleteButtonColumn.Name = "Delete";
-            deleteButtonColumn.Text = "Delete";
-            deleteButtonColumn.UseColumnTextForButtonValue = true;
-            deleteButtonColumn.Width = 100;
-            userManagementDataGrid.Columns.Add(editButtonColumn);
-            userManagementDataGrid.Columns.Add(deleteButtonColumn);
+            userManagementDataGrid.DataSource = null;
             userManagementDataGrid.DataSource = users;
-            userManagementDataGrid.AutoResizeColumns();
-            userManagementDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            userManagementDataGrid.BackgroundColor = Color.LightGray;
-            userManagementDataGrid.BorderStyle = BorderStyle.None;
-            userManagementDataGrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
-            userManagementDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            userManagementDataGrid.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;
-            userManagementDataGrid.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
-            userManagementDataGrid.DefaultCellStyle.Font = new Font("Segoe UI", 10);
-            userManagementDataGrid.EnableHeadersVisualStyles = false;
-            userManagementDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            userManagementDataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
-            userManagementDataGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            userManagementDataGrid.RowTemplate.Height = 50;
-            totalUsersLabel.Text = $"Total Users:\n{users.Count}";
+            totalUsersLabel.Text = $"Total Users: {users.Count}";
+            userManagementDataGrid.Refresh();
         }
 
-        private void userManagementDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void userManagementDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
                 User user = (User)senderGrid.Rows[e.RowIndex].DataBoundItem;
-                // Below write logic for updating the user
+                if (senderGrid.Columns[e.ColumnIndex].Name == "Edit")
+                {
+                    userOperationsTabCtrl.SelectedIndex = 2;
+                    currentUserId = user.Id;
+                    updateUsernameBox.Text = user.Username;
+                    updateEmailBox.Text = user.Email;
+                    updateFirstNameBox.Text = user.FirstName;
+                    updateLastNameBox.Text = user.LastName;
+                }
+                else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
+                {
+                    DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this user?", "Delete User", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        try
+                        {
+                            _desktopController.backendService?.DeleteUser(user.Id);
+                            generalErrorLabel.ForeColor = Color.DarkGreen;
+                            generalErrorLabel.Text = "User deleted successfully!";
+                        }
+                        catch (Exception ex)
+                        {
+                            generalErrorLabel.ForeColor = Color.Red;
+                            generalErrorLabel.Text = ex.Message;
+                        }
+                        finally
+                        {
+                            RefreshUsers();
+                            senderGrid.CurrentCell = null;
+                            await Task.Delay(3000);
+                            generalErrorLabel.Text = "";
+                        }
+                    }
+                }
             }
         }
 
-        private string ValidateInput(string username, string email, string password, string firstName, string lastName)
-        {
-            if (string.IsNullOrEmpty(username) || username.Length < 6 || username.All(char.IsDigit))
-            {
-                return "Username should be at least 6 characters long and should not contain only numbers.";
-            }
-            if (string.IsNullOrEmpty(email) || !Regex.IsMatch(email, @"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$"))
-            {
-                return "Please enter a valid email.";
-            }
-            if (string.IsNullOrEmpty(password) || password.Length < 8)
-            {
-                return "Password should be at least 8 characters long.";
-            }
-            if (string.IsNullOrEmpty(firstName) || !Regex.IsMatch(firstName, @"^[A-Z][a-zA-Z]*$"))
-            {
-                return "First name should start with a capital letter and should only contain letters.";
-            }
-            if (string.IsNullOrEmpty(lastName) || !Regex.IsMatch(lastName, @"^[A-Z][a-zA-Z]*$"))
-            {
-                return "Last name should start with a capital letter and should only contain letters.";
-            }
-            return "";
-        }
         private void ClearInputFields()
         {
             usernameTextBox.Text = "";
