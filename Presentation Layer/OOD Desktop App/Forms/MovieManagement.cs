@@ -1,5 +1,6 @@
 ﻿using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Validation;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,7 +27,7 @@ namespace DesktopApp.Forms
             RefreshMovies();
         }
 
-        private void moviesDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void moviesDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
@@ -64,73 +66,58 @@ namespace DesktopApp.Forms
                     {
                         movieMgmtErrorLabel.Text = ex.Message;
                     }
+                    finally
+                    {
+                        await Task.Delay(3000); 
+                        movieMgmtErrorLabel.Text = "";
+                        senderGrid.CurrentCell = null;
+                    }
                 }
+                senderGrid.CurrentCell = null;
             }
         }
 
         private void InitializeMoviesGrid()
         {
-            // adding data columns
             moviesDataGrid.AutoGenerateColumns = false;
             moviesDataGrid.Columns.Clear();
-
-            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Id", HeaderText = "ID" });
-            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title" });
-            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Year", HeaderText = "Year" });
-            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Description", HeaderText = "Description" });
-            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "RuntimeMinutes", HeaderText = "Runtime" });
-
-            // edit button dgrid view
-            DataGridViewButtonColumn editButtonColumn = new DataGridViewButtonColumn();
-            editButtonColumn.Name = "Edit";
-            editButtonColumn.Text = "Edit";
-            editButtonColumn.UseColumnTextForButtonValue = true;
-            editButtonColumn.Width = 125;
-            editButtonColumn.MinimumWidth = 125;
-
-            // delete button dgrid view
-            DataGridViewButtonColumn deleteButtonColumn = new DataGridViewButtonColumn();
-            deleteButtonColumn.Name = "Delete";
-            deleteButtonColumn.Text = "Delete";
-            deleteButtonColumn.UseColumnTextForButtonValue = true;
-            deleteButtonColumn.Width = 125;
-            deleteButtonColumn.MinimumWidth = 125;
-
-            //adding them to columns
-            moviesDataGrid.Columns.Add(editButtonColumn);
-            moviesDataGrid.Columns.Add(deleteButtonColumn);
-
-            // cell styling
-            moviesDataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            moviesDataGrid.BackgroundColor = Color.LightGray;
-            moviesDataGrid.BorderStyle = BorderStyle.None;
-            moviesDataGrid.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
-            moviesDataGrid.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            moviesDataGrid.DefaultCellStyle.SelectionBackColor = Color.DarkTurquoise;
-            moviesDataGrid.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
-            moviesDataGrid.DefaultCellStyle.Font = new Font("Segoe UI", 10);
-            moviesDataGrid.EnableHeadersVisualStyles = false;
-            moviesDataGrid.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-            moviesDataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
-            moviesDataGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-            moviesDataGrid.RowTemplate.Height = 50;
+            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Title", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Year", HeaderText = "Year", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Description", HeaderText = "Description", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
+            moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "RuntimeMinutes", HeaderText = "Runtime", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
+            UIStyler.StyleDataGridView(moviesDataGrid); 
+            UIStyler.AddButtonColumn(moviesDataGrid, "Edit", "Edit");
+            UIStyler.AddButtonColumn(moviesDataGrid, "Delete", "Delete");
         }
 
         private void RefreshMovies()
         {
             List<Movie> movies = desktopController.displayMoviePage();
+            moviesDataGrid.DataSource = null;
             moviesDataGrid.DataSource = movies;
             totalMoviesLabel.Text = $"Total Movies: {movies.Count}";
+            moviesDataGrid.Refresh();
         }
 
         private async void updateMovieBtn_Click(object sender, EventArgs e)
         {
-            string validationError = ValidateMovieFields();
-            if (validationError != null)
+            string validationError = MovieValidation.ValidateCreateMovieFields(
+                movieTitleBox.Text,
+                movieYearPicker.Value,
+                descriptionTextBox.Text,
+                posterUrlTextBox.Text,
+                trailerUrlTextBox.Text,
+                int.TryParse(runTimeTextBox.Text, out int runtime) ? runtime : 0
+            );
+
+            if (!string.IsNullOrEmpty(validationError))
             {
                 updateStatusLabel.Text = validationError;
+                await Task.Delay(3000);
+                updateStatusLabel.Text = "";
                 return;
             }
+
             MovieDTO movieDto = new MovieDTO
             {
                 Id = currentMovieId,
@@ -139,8 +126,9 @@ namespace DesktopApp.Forms
                 Description = descriptionTextBox.Text,
                 PosterImageURL = posterUrlTextBox.Text,
                 TrailerURL = trailerUrlTextBox.Text,
-                RuntimeMinutes = int.Parse(runTimeTextBox.Text)
+                RuntimeMinutes = runtime
             };
+
             try
             {
                 desktopController.backendService?.UpdateMovie(movieDto);
@@ -151,48 +139,83 @@ namespace DesktopApp.Forms
             {
                 updateStatusLabel.Text = ex.Message;
             }
-            await Task.Delay(3000);
-            updateStatusLabel.Text = "";
+            finally
+            {
+                await Task.Delay(3000);
+                updateStatusLabel.Text = "";
+            }
         }
 
         private void movieDashTabCtrl_SelectedIndexChanged(object sender, EventArgs e)
         {
-        moviesDataGrid.Refresh();
+            moviesDataGrid.Refresh();
         }
 
-        private string ValidateMovieFields()
+        private void addMovieBtn_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(movieTitleBox.Text))
+            movieDashTabCtrl.SelectedIndex = 2;
+        }
+
+        private void moviesDashHomeBtn_Click(object sender, EventArgs e)
+        {
+            movieDashTabCtrl.SelectedIndex = 0;
+        }
+
+        private async void createMovieBtn_Click(object sender, EventArgs e)
+        {
+            string validationError = MovieValidation.ValidateCreateMovieFields(
+                createMovieTitleBox.Text,
+                createMovieDatePicker.Value,
+                createMovieDescriptionBox.Text,
+                createMoviePosterBox.Text,
+                createMovieUrlBox.Text,
+                int.TryParse(createMovieRunTimeBox.Text, out int runtime) ? runtime : 0
+            );
+
+            if (!string.IsNullOrEmpty(validationError))
             {
-                return "Title cannot be empty!";
+                createMovieErrorLabel.Text = validationError;
+                await Task.Delay(3000);
+                createMovieErrorLabel.Text = "";
+                return;
             }
 
-            if (movieYearPicker.Value > DateTime.Now)
+            MovieDTO newMovie = new MovieDTO
             {
-                return "Year cannot be in the future!";
-            }
+                Title = createMovieTitleBox.Text,
+                ReleaseDate = createMovieDatePicker.Value,
+                Description = createMovieDescriptionBox.Text,
+                PosterImageURL = createMoviePosterBox.Text,
+                TrailerURL = createMovieUrlBox.Text,
+                RuntimeMinutes = runtime
+            };
 
-            if (string.IsNullOrWhiteSpace(descriptionTextBox.Text))
+            try
             {
-                return "Description cannot be empty!";
+                desktopController.backendService?.AddMovie(newMovie);
+                createMovieErrorLabel.Text = "Movie created successfully!";
+                ClearCreateMovieFields();
+                RefreshMovies();
             }
+            catch (Exception ex)
+            {
+                createMovieErrorLabel.Text = $"Failed to create movie: {ex.Message}";
+            }
+            finally
+            {
+                await Task.Delay(3000);
+                createMovieErrorLabel.Text = "";
+            }
+        }
 
-            Uri uriResult;
-            if (!Uri.TryCreate(posterUrlTextBox.Text, UriKind.Absolute, out uriResult) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-            {
-                return "Poster URL is not a valid URL!";
-            }
-
-            if (!Uri.TryCreate(trailerUrlTextBox.Text, UriKind.Absolute, out uriResult) || !(uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-            {
-                return "Trailer URL is not a valid URL!";
-            }
-
-            if (!int.TryParse(runTimeTextBox.Text, out int runtime) || runtime <= 0)
-            {
-                return "Runtime must be a positive integer!";
-            }
-            return null;
+        private void ClearCreateMovieFields()
+        {
+            createMovieTitleBox.Text = string.Empty;
+            createMovieDatePicker.Value = DateTime.Now;
+            createMovieDescriptionBox.Text = string.Empty;
+            createMoviePosterBox.Text = string.Empty;
+            createMovieUrlBox.Text = string.Empty;
+            createMovieRunTimeBox.Text = string.Empty;
         }
     }
 }
