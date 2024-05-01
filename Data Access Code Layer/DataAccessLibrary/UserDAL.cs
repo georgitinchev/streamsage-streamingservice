@@ -29,15 +29,16 @@ namespace DataAccessLibrary
                             while (reader.Read())
                             {
                                 UserDTO user = new UserDTO(
-                                id: (int)reader["UserID"],
+                                id: (int)reader["ID"],
                                 username: reader["Username"] as string,
                                 email: reader["Email"] as string,
                                 passwordHash: reader["PasswordHash"] as string,
                                 firstName: reader["FirstName"] as string,
                                 lastName: reader["LastName"] as string,
+                                profilePicture: reader["ProfilePictureURL"] as string,
                                 settings: reader["Settings"] as string,
-                                favoriteMovies: GetMoviesForUser((int)reader["UserID"], "FavoriteMovies"),
-                                watchList: GetMoviesForUser((int)reader["UserID"], "WatchList")
+                                favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
  );
                                 users.Add(user);
                             }
@@ -47,24 +48,23 @@ namespace DataAccessLibrary
                 return users;
             }
 
-
             private List<MovieDTO> GetMoviesForUser(int userId, string tableName)
             {
                 List<MovieDTO> movies = new List<MovieDTO>();
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = $"SELECT m.* FROM {tableName} as t JOIN Movie as m ON t.MovieId = m.MovieID WHERE t.UserId = @userId";
+                    string query = $"SELECT m.* FROM {tableName} as t JOIN Movie as m ON t.MovieId = m.ID WHERE t.UserId = @ID";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@userId", userId);
+                        cmd.Parameters.AddWithValue("@ID", userId);
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 MovieDTO movie = new MovieDTO
                                 {
-                                    Id = (int)reader["MovieID"],
+                                    Id = (int)reader["ID"],
                                     Title = reader["Title"] as string,
                                     ReleaseDate = (DateTime)reader["ReleaseDate"],
                                     Description = reader["Description"] as string,
@@ -86,7 +86,7 @@ namespace DataAccessLibrary
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "INSERT INTO [User] (Username, Email, PasswordHash, FirstName, LastName, Settings) VALUES (@Username, @Email, @PasswordHash, @FirstName, @LastName, @Settings)";
+                    string query = "INSERT INTO [User] (Username, Email, PasswordHash, FirstName, LastName, ProfilePictureURL, Settings) VALUES (@Username, @Email, @PasswordHash, @FirstName, @LastName, @ProfilePictureURL, @Settings)";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@Username", user.Username);
@@ -94,6 +94,7 @@ namespace DataAccessLibrary
                         cmd.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
                         cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
                         cmd.Parameters.AddWithValue("@LastName", user.LastName);
+                        cmd.Parameters.AddWithValue("@ProfilePictureURL", user.ProfilePictureURL);
                         cmd.Parameters.AddWithValue("@Settings", user.Settings);
                         cmd.ExecuteNonQuery();
                     }
@@ -114,15 +115,16 @@ namespace DataAccessLibrary
                             if (reader.Read())
                             {
                                 return new UserDTO(
-                                    id: (int)reader["UserID"],
+                                    id: (int)reader["ID"],
                                     username: reader["Username"] as string,
                                     email: reader["Email"] as string,
                                     passwordHash: reader["PasswordHash"] as string,
                                     firstName: reader["FirstName"] as string,
                                     lastName: reader["LastName"] as string,
+                                    profilePicture: reader["ProfilePictureURL"] as string,
                                     settings: reader["Settings"] as string,
-                                    favoriteMovies: GetMoviesForUser((int)reader["UserID"], "FavoriteMovies"),
-                                    watchList: GetMoviesForUser((int)reader["UserID"], "WatchList")
+                                    favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
+                                    watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
                                 );
                             }
                             else
@@ -134,14 +136,53 @@ namespace DataAccessLibrary
                 }
             }
 
+            public void ChangePassword(string username, string newPassword)
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE [User] SET PasswordHash = @PasswordHash WHERE Username = @Username";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@PasswordHash", newPassword);
+                        cmd.Parameters.AddWithValue("@Username", username);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
             public void UpdateUser(UserDTO user)
             {
-                throw new NotImplementedException();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "UPDATE [User] SET Username = @Username, Email = @Email, FirstName = @FirstName, LastName = @LastName, ProfilePictureURL = @ProfilePictureURL, Settings = @Settings WHERE ID = @ID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Username", user.Username);
+                        cmd.Parameters.AddWithValue("@Email", user.Email);
+                        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
+                        cmd.Parameters.AddWithValue("@LastName", user.LastName);
+                        cmd.Parameters.AddWithValue("@ProfilePictureURL", user.ProfilePictureURL);
+                        cmd.Parameters.AddWithValue("@Settings", user.Settings);
+                        cmd.Parameters.AddWithValue("@ID", user.Id);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
 
             public void DeleteUser(int userId)
             {
-                throw new NotImplementedException();
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "DELETE FROM [User] WHERE ID = @ID";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ID", userId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
             }
         }
     }
