@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MovieDashboard));
             searchBarMovies = new TextBox();
             filterBarMovies = new ComboBox();
             totalMoviesLabel = new Label();
@@ -54,24 +55,26 @@
             movieTitleLabel = new Label();
             movieTitleBox = new TextBox();
             createMoviePage = new TabPage();
-            tabControl1 = new TabControl();
+            createMovieTabCtrl = new TabControl();
             createMovieDetailsGroup = new TabPage();
-            label1 = new Label();
+            createMovieErrorLabel = new Label();
             createMovieBtn = new Button();
-            groupBox1 = new GroupBox();
-            label2 = new Label();
-            textBox1 = new TextBox();
-            label3 = new Label();
-            textBox2 = new TextBox();
-            label4 = new Label();
-            textBox3 = new TextBox();
-            richTextBox1 = new RichTextBox();
-            label5 = new Label();
-            dateTimePicker1 = new DateTimePicker();
-            label6 = new Label();
-            label7 = new Label();
-            textBox4 = new TextBox();
+            createMovieDialogueBox = new GroupBox();
+            createMovieRunTimeLabel = new Label();
+            createMovieRunTimeBox = new TextBox();
+            createTrailerUrlLabel = new Label();
+            createMovieUrlBox = new TextBox();
+            createPosterUrlLabel = new Label();
+            createMoviePosterBox = new TextBox();
+            createMovieDescriptionBox = new RichTextBox();
+            createMovieDescriptionLabel = new Label();
+            createMovieDatePicker = new DateTimePicker();
+            createMovieYearLabel = new Label();
+            createMovieTitleLabel = new Label();
+            createMovieTitleBox = new TextBox();
             movieMgmtErrorLabel = new Label();
+            addMovieBtn = new Button();
+            moviesDashHomeBtn = new PictureBox();
             movieDashTabCtrl.SuspendLayout();
             movieDashPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)moviesDataGrid).BeginInit();
@@ -80,15 +83,16 @@
             editMovieDetailsPage.SuspendLayout();
             editMovieGroup.SuspendLayout();
             createMoviePage.SuspendLayout();
-            tabControl1.SuspendLayout();
+            createMovieTabCtrl.SuspendLayout();
             createMovieDetailsGroup.SuspendLayout();
-            groupBox1.SuspendLayout();
+            createMovieDialogueBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)moviesDashHomeBtn).BeginInit();
             SuspendLayout();
             // 
             // searchBarMovies
             // 
             searchBarMovies.Font = new Font("Rockwell", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            searchBarMovies.Location = new Point(329, 48);
+            searchBarMovies.Location = new Point(329, 14);
             searchBarMovies.Margin = new Padding(3, 4, 3, 4);
             searchBarMovies.Name = "searchBarMovies";
             searchBarMovies.Size = new Size(883, 35);
@@ -98,7 +102,7 @@
             // 
             filterBarMovies.Font = new Font("Rockwell", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             filterBarMovies.FormattingEnabled = true;
-            filterBarMovies.Location = new Point(1542, 47);
+            filterBarMovies.Location = new Point(1542, 13);
             filterBarMovies.Margin = new Padding(3, 4, 3, 4);
             filterBarMovies.Name = "filterBarMovies";
             filterBarMovies.Size = new Size(364, 37);
@@ -107,16 +111,16 @@
             // totalMoviesLabel
             // 
             totalMoviesLabel.Font = new Font("Rockwell", 14F, FontStyle.Bold);
-            totalMoviesLabel.Location = new Point(19, 9);
+            totalMoviesLabel.Location = new Point(110, 9);
             totalMoviesLabel.Name = "totalMoviesLabel";
-            totalMoviesLabel.Size = new Size(287, 79);
+            totalMoviesLabel.Size = new Size(196, 79);
             totalMoviesLabel.TabIndex = 5;
             totalMoviesLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // searchBtn
             // 
             searchBtn.Font = new Font("Rockwell", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            searchBtn.Location = new Point(1264, 47);
+            searchBtn.Location = new Point(1264, 13);
             searchBtn.Margin = new Padding(3, 4, 3, 4);
             searchBtn.Name = "searchBtn";
             searchBtn.Size = new Size(226, 41);
@@ -130,22 +134,24 @@
             movieDashTabCtrl.Controls.Add(editMoviePage);
             movieDashTabCtrl.Controls.Add(createMoviePage);
             movieDashTabCtrl.Font = new Font("Rockwell", 17.5F);
+            movieDashTabCtrl.ItemSize = new Size(0, 1);
             movieDashTabCtrl.Location = new Point(9, 111);
             movieDashTabCtrl.Margin = new Padding(2, 3, 2, 3);
             movieDashTabCtrl.Name = "movieDashTabCtrl";
             movieDashTabCtrl.SelectedIndex = 0;
             movieDashTabCtrl.Size = new Size(2154, 1263);
+            movieDashTabCtrl.SizeMode = TabSizeMode.Fixed;
             movieDashTabCtrl.TabIndex = 7;
             // 
             // movieDashPage
             // 
             movieDashPage.BackColor = Color.MediumTurquoise;
             movieDashPage.Controls.Add(moviesDataGrid);
-            movieDashPage.Location = new Point(4, 41);
+            movieDashPage.Location = new Point(4, 5);
             movieDashPage.Margin = new Padding(2, 3, 2, 3);
             movieDashPage.Name = "movieDashPage";
             movieDashPage.Padding = new Padding(2, 3, 2, 3);
-            movieDashPage.Size = new Size(2146, 1218);
+            movieDashPage.Size = new Size(2146, 1254);
             movieDashPage.TabIndex = 0;
             movieDashPage.Text = "Movie Dashboard";
             // 
@@ -157,18 +163,18 @@
             moviesDataGrid.Margin = new Padding(3, 4, 3, 4);
             moviesDataGrid.Name = "moviesDataGrid";
             moviesDataGrid.RowHeadersWidth = 62;
-            moviesDataGrid.Size = new Size(2134, 1197);
+            moviesDataGrid.Size = new Size(2134, 1241);
             moviesDataGrid.TabIndex = 5;
             // 
             // editMoviePage
             // 
             editMoviePage.BackColor = Color.MediumTurquoise;
             editMoviePage.Controls.Add(movieEditTabControl);
-            editMoviePage.Location = new Point(4, 41);
+            editMoviePage.Location = new Point(4, 5);
             editMoviePage.Margin = new Padding(2, 3, 2, 3);
             editMoviePage.Name = "editMoviePage";
             editMoviePage.Padding = new Padding(2, 3, 2, 3);
-            editMoviePage.Size = new Size(2146, 1218);
+            editMoviePage.Size = new Size(2146, 1254);
             editMoviePage.TabIndex = 1;
             editMoviePage.Text = "Edit Movie";
             // 
@@ -179,7 +185,7 @@
             movieEditTabControl.Margin = new Padding(3, 4, 3, 4);
             movieEditTabControl.Name = "movieEditTabControl";
             movieEditTabControl.SelectedIndex = 0;
-            movieEditTabControl.Size = new Size(2082, 1153);
+            movieEditTabControl.Size = new Size(2082, 1213);
             movieEditTabControl.TabIndex = 1;
             // 
             // editMovieDetailsPage
@@ -191,7 +197,7 @@
             editMovieDetailsPage.Margin = new Padding(3, 4, 3, 4);
             editMovieDetailsPage.Name = "editMovieDetailsPage";
             editMovieDetailsPage.Padding = new Padding(3, 4, 3, 4);
-            editMovieDetailsPage.Size = new Size(2074, 1108);
+            editMovieDetailsPage.Size = new Size(2074, 1168);
             editMovieDetailsPage.TabIndex = 0;
             editMovieDetailsPage.Text = "Edit Movie Details";
             editMovieDetailsPage.UseVisualStyleBackColor = true;
@@ -239,7 +245,7 @@
             editMovieGroup.Margin = new Padding(3, 4, 3, 4);
             editMovieGroup.Name = "editMovieGroup";
             editMovieGroup.Padding = new Padding(3, 4, 3, 4);
-            editMovieGroup.Size = new Size(1008, 1024);
+            editMovieGroup.Size = new Size(1008, 1096);
             editMovieGroup.TabIndex = 0;
             editMovieGroup.TabStop = false;
             editMovieGroup.Text = "Movie Dialogue:";
@@ -247,7 +253,7 @@
             // runTimeLabel
             // 
             runTimeLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            runTimeLabel.Location = new Point(423, 884);
+            runTimeLabel.Location = new Point(413, 916);
             runTimeLabel.Name = "runTimeLabel";
             runTimeLabel.Size = new Size(162, 43);
             runTimeLabel.TabIndex = 12;
@@ -256,7 +262,7 @@
             // runTimeTextBox
             // 
             runTimeTextBox.Font = new Font("Rockwell", 20F);
-            runTimeTextBox.Location = new Point(264, 931);
+            runTimeTextBox.Location = new Point(264, 973);
             runTimeTextBox.Margin = new Padding(3, 4, 3, 4);
             runTimeTextBox.Name = "runTimeTextBox";
             runTimeTextBox.Size = new Size(471, 47);
@@ -313,7 +319,7 @@
             movieDescriptionLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             movieDescriptionLabel.Location = new Point(355, 375);
             movieDescriptionLabel.Name = "movieDescriptionLabel";
-            movieDescriptionLabel.Size = new Size(282, 43);
+            movieDescriptionLabel.Size = new Size(309, 43);
             movieDescriptionLabel.TabIndex = 5;
             movieDescriptionLabel.Text = "Movie Description";
             // 
@@ -331,7 +337,7 @@
             movieYearLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             movieYearLabel.Location = new Point(400, 203);
             movieYearLabel.Name = "movieYearLabel";
-            movieYearLabel.Size = new Size(185, 43);
+            movieYearLabel.Size = new Size(218, 43);
             movieYearLabel.TabIndex = 2;
             movieYearLabel.Text = "Movie Year";
             // 
@@ -340,7 +346,7 @@
             movieTitleLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             movieTitleLabel.Location = new Point(400, 52);
             movieTitleLabel.Name = "movieTitleLabel";
-            movieTitleLabel.Size = new Size(185, 43);
+            movieTitleLabel.Size = new Size(198, 43);
             movieTitleLabel.TabIndex = 1;
             movieTitleLabel.Text = "Movie Title";
             // 
@@ -356,204 +362,229 @@
             // createMoviePage
             // 
             createMoviePage.BackColor = Color.MediumTurquoise;
-            createMoviePage.Controls.Add(tabControl1);
-            createMoviePage.Location = new Point(4, 41);
+            createMoviePage.Controls.Add(createMovieTabCtrl);
+            createMoviePage.Location = new Point(4, 5);
             createMoviePage.Margin = new Padding(3, 4, 3, 4);
             createMoviePage.Name = "createMoviePage";
             createMoviePage.Padding = new Padding(3, 4, 3, 4);
-            createMoviePage.Size = new Size(2146, 1218);
+            createMoviePage.Size = new Size(2146, 1254);
             createMoviePage.TabIndex = 2;
             createMoviePage.Text = "Create Movie";
             // 
-            // tabControl1
+            // createMovieTabCtrl
             // 
-            tabControl1.Controls.Add(createMovieDetailsGroup);
-            tabControl1.Location = new Point(31, 29);
-            tabControl1.Margin = new Padding(3, 4, 3, 4);
-            tabControl1.Name = "tabControl1";
-            tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(2082, 1153);
-            tabControl1.TabIndex = 2;
+            createMovieTabCtrl.Controls.Add(createMovieDetailsGroup);
+            createMovieTabCtrl.Location = new Point(31, 29);
+            createMovieTabCtrl.Margin = new Padding(3, 4, 3, 4);
+            createMovieTabCtrl.Name = "createMovieTabCtrl";
+            createMovieTabCtrl.SelectedIndex = 0;
+            createMovieTabCtrl.Size = new Size(2082, 1207);
+            createMovieTabCtrl.TabIndex = 2;
             // 
             // createMovieDetailsGroup
             // 
-            createMovieDetailsGroup.Controls.Add(label1);
+            createMovieDetailsGroup.Controls.Add(createMovieErrorLabel);
             createMovieDetailsGroup.Controls.Add(createMovieBtn);
-            createMovieDetailsGroup.Controls.Add(groupBox1);
+            createMovieDetailsGroup.Controls.Add(createMovieDialogueBox);
             createMovieDetailsGroup.Location = new Point(4, 41);
             createMovieDetailsGroup.Margin = new Padding(3, 4, 3, 4);
             createMovieDetailsGroup.Name = "createMovieDetailsGroup";
             createMovieDetailsGroup.Padding = new Padding(3, 4, 3, 4);
-            createMovieDetailsGroup.Size = new Size(2074, 1108);
+            createMovieDetailsGroup.Size = new Size(2074, 1162);
             createMovieDetailsGroup.TabIndex = 0;
             createMovieDetailsGroup.Text = "Create Movie Details";
             createMovieDetailsGroup.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // createMovieErrorLabel
             // 
-            label1.Font = new Font("Rockwell", 20F);
-            label1.ForeColor = Color.FromArgb(0, 192, 0);
-            label1.Location = new Point(31, 308);
-            label1.Name = "label1";
-            label1.Size = new Size(429, 465);
-            label1.TabIndex = 2;
-            label1.TextAlign = ContentAlignment.MiddleCenter;
+            createMovieErrorLabel.Font = new Font("Rockwell", 20F);
+            createMovieErrorLabel.ForeColor = Color.FromArgb(0, 192, 0);
+            createMovieErrorLabel.Location = new Point(31, 308);
+            createMovieErrorLabel.Name = "createMovieErrorLabel";
+            createMovieErrorLabel.Size = new Size(429, 465);
+            createMovieErrorLabel.TabIndex = 2;
+            createMovieErrorLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // createMovieBtn
             // 
             createMovieBtn.BackColor = Color.MediumTurquoise;
             createMovieBtn.Font = new Font("Rockwell", 20F, FontStyle.Bold);
-            createMovieBtn.Location = new Point(1649, 411);
+            createMovieBtn.Location = new Point(1626, 475);
             createMovieBtn.Margin = new Padding(3, 4, 3, 4);
             createMovieBtn.Name = "createMovieBtn";
-            createMovieBtn.Size = new Size(319, 224);
+            createMovieBtn.Size = new Size(319, 223);
             createMovieBtn.TabIndex = 1;
             createMovieBtn.Text = "Create Movie";
             createMovieBtn.UseVisualStyleBackColor = false;
+            createMovieBtn.Click += createMovieBtn_Click;
             // 
-            // groupBox1
+            // createMovieDialogueBox
             // 
-            groupBox1.BackColor = Color.MintCream;
-            groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(textBox1);
-            groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(textBox2);
-            groupBox1.Controls.Add(label4);
-            groupBox1.Controls.Add(textBox3);
-            groupBox1.Controls.Add(richTextBox1);
-            groupBox1.Controls.Add(label5);
-            groupBox1.Controls.Add(dateTimePicker1);
-            groupBox1.Controls.Add(label6);
-            groupBox1.Controls.Add(label7);
-            groupBox1.Controls.Add(textBox4);
-            groupBox1.Font = new Font("Rockwell", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            groupBox1.Location = new Point(485, 36);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(1008, 1024);
-            groupBox1.TabIndex = 0;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Movie Dialogue:";
+            createMovieDialogueBox.BackColor = Color.MintCream;
+            createMovieDialogueBox.Controls.Add(createMovieRunTimeLabel);
+            createMovieDialogueBox.Controls.Add(createMovieRunTimeBox);
+            createMovieDialogueBox.Controls.Add(createTrailerUrlLabel);
+            createMovieDialogueBox.Controls.Add(createMovieUrlBox);
+            createMovieDialogueBox.Controls.Add(createPosterUrlLabel);
+            createMovieDialogueBox.Controls.Add(createMoviePosterBox);
+            createMovieDialogueBox.Controls.Add(createMovieDescriptionBox);
+            createMovieDialogueBox.Controls.Add(createMovieDescriptionLabel);
+            createMovieDialogueBox.Controls.Add(createMovieDatePicker);
+            createMovieDialogueBox.Controls.Add(createMovieYearLabel);
+            createMovieDialogueBox.Controls.Add(createMovieTitleLabel);
+            createMovieDialogueBox.Controls.Add(createMovieTitleBox);
+            createMovieDialogueBox.Font = new Font("Rockwell", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            createMovieDialogueBox.Location = new Point(485, 36);
+            createMovieDialogueBox.Margin = new Padding(3, 4, 3, 4);
+            createMovieDialogueBox.Name = "createMovieDialogueBox";
+            createMovieDialogueBox.Padding = new Padding(3, 4, 3, 4);
+            createMovieDialogueBox.Size = new Size(1008, 1091);
+            createMovieDialogueBox.TabIndex = 0;
+            createMovieDialogueBox.TabStop = false;
+            createMovieDialogueBox.Text = "Movie Dialogue:";
             // 
-            // label2
+            // createMovieRunTimeLabel
             // 
-            label2.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label2.Location = new Point(423, 884);
-            label2.Name = "label2";
-            label2.Size = new Size(162, 43);
-            label2.TabIndex = 12;
-            label2.Text = "Run Time ";
+            createMovieRunTimeLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            createMovieRunTimeLabel.Location = new Point(423, 909);
+            createMovieRunTimeLabel.Name = "createMovieRunTimeLabel";
+            createMovieRunTimeLabel.Size = new Size(162, 43);
+            createMovieRunTimeLabel.TabIndex = 12;
+            createMovieRunTimeLabel.Text = "Run Time ";
             // 
-            // textBox1
+            // createMovieRunTimeBox
             // 
-            textBox1.Font = new Font("Rockwell", 20F);
-            textBox1.Location = new Point(264, 931);
-            textBox1.Margin = new Padding(3, 4, 3, 4);
-            textBox1.Name = "textBox1";
-            textBox1.Size = new Size(471, 47);
-            textBox1.TabIndex = 11;
+            createMovieRunTimeBox.Font = new Font("Rockwell", 20F);
+            createMovieRunTimeBox.Location = new Point(264, 956);
+            createMovieRunTimeBox.Margin = new Padding(3, 4, 3, 4);
+            createMovieRunTimeBox.Name = "createMovieRunTimeBox";
+            createMovieRunTimeBox.Size = new Size(471, 47);
+            createMovieRunTimeBox.TabIndex = 11;
             // 
-            // label3
+            // createTrailerUrlLabel
             // 
-            label3.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label3.Location = new Point(413, 756);
-            label3.Name = "label3";
-            label3.Size = new Size(185, 43);
-            label3.TabIndex = 10;
-            label3.Text = "TrailerURL";
+            createTrailerUrlLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            createTrailerUrlLabel.Location = new Point(413, 756);
+            createTrailerUrlLabel.Name = "createTrailerUrlLabel";
+            createTrailerUrlLabel.Size = new Size(185, 43);
+            createTrailerUrlLabel.TabIndex = 10;
+            createTrailerUrlLabel.Text = "TrailerURL";
             // 
-            // textBox2
+            // createMovieUrlBox
             // 
-            textBox2.Font = new Font("Rockwell", 20F);
-            textBox2.Location = new Point(264, 816);
-            textBox2.Margin = new Padding(3, 4, 3, 4);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(471, 47);
-            textBox2.TabIndex = 9;
+            createMovieUrlBox.Font = new Font("Rockwell", 20F);
+            createMovieUrlBox.Location = new Point(264, 816);
+            createMovieUrlBox.Margin = new Padding(3, 4, 3, 4);
+            createMovieUrlBox.Name = "createMovieUrlBox";
+            createMovieUrlBox.Size = new Size(471, 47);
+            createMovieUrlBox.TabIndex = 9;
             // 
-            // label4
+            // createPosterUrlLabel
             // 
-            label4.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label4.Location = new Point(413, 619);
-            label4.Name = "label4";
-            label4.Size = new Size(185, 43);
-            label4.TabIndex = 8;
-            label4.Text = "Poster URL";
+            createPosterUrlLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            createPosterUrlLabel.Location = new Point(413, 619);
+            createPosterUrlLabel.Name = "createPosterUrlLabel";
+            createPosterUrlLabel.Size = new Size(185, 43);
+            createPosterUrlLabel.TabIndex = 8;
+            createPosterUrlLabel.Text = "Poster URL";
             // 
-            // textBox3
+            // createMoviePosterBox
             // 
-            textBox3.Font = new Font("Rockwell", 20F);
-            textBox3.Location = new Point(264, 685);
-            textBox3.Margin = new Padding(3, 4, 3, 4);
-            textBox3.Name = "textBox3";
-            textBox3.Size = new Size(471, 47);
-            textBox3.TabIndex = 7;
+            createMoviePosterBox.Font = new Font("Rockwell", 20F);
+            createMoviePosterBox.Location = new Point(264, 685);
+            createMoviePosterBox.Margin = new Padding(3, 4, 3, 4);
+            createMoviePosterBox.Name = "createMoviePosterBox";
+            createMoviePosterBox.Size = new Size(471, 47);
+            createMoviePosterBox.TabIndex = 7;
             // 
-            // richTextBox1
+            // createMovieDescriptionBox
             // 
-            richTextBox1.Font = new Font("Segoe UI", 15F);
-            richTextBox1.Location = new Point(264, 439);
-            richTextBox1.Margin = new Padding(3, 4, 3, 4);
-            richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(471, 159);
-            richTextBox1.TabIndex = 6;
-            richTextBox1.Text = "";
+            createMovieDescriptionBox.Font = new Font("Segoe UI", 15F);
+            createMovieDescriptionBox.Location = new Point(264, 439);
+            createMovieDescriptionBox.Margin = new Padding(3, 4, 3, 4);
+            createMovieDescriptionBox.Name = "createMovieDescriptionBox";
+            createMovieDescriptionBox.Size = new Size(471, 159);
+            createMovieDescriptionBox.TabIndex = 6;
+            createMovieDescriptionBox.Text = "";
             // 
-            // label5
+            // createMovieDescriptionLabel
             // 
-            label5.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label5.Location = new Point(355, 375);
-            label5.Name = "label5";
-            label5.Size = new Size(282, 43);
-            label5.TabIndex = 5;
-            label5.Text = "Movie Description";
+            createMovieDescriptionLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            createMovieDescriptionLabel.Location = new Point(355, 375);
+            createMovieDescriptionLabel.Name = "createMovieDescriptionLabel";
+            createMovieDescriptionLabel.Size = new Size(311, 43);
+            createMovieDescriptionLabel.TabIndex = 5;
+            createMovieDescriptionLabel.Text = "Movie Description";
             // 
-            // dateTimePicker1
+            // createMovieDatePicker
             // 
-            dateTimePicker1.Font = new Font("Segoe UI", 20F);
-            dateTimePicker1.Location = new Point(264, 272);
-            dateTimePicker1.Margin = new Padding(3, 4, 3, 4);
-            dateTimePicker1.Name = "dateTimePicker1";
-            dateTimePicker1.Size = new Size(471, 52);
-            dateTimePicker1.TabIndex = 3;
+            createMovieDatePicker.Font = new Font("Segoe UI", 20F);
+            createMovieDatePicker.Location = new Point(264, 272);
+            createMovieDatePicker.Margin = new Padding(3, 4, 3, 4);
+            createMovieDatePicker.Name = "createMovieDatePicker";
+            createMovieDatePicker.Size = new Size(471, 52);
+            createMovieDatePicker.TabIndex = 3;
             // 
-            // label6
+            // createMovieYearLabel
             // 
-            label6.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label6.Location = new Point(400, 203);
-            label6.Name = "label6";
-            label6.Size = new Size(185, 43);
-            label6.TabIndex = 2;
-            label6.Text = "Movie Year";
+            createMovieYearLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            createMovieYearLabel.Location = new Point(400, 203);
+            createMovieYearLabel.Name = "createMovieYearLabel";
+            createMovieYearLabel.Size = new Size(219, 43);
+            createMovieYearLabel.TabIndex = 2;
+            createMovieYearLabel.Text = "Movie Year";
             // 
-            // label7
+            // createMovieTitleLabel
             // 
-            label7.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label7.Location = new Point(400, 52);
-            label7.Name = "label7";
-            label7.Size = new Size(185, 43);
-            label7.TabIndex = 1;
-            label7.Text = "Movie Title";
+            createMovieTitleLabel.Font = new Font("Rockwell", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            createMovieTitleLabel.Location = new Point(400, 52);
+            createMovieTitleLabel.Name = "createMovieTitleLabel";
+            createMovieTitleLabel.Size = new Size(219, 43);
+            createMovieTitleLabel.TabIndex = 1;
+            createMovieTitleLabel.Text = "Movie Title";
             // 
-            // textBox4
+            // createMovieTitleBox
             // 
-            textBox4.Font = new Font("Rockwell", 20F);
-            textBox4.Location = new Point(264, 115);
-            textBox4.Margin = new Padding(3, 4, 3, 4);
-            textBox4.Name = "textBox4";
-            textBox4.Size = new Size(471, 47);
-            textBox4.TabIndex = 0;
+            createMovieTitleBox.Font = new Font("Rockwell", 20F);
+            createMovieTitleBox.Location = new Point(264, 115);
+            createMovieTitleBox.Margin = new Padding(3, 4, 3, 4);
+            createMovieTitleBox.Name = "createMovieTitleBox";
+            createMovieTitleBox.Size = new Size(471, 47);
+            createMovieTitleBox.TabIndex = 0;
             // 
             // movieMgmtErrorLabel
             // 
             movieMgmtErrorLabel.Font = new Font("Rockwell", 10F, FontStyle.Bold);
             movieMgmtErrorLabel.ForeColor = Color.FromArgb(192, 0, 0);
-            movieMgmtErrorLabel.Location = new Point(620, 92);
+            movieMgmtErrorLabel.Location = new Point(329, 63);
             movieMgmtErrorLabel.Name = "movieMgmtErrorLabel";
-            movieMgmtErrorLabel.Size = new Size(1286, 45);
+            movieMgmtErrorLabel.Size = new Size(1577, 45);
             movieMgmtErrorLabel.TabIndex = 8;
             movieMgmtErrorLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // addMovieBtn
+            // 
+            addMovieBtn.BackColor = Color.MediumTurquoise;
+            addMovieBtn.Font = new Font("Rockwell", 15F, FontStyle.Bold);
+            addMovieBtn.Location = new Point(1970, 13);
+            addMovieBtn.Margin = new Padding(3, 4, 3, 4);
+            addMovieBtn.Name = "addMovieBtn";
+            addMovieBtn.Size = new Size(189, 89);
+            addMovieBtn.TabIndex = 3;
+            addMovieBtn.Text = "Add Movie";
+            addMovieBtn.UseVisualStyleBackColor = false;
+            addMovieBtn.Click += addMovieBtn_Click;
+            // 
+            // moviesDashHomeBtn
+            // 
+            moviesDashHomeBtn.Image = (Image)resources.GetObject("moviesDashHomeBtn.Image");
+            moviesDashHomeBtn.Location = new Point(19, 9);
+            moviesDashHomeBtn.Name = "moviesDashHomeBtn";
+            moviesDashHomeBtn.Size = new Size(73, 79);
+            moviesDashHomeBtn.SizeMode = PictureBoxSizeMode.StretchImage;
+            moviesDashHomeBtn.TabIndex = 9;
+            moviesDashHomeBtn.TabStop = false;
+            moviesDashHomeBtn.Click += moviesDashHomeBtn_Click;
             // 
             // MovieDashboard
             // 
@@ -561,6 +592,8 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(192, 255, 255);
             ClientSize = new Size(2174, 1377);
+            Controls.Add(moviesDashHomeBtn);
+            Controls.Add(addMovieBtn);
             Controls.Add(movieMgmtErrorLabel);
             Controls.Add(movieDashTabCtrl);
             Controls.Add(searchBtn);
@@ -581,10 +614,11 @@
             editMovieGroup.ResumeLayout(false);
             editMovieGroup.PerformLayout();
             createMoviePage.ResumeLayout(false);
-            tabControl1.ResumeLayout(false);
+            createMovieTabCtrl.ResumeLayout(false);
             createMovieDetailsGroup.ResumeLayout(false);
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            createMovieDialogueBox.ResumeLayout(false);
+            createMovieDialogueBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)moviesDashHomeBtn).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -616,23 +650,25 @@
         private Button updateMovieBtn;
         private Label updateStatusLabel;
         private TabPage createMoviePage;
-        private TabControl tabControl1;
+        private TabControl createMovieTabCtrl;
         private TabPage createMovieDetailsGroup;
-        private Label label1;
+        private Label createMovieErrorLabel;
         private Button createMovieBtn;
-        private GroupBox groupBox1;
-        private Label label2;
-        private TextBox textBox1;
-        private Label label3;
-        private TextBox textBox2;
-        private Label label4;
-        private TextBox textBox3;
-        private RichTextBox richTextBox1;
-        private Label label5;
-        private DateTimePicker dateTimePicker1;
-        private Label label6;
-        private Label label7;
-        private TextBox textBox4;
+        private GroupBox createMovieDialogueBox;
+        private Label createMovieRunTimeLabel;
+        private TextBox createMovieRunTimeBox;
+        private Label createTrailerUrlLabel;
+        private TextBox createMovieUrlBox;
+        private Label createPosterUrlLabel;
+        private TextBox createMoviePosterBox;
+        private RichTextBox createMovieDescriptionBox;
+        private Label createMovieDescriptionLabel;
+        private DateTimePicker createMovieDatePicker;
+        private Label createMovieYearLabel;
+        private Label createMovieTitleLabel;
+        private TextBox createMovieTitleBox;
         private Label movieMgmtErrorLabel;
+        private Button addMovieBtn;
+        private PictureBox moviesDashHomeBtn;
     }
 }
