@@ -20,6 +20,7 @@ public class MovieManager : GeneralManager
 
     public void PopulateMovies()
     {
+        movies?.Clear();
         foreach (MovieDTO movie in movieDAL.ReadAllMovies())
         {
             if (TransformDTOtoEntity(movie) is Movie movieEntity)
@@ -66,14 +67,14 @@ public class MovieManager : GeneralManager
         }
     }
 
-    public void CreateMovie(Movie movie)
+    public void CreateMovie(MovieDTO movie)
     {
-        throw new NotImplementedException();
+        movieDAL.CreateMovie(movie);
+        PopulateMovies();
     }
 
     public Movie ReadMovie(int movieId)
     {
-        throw new NotImplementedException();
+       return movies?.Find(m => m.Id == movieId) ?? throw new Exception("Movie not found");
     }
-
 }

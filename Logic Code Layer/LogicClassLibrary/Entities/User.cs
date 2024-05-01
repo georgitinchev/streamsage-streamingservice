@@ -8,18 +8,18 @@ namespace LogicClassLibrary.Entities
 {
     public class User : Entity
     {
-        public int Id { get; set; }
+        public override int Id { get; set; }
         public string Username { get; set; }
         public string PasswordHash { get; set; }
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public string? ProfilePictureURL { get; set; }
         public string? Settings { get; set; }
 
         public List<Movie>? FavoriteMovies { get; set; }
         public List<Movie>? WatchList { get; set; }
-
-        public User(int id, string username, string passwordHash, string email, string? firstName, string? lastName, string? settings, List<Movie> favoriteMovies, List<Movie> watchList)
+        public User(int id, string username, string passwordHash, string? email, string? firstName, string? lastName, string? profilePicture ,string? settings, List<Movie> favoriteMovies, List<Movie> watchList)
         {
             Id = id;
             Username = username;
@@ -27,6 +27,7 @@ namespace LogicClassLibrary.Entities
             Email = email;
             FirstName = firstName;
             LastName = lastName;
+            ProfilePictureURL = profilePicture;
             Settings = settings;
             FavoriteMovies = favoriteMovies;
             WatchList = watchList;
