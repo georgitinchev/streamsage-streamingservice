@@ -30,9 +30,8 @@
         {
             interpretationViewTabCtrl = new TabControl();
             InterpretationMgmtPage = new TabPage();
-            interpretationUpdate = new TabPage();
             interpretationMgmtDataGrid = new DataGridView();
-            backToDashBtn = new Button();
+            interpretationUpdate = new TabPage();
             interpretationViewTabCtrl.SuspendLayout();
             InterpretationMgmtPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)interpretationMgmtDataGrid).BeginInit();
@@ -43,63 +42,56 @@
             interpretationViewTabCtrl.Controls.Add(InterpretationMgmtPage);
             interpretationViewTabCtrl.Controls.Add(interpretationUpdate);
             interpretationViewTabCtrl.Font = new Font("Rockwell", 15.75F);
-            interpretationViewTabCtrl.Location = new Point(12, 30);
+            interpretationViewTabCtrl.Location = new Point(14, 40);
+            interpretationViewTabCtrl.Margin = new Padding(3, 4, 3, 4);
             interpretationViewTabCtrl.Name = "interpretationViewTabCtrl";
             interpretationViewTabCtrl.SelectedIndex = 0;
-            interpretationViewTabCtrl.Size = new Size(1880, 999);
+            interpretationViewTabCtrl.Size = new Size(2149, 1332);
             interpretationViewTabCtrl.TabIndex = 0;
             // 
             // InterpretationMgmtPage
             // 
             InterpretationMgmtPage.Controls.Add(interpretationMgmtDataGrid);
-            InterpretationMgmtPage.Location = new Point(4, 32);
+            InterpretationMgmtPage.Location = new Point(4, 39);
+            InterpretationMgmtPage.Margin = new Padding(3, 4, 3, 4);
             InterpretationMgmtPage.Name = "InterpretationMgmtPage";
-            InterpretationMgmtPage.Padding = new Padding(3);
-            InterpretationMgmtPage.Size = new Size(1872, 963);
+            InterpretationMgmtPage.Padding = new Padding(3, 4, 3, 4);
+            InterpretationMgmtPage.Size = new Size(2141, 1289);
             InterpretationMgmtPage.TabIndex = 0;
             InterpretationMgmtPage.Text = "Interpretation Management";
             InterpretationMgmtPage.UseVisualStyleBackColor = true;
             // 
+            // interpretationMgmtDataGrid
+            // 
+            interpretationMgmtDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            interpretationMgmtDataGrid.Location = new Point(7, 8);
+            interpretationMgmtDataGrid.Margin = new Padding(3, 4, 3, 4);
+            interpretationMgmtDataGrid.Name = "interpretationMgmtDataGrid";
+            interpretationMgmtDataGrid.RowHeadersWidth = 51;
+            interpretationMgmtDataGrid.Size = new Size(2126, 1268);
+            interpretationMgmtDataGrid.TabIndex = 0;
+            // 
             // interpretationUpdate
             // 
-            interpretationUpdate.Location = new Point(4, 32);
+            interpretationUpdate.Location = new Point(4, 39);
+            interpretationUpdate.Margin = new Padding(3, 4, 3, 4);
             interpretationUpdate.Name = "interpretationUpdate";
-            interpretationUpdate.Padding = new Padding(3);
-            interpretationUpdate.Size = new Size(1872, 881);
+            interpretationUpdate.Padding = new Padding(3, 4, 3, 4);
+            interpretationUpdate.Size = new Size(2141, 1289);
             interpretationUpdate.TabIndex = 1;
             interpretationUpdate.Text = "Update";
             interpretationUpdate.UseVisualStyleBackColor = true;
             // 
-            // interpretationMgmtDataGrid
-            // 
-            interpretationMgmtDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            interpretationMgmtDataGrid.Location = new Point(6, 6);
-            interpretationMgmtDataGrid.Name = "interpretationMgmtDataGrid";
-            interpretationMgmtDataGrid.Size = new Size(1860, 951);
-            interpretationMgmtDataGrid.TabIndex = 0;
-            // 
-            // backToDashBtn
-            // 
-            backToDashBtn.BackColor = Color.CornflowerBlue;
-            backToDashBtn.Font = new Font("Rockwell", 13F, FontStyle.Bold);
-            backToDashBtn.Location = new Point(1679, 11);
-            backToDashBtn.Margin = new Padding(2);
-            backToDashBtn.Name = "backToDashBtn";
-            backToDashBtn.Size = new Size(214, 40);
-            backToDashBtn.TabIndex = 7;
-            backToDashBtn.Text = "Back to Admin Dash";
-            backToDashBtn.UseVisualStyleBackColor = false;
-            // 
             // InterpretationManagement
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(0, 192, 192);
-            ClientSize = new Size(1904, 1041);
-            Controls.Add(backToDashBtn);
+            ClientSize = new Size(2174, 1377);
             Controls.Add(interpretationViewTabCtrl);
-            MaximumSize = new Size(1920, 1080);
-            MinimumSize = new Size(1920, 1080);
+            Margin = new Padding(3, 4, 3, 4);
+            MaximumSize = new Size(2192, 1424);
+            MinimumSize = new Size(2192, 1424);
             Name = "InterpretationManagement";
             Text = "InterpretationManagement";
             interpretationViewTabCtrl.ResumeLayout(false);
@@ -114,6 +106,5 @@
         private TabPage InterpretationMgmtPage;
         private DataGridView interpretationMgmtDataGrid;
         private TabPage interpretationUpdate;
-        private Button backToDashBtn;
     }
 }

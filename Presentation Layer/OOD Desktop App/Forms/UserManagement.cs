@@ -96,7 +96,7 @@ namespace DesktopApp.Forms
             userManagementDataGrid.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
             userManagementDataGrid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
             userManagementDataGrid.RowTemplate.Height = 50;
-            totalUsersLabelIcon.Text = $"Total Users:\n{users.Count}";
+            totalUsersLabel.Text = $"Total Users:\n{users.Count}";
         }
 
         private void userManagementDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -132,11 +132,6 @@ namespace DesktopApp.Forms
                 return "Last name should start with a capital letter and should only contain letters.";
             }
             return "";
-        }
-        private void backToDashBtn_Click(object sender, EventArgs e)
-        {
-            Program.SwitchToForm(new AdminDashboard(_desktopController));
-            this.Dispose();
         }
         private void ClearInputFields()
         {
