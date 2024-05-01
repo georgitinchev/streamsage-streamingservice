@@ -83,39 +83,43 @@
             // 
             // label4
             // 
-            label4.Font = new Font("Rockwell", 11.25F);
+            label4.Font = new Font("Rockwell", 14F);
             label4.Location = new Point(17, 392);
             label4.Name = "label4";
-            label4.Size = new Size(182, 75);
+            label4.Size = new Size(182, 105);
             label4.TabIndex = 2;
             label4.Text = "Total Interpretations";
+            label4.TextAlign = ContentAlignment.TopCenter;
             // 
             // totalReviewsLabel
             // 
-            totalReviewsLabel.Font = new Font("Rockwell", 11.25F);
+            totalReviewsLabel.Font = new Font("Rockwell", 14F);
             totalReviewsLabel.Location = new Point(17, 285);
             totalReviewsLabel.Name = "totalReviewsLabel";
             totalReviewsLabel.Size = new Size(182, 91);
             totalReviewsLabel.TabIndex = 1;
             totalReviewsLabel.Text = "Total Reviews";
+            totalReviewsLabel.TextAlign = ContentAlignment.TopCenter;
             // 
             // totalUsersLabel
             // 
-            totalUsersLabel.Font = new Font("Rockwell", 11.25F);
+            totalUsersLabel.Font = new Font("Rockwell", 14F);
             totalUsersLabel.Location = new Point(17, 173);
             totalUsersLabel.Name = "totalUsersLabel";
             totalUsersLabel.Size = new Size(182, 97);
             totalUsersLabel.TabIndex = 1;
             totalUsersLabel.Text = "Total Users";
+            totalUsersLabel.TextAlign = ContentAlignment.TopCenter;
             // 
             // totalMoviesLabel
             // 
-            totalMoviesLabel.Font = new Font("Rockwell", 11.25F);
-            totalMoviesLabel.Location = new Point(17, 52);
+            totalMoviesLabel.Font = new Font("Rockwell", 14F);
+            totalMoviesLabel.Location = new Point(17, 45);
             totalMoviesLabel.Name = "totalMoviesLabel";
-            totalMoviesLabel.Size = new Size(182, 100);
+            totalMoviesLabel.Size = new Size(182, 107);
             totalMoviesLabel.TabIndex = 0;
             totalMoviesLabel.Text = "Total Movies";
+            totalMoviesLabel.TextAlign = ContentAlignment.TopCenter;
             // 
             // buttonGroupBox
             // 

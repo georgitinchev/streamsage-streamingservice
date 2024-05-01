@@ -10,7 +10,8 @@ namespace DesktopApp
         {
             InitializeComponent();
             _desktopController = desktopController;
-            moviesBtnPicture.Cursor = Cursors.Hand;
+            this.Activated += AdminDashboard_Activated;
+            UIStyler.StyleCursorFormButtonHands(moviesBtnPicture, usersBtnPic, reviewsBtnPic, interpretationsBtnPic, analyticsBtnPic, settingsBtnPic);
         }
 
         private void logoutBtn_Click(object sender, EventArgs e)
@@ -19,7 +20,10 @@ namespace DesktopApp
             Program.SwitchToForm(new Authentication());
         }
 
-
+        private void AdminDashboard_Activated(object sender, EventArgs e)
+        {
+            UpdateTotalCounts();
+        }
         private void moviesBtnPicture_Click(object sender, EventArgs e)
         {
             MovieDashboard movieDashboard = new MovieDashboard(_desktopController);
@@ -49,6 +53,15 @@ namespace DesktopApp
             Analytics analytics = new Analytics(_desktopController);
             Program.SwitchToForm(analytics);
         }
+
+        private void UpdateTotalCounts()
+        {
+            totalUsersLabel.Text = $"Total Users:\n{_desktopController.displayUserPage().Count}";
+            totalMoviesLabel.Text = $"Total Movies:\n{_desktopController.displayMoviePage().Count}";
+            // totalReviewsLabel.Text = $"Total Reviews: {_desktopController.GetTotalReviews()}";
+            // totalInterpretationsLabel.Text = $"Total Interpretations: {_desktopController.GetTotalInterpretations()}";
+        }
+
 
         private void settingsBtnPic_Click(object sender, EventArgs e)
         {
