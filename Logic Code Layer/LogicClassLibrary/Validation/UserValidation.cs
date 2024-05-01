@@ -46,7 +46,7 @@ namespace LogicClassLibrary.NewFolder
             }
             if (!string.IsNullOrEmpty(password) && password.Length < 6)
             {
-                return "Password should be at least 8 characters long if changing.\n";
+                return "Password should be at least 6 characters long if changing.\n";
             }
             if (string.IsNullOrEmpty(firstName) || !Regex.IsMatch(firstName, @"^[A-Z][a-zA-Z]*$"))
             {
