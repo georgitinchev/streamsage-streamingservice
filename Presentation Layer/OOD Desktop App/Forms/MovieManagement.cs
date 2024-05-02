@@ -56,6 +56,7 @@ namespace DesktopApp.Forms
                     trailerUrlTextBox.Text = movieDto.TrailerURL;
                     runTimeTextBox.Text = movieDto.RuntimeMinutes.ToString();
                     SetSelectedMovieGenres(movieDto);
+                    UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
                 }
                 else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
                 {
@@ -71,7 +72,7 @@ namespace DesktopApp.Forms
                     }
                     finally
                     {
-                        await Task.Delay(3000); 
+                        await Task.Delay(3000);
                         movieMgmtErrorLabel.Text = "";
                         senderGrid.CurrentCell = null;
                     }
@@ -88,7 +89,7 @@ namespace DesktopApp.Forms
             moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Year", HeaderText = "Year", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
             moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Description", HeaderText = "Description", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
             moviesDataGrid.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "RuntimeMinutes", HeaderText = "Runtime", AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells });
-            UIStyler.StyleDataGridView(moviesDataGrid); 
+            UIStyler.StyleDataGridView(moviesDataGrid);
             UIStyler.AddButtonColumn(moviesDataGrid, "Edit", "Edit");
             UIStyler.AddButtonColumn(moviesDataGrid, "Delete", "Delete");
         }
@@ -221,40 +222,26 @@ namespace DesktopApp.Forms
             createMoviePosterBox.Text = string.Empty;
             createMovieUrlBox.Text = string.Empty;
             createMovieRunTimeBox.Text = string.Empty;
+            UIStyler.UncheckAllItemsInCheckListBox(createMovieGenresCheckList);
         }
 
+        // 3 Methods for checkListBox ops
         private void PopulateGenreCheckListBoxes()
         {
             var genres = desktopController.backendService?.GetAllGenres();
-            createMovieGenresCheckList.Items.Clear();
-            updateMovieCheckListBox.Items.Clear();
-
-            foreach (var genre in genres)
-            {
-                createMovieGenresCheckList.Items.Add(genre, false);
-                updateMovieCheckListBox.Items.Add(genre, false);
-            }
+            UIStyler.PopulateCheckListBox(createMovieGenresCheckList, genres);
+            UIStyler.PopulateCheckListBox(updateMovieCheckListBox, genres);
         }
 
         private List<string> GetSelectedGenres(CheckedListBox box)
         {
-            var selectedGenres = new List<string>();
-            foreach (var item in box.CheckedItems)
-            {
-                selectedGenres.Add(item.ToString());
-            }
-            return selectedGenres;
+            return UIStyler.GetSelectedItemsFromCheckListBox(box);
         }
 
         private void SetSelectedMovieGenres(MovieDTO movieDto)
         {
             if (movieDto.Genres == null) return;
-            for (int i = 0; i < updateMovieCheckListBox.Items.Count; i++)
-            {
-                string genre = updateMovieCheckListBox.Items[i].ToString();
-                updateMovieCheckListBox.SetItemChecked(i, movieDto.Genres.Contains(genre));
-            }
+            UIStyler.SetSelectedItemsInCheckListBox(updateMovieCheckListBox, movieDto.Genres);
         }
-
     }
 }
