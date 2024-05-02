@@ -1,6 +1,8 @@
-﻿using System;
+﻿using LogicClassLibrary.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,5 +59,65 @@ namespace DesktopApp
             pic5.Cursor = Cursors.Hand;
             pic6.Cursor = Cursors.Hand;
         }
+
+        public static void PopulateCheckListBox(CheckedListBox checkedListBox, IEnumerable<string> items)
+        {
+            checkedListBox.Items.Clear();
+            foreach (var item in items)
+            {
+                checkedListBox.Items.Add(item, false);
+            }
+        }
+
+        public static List<string> GetSelectedItemsFromCheckListBox(CheckedListBox checkedListBox)
+        {
+            var selectedItems = new List<string>();
+            foreach (var item in checkedListBox.CheckedItems)
+            {
+                selectedItems.Add(item.ToString());
+            }
+            return selectedItems;
+        }
+
+        public static void SetSelectedItemsInCheckListBox(CheckedListBox checkedListBox, IEnumerable<string> selectedItems)
+        {
+            for (int i = 0; i < checkedListBox.Items.Count; i++)
+            {
+                string item = checkedListBox.Items[i].ToString();
+                checkedListBox.SetItemChecked(i, selectedItems.Contains(item));
+            }
+        }
+
+        public static void UncheckAllItemsInCheckListBox(CheckedListBox checkedListBox)
+        {
+            for (int i = 0; i < checkedListBox.Items.Count; i++)
+            {
+                checkedListBox.SetItemChecked(i, false);
+            }
+        }
+
+        public static async void LoadImageIntoPictureBox(string imageUrl, PictureBox pictureBox)
+        {
+            if (string.IsNullOrWhiteSpace(imageUrl) || !MovieValidation.IsValidUrl(imageUrl))
+            {
+                pictureBox.Image = null;
+                return;
+            }
+            try
+            {
+                var request = WebRequest.Create(imageUrl);
+
+                using (var response = await request.GetResponseAsync())
+                using (var stream = response.GetResponseStream())
+                {
+                    pictureBox.Image = Image.FromStream(stream);
+                }
+            }
+            catch
+            {
+                pictureBox.Image = null;
+            }
+        }
+
     }
 }
