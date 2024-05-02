@@ -24,6 +24,7 @@ namespace DesktopApp.Forms
             this.desktopController = _desktopController;
             moviesDataGrid.CellContentClick += moviesDataGrid_CellContentClick;
             InitializeMoviesGrid();
+            PopulateGenreCheckListBoxes();
             RefreshMovies();
         }
 
@@ -41,7 +42,8 @@ namespace DesktopApp.Forms
                     Description = movie.Description,
                     PosterImageURL = movie.PosterImageURL,
                     TrailerURL = movie.TrailerURL,
-                    RuntimeMinutes = movie.RuntimeMinutes
+                    RuntimeMinutes = movie.RuntimeMinutes,
+                    Genres = movie.Genres
                 };
                 if (senderGrid.Columns[e.ColumnIndex].Name == "Edit")
                 {
@@ -53,6 +55,7 @@ namespace DesktopApp.Forms
                     posterUrlTextBox.Text = movieDto.PosterImageURL;
                     trailerUrlTextBox.Text = movieDto.TrailerURL;
                     runTimeTextBox.Text = movieDto.RuntimeMinutes.ToString();
+                    SetSelectedMovieGenres(movieDto);
                 }
                 else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
                 {
@@ -126,7 +129,8 @@ namespace DesktopApp.Forms
                 Description = descriptionTextBox.Text,
                 PosterImageURL = posterUrlTextBox.Text,
                 TrailerURL = trailerUrlTextBox.Text,
-                RuntimeMinutes = runtime
+                RuntimeMinutes = runtime,
+                Genres = GetSelectedGenres(updateMovieCheckListBox)
             };
 
             try
@@ -187,7 +191,8 @@ namespace DesktopApp.Forms
                 Description = createMovieDescriptionBox.Text,
                 PosterImageURL = createMoviePosterBox.Text,
                 TrailerURL = createMovieUrlBox.Text,
-                RuntimeMinutes = runtime
+                RuntimeMinutes = runtime,
+                Genres = GetSelectedGenres(createMovieGenresCheckList)
             };
 
             try
@@ -217,5 +222,39 @@ namespace DesktopApp.Forms
             createMovieUrlBox.Text = string.Empty;
             createMovieRunTimeBox.Text = string.Empty;
         }
+
+        private void PopulateGenreCheckListBoxes()
+        {
+            var genres = desktopController.backendService?.GetAllGenres();
+            createMovieGenresCheckList.Items.Clear();
+            updateMovieCheckListBox.Items.Clear();
+
+            foreach (var genre in genres)
+            {
+                createMovieGenresCheckList.Items.Add(genre, false);
+                updateMovieCheckListBox.Items.Add(genre, false);
+            }
+        }
+
+        private List<string> GetSelectedGenres(CheckedListBox box)
+        {
+            var selectedGenres = new List<string>();
+            foreach (var item in box.CheckedItems)
+            {
+                selectedGenres.Add(item.ToString());
+            }
+            return selectedGenres;
+        }
+
+        private void SetSelectedMovieGenres(MovieDTO movieDto)
+        {
+            if (movieDto.Genres == null) return;
+            for (int i = 0; i < updateMovieCheckListBox.Items.Count; i++)
+            {
+                string genre = updateMovieCheckListBox.Items[i].ToString();
+                updateMovieCheckListBox.SetItemChecked(i, movieDto.Genres.Contains(genre));
+            }
+        }
+
     }
 }
