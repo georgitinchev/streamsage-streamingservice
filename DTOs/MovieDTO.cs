@@ -16,5 +16,6 @@ namespace DTOs
 		public string? TrailerURL { get; set; }
 		public int RuntimeMinutes { get; set; }
 		public decimal? AverageRating { get; set; } = null;
+		public List<string>? Genres { get; set; }
 	}
 }

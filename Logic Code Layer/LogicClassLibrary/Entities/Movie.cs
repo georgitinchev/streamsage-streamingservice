@@ -16,21 +16,9 @@ namespace LogicClassLibrary.Entities
         public string? TrailerURL { get; set; }
 		public int RuntimeMinutes { get; set; }
 		public decimal? AverageRating { get; set; } = null;
-        public override DateTime CreatedAt { get; set; }
-
-		public Movie(int id, string title, DateTime year, string description, string posterImageURL, string trailerURL, int runtimeMinutes, decimal? averageRating, DateTime createdAt)
-        {
-            Id = id;
-            Title = title;
-            Year = year;
-            Description = description;
-            PosterImageURL = posterImageURL;
-            TrailerURL = trailerURL;
-            RuntimeMinutes = runtimeMinutes;
-            AverageRating = averageRating;
-            CreatedAt = createdAt;
-        }
-		public Movie(int id, string title, DateTime year, string description, string posterImageURL, string trailerURL, int runtimeMinutes, decimal? averageRating)
+        public List<string> Genres { get; set; } = new List<string>();
+        public override DateTime CreatedAt { get; set; } = DateTime.Now;
+		public Movie(int id, string title, DateTime year, string description, string posterImageURL, string trailerURL, int runtimeMinutes, decimal? averageRating, List<string> genres)
 		{
 			Id = id;
 			Title = title;
@@ -40,6 +28,20 @@ namespace LogicClassLibrary.Entities
 			TrailerURL = trailerURL;
 			RuntimeMinutes = runtimeMinutes;
 			AverageRating = averageRating;
+            Genres = genres;
 		}
+        public Movie(int id, string title, DateTime year, string description, string posterImageURL, string trailerURL, int runtimeMinutes, decimal? averageRating, List<string> genres, DateTime createdAt)
+        {
+            Id = id;
+            Title = title;
+            Year = year;
+            Description = description;
+            PosterImageURL = posterImageURL;
+            TrailerURL = trailerURL;
+            RuntimeMinutes = runtimeMinutes;
+            AverageRating = averageRating;
+            Genres = genres;
+            CreatedAt = createdAt;
+        }
 	}
 }

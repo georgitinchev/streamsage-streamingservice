@@ -71,7 +71,7 @@ namespace DataAccessLibrary
                                     PosterImageURL = reader["PosterImageURL"] as string,
                                     TrailerURL = reader["TrailerURL"] as string,
                                     RuntimeMinutes = (int)reader["RuntimeMinutes"],
-                                    AverageRating = (decimal)reader["AverageRating"]
+                                    AverageRating = reader["AverageRating"] == DBNull.Value ? (decimal?)null : (decimal)reader["AverageRating"]
                                 };
                                 movies.Add(movie);
                             }
