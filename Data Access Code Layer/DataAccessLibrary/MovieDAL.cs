@@ -66,7 +66,6 @@ namespace DataAccessLibrary
             }
 
             // Method to update a movie
-            // Method to update a movie
             public void UpdateMovie(MovieDTO movie)
             {
                 string query = "UPDATE Movie SET Title = @Title, ReleaseDate = @ReleaseDate, Description = @Description, PosterImageURL = @PosterImageURL, TrailerURL = @TrailerURL, RuntimeMinutes = @RuntimeMinutes, AverageRating = @AverageRating WHERE ID = @Id";
@@ -116,10 +115,15 @@ namespace DataAccessLibrary
                     using (SqlConnection connection = new SqlConnection(connectionString))
                     {
                         connection.Open();
-                        using (SqlCommand command = new SqlCommand(deleteMovieQuery, connection))
+                        using (SqlTransaction transaction = connection.BeginTransaction())
                         {
-                            command.Parameters.AddWithValue("@Id", movieId);
-                            command.ExecuteNonQuery();
+                            ClearMovieGenres(movieId, connection, transaction);
+                            using (SqlCommand command = new SqlCommand(deleteMovieQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@Id", movieId);
+                                command.ExecuteNonQuery();
+                            }
+                            transaction.Commit();
                         }
                     }
                 }
@@ -128,6 +132,7 @@ namespace DataAccessLibrary
                     throw new Exception("Error deleting movie: " + ex.Message);
                 }
             }
+
 
             // Method to create a movie
             public void CreateMovie(MovieDTO movie)
