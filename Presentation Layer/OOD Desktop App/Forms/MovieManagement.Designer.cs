@@ -79,6 +79,7 @@
             movieMgmtErrorLabel = new Label();
             addMovieBtn = new Button();
             moviesDashHomeBtn = new PictureBox();
+            updateMoviePictureBox = new PictureBox();
             movieDashTabCtrl.SuspendLayout();
             movieDashPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)moviesDataGrid).BeginInit();
@@ -91,6 +92,7 @@
             createMovieDetailsGroup.SuspendLayout();
             createMovieDialogueBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)moviesDashHomeBtn).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)updateMoviePictureBox).BeginInit();
             SuspendLayout();
             // 
             // searchBarMovies
@@ -194,6 +196,7 @@
             // 
             // editMovieDetailsPage
             // 
+            editMovieDetailsPage.Controls.Add(updateMoviePictureBox);
             editMovieDetailsPage.Controls.Add(updateStatusLabel);
             editMovieDetailsPage.Controls.Add(updateMovieBtn);
             editMovieDetailsPage.Controls.Add(editMovieGroup);
@@ -210,7 +213,7 @@
             // 
             updateStatusLabel.Font = new Font("Rockwell", 20F);
             updateStatusLabel.ForeColor = Color.FromArgb(0, 192, 0);
-            updateStatusLabel.Location = new Point(31, 308);
+            updateStatusLabel.Location = new Point(31, 667);
             updateStatusLabel.Name = "updateStatusLabel";
             updateStatusLabel.Size = new Size(429, 465);
             updateStatusLabel.TabIndex = 2;
@@ -630,6 +633,15 @@
             moviesDashHomeBtn.TabStop = false;
             moviesDashHomeBtn.Click += moviesDashHomeBtn_Click;
             // 
+            // updateMoviePictureBox
+            // 
+            updateMoviePictureBox.Location = new Point(31, 36);
+            updateMoviePictureBox.Name = "updateMoviePictureBox";
+            updateMoviePictureBox.Size = new Size(437, 537);
+            updateMoviePictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
+            updateMoviePictureBox.TabIndex = 3;
+            updateMoviePictureBox.TabStop = false;
+            // 
             // MovieDashboard
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -663,6 +675,7 @@
             createMovieDialogueBox.ResumeLayout(false);
             createMovieDialogueBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)moviesDashHomeBtn).EndInit();
+            ((System.ComponentModel.ISupportInitialize)updateMoviePictureBox).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -718,5 +731,6 @@
         private Label createMovieGenreLabel;
         private Label updateMovieGenresLabel;
         private CheckedListBox updateMovieCheckListBox;
+        private PictureBox updateMoviePictureBox;
     }
 }
