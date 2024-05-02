@@ -32,6 +32,11 @@ namespace LogicClassLibrary
             recommendationManager = new RecommendationManager();
         }
 
+        public List<string> GetAllGenres()
+        {
+            return movieManager.GetAllGenres();
+        }
+
         public Movie GetMovie(int id)
         {
             return movieManager.ReadMovie(id);
