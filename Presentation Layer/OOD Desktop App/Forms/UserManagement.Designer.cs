@@ -70,6 +70,10 @@
             backToHomeBtn = new Button();
             openFileDialog1 = new OpenFileDialog();
             generalErrorLabel = new Label();
+            profilePictureLabel = new Label();
+            updateUserPFP = new TextBox();
+            updateProfilePictureBox = new TextBox();
+            updateProfilePictureLabel = new Label();
             userOperationsTabCtrl.SuspendLayout();
             userManagementPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)userManagementDataGrid).BeginInit();
@@ -83,37 +87,37 @@
             // usernameTextBox
             // 
             usernameTextBox.Font = new Font("Rockwell", 25F);
-            usernameTextBox.Location = new Point(93, 221);
+            usernameTextBox.Location = new Point(36, 184);
             usernameTextBox.Margin = new Padding(2, 3, 2, 3);
             usernameTextBox.Name = "usernameTextBox";
-            usernameTextBox.Size = new Size(442, 56);
+            usernameTextBox.Size = new Size(558, 56);
             usernameTextBox.TabIndex = 0;
             // 
             // userEmailTextBox
             // 
             userEmailTextBox.Font = new Font("Rockwell", 25F);
-            userEmailTextBox.Location = new Point(94, 417);
+            userEmailTextBox.Location = new Point(36, 358);
             userEmailTextBox.Margin = new Padding(2, 3, 2, 3);
             userEmailTextBox.Name = "userEmailTextBox";
-            userEmailTextBox.Size = new Size(442, 56);
+            userEmailTextBox.Size = new Size(558, 56);
             userEmailTextBox.TabIndex = 1;
             // 
             // userPasswordTextBox
             // 
             userPasswordTextBox.Font = new Font("Rockwell", 25F);
-            userPasswordTextBox.Location = new Point(94, 609);
+            userPasswordTextBox.Location = new Point(36, 550);
             userPasswordTextBox.Margin = new Padding(2, 3, 2, 3);
             userPasswordTextBox.Name = "userPasswordTextBox";
-            userPasswordTextBox.Size = new Size(442, 56);
+            userPasswordTextBox.Size = new Size(558, 56);
             userPasswordTextBox.TabIndex = 2;
             // 
             // userFirstNameTextBox
             // 
             userFirstNameTextBox.Font = new Font("Rockwell", 25F);
-            userFirstNameTextBox.Location = new Point(94, 795);
+            userFirstNameTextBox.Location = new Point(36, 736);
             userFirstNameTextBox.Margin = new Padding(2, 3, 2, 3);
             userFirstNameTextBox.Name = "userFirstNameTextBox";
-            userFirstNameTextBox.Size = new Size(442, 56);
+            userFirstNameTextBox.Size = new Size(558, 56);
             userFirstNameTextBox.TabIndex = 3;
             // 
             // usernameLabel
@@ -273,6 +277,8 @@
             // 
             // createUserBox
             // 
+            createUserBox.Controls.Add(updateUserPFP);
+            createUserBox.Controls.Add(profilePictureLabel);
             createUserBox.Controls.Add(usernameLabel);
             createUserBox.Controls.Add(userPasswordTextBox);
             createUserBox.Controls.Add(lastNameLabel);
@@ -288,7 +294,7 @@
             createUserBox.Margin = new Padding(3, 4, 3, 4);
             createUserBox.Name = "createUserBox";
             createUserBox.Padding = new Padding(3, 4, 3, 4);
-            createUserBox.Size = new Size(630, 1135);
+            createUserBox.Size = new Size(630, 1176);
             createUserBox.TabIndex = 13;
             createUserBox.TabStop = false;
             createUserBox.Text = "Create User";
@@ -296,7 +302,7 @@
             // lastNameLabel
             // 
             lastNameLabel.Font = new Font("Rockwell", 25F);
-            lastNameLabel.Location = new Point(147, 891);
+            lastNameLabel.Location = new Point(147, 832);
             lastNameLabel.Margin = new Padding(2, 0, 2, 0);
             lastNameLabel.Name = "lastNameLabel";
             lastNameLabel.Size = new Size(329, 63);
@@ -307,16 +313,16 @@
             // userLastNameTextBox
             // 
             userLastNameTextBox.Font = new Font("Rockwell", 25F);
-            userLastNameTextBox.Location = new Point(94, 971);
+            userLastNameTextBox.Location = new Point(36, 912);
             userLastNameTextBox.Margin = new Padding(2, 3, 2, 3);
             userLastNameTextBox.Name = "userLastNameTextBox";
-            userLastNameTextBox.Size = new Size(442, 56);
+            userLastNameTextBox.Size = new Size(558, 56);
             userLastNameTextBox.TabIndex = 9;
             // 
             // firstNameLabel
             // 
             firstNameLabel.Font = new Font("Rockwell", 25F);
-            firstNameLabel.Location = new Point(147, 712);
+            firstNameLabel.Location = new Point(147, 653);
             firstNameLabel.Margin = new Padding(2, 0, 2, 0);
             firstNameLabel.Name = "firstNameLabel";
             firstNameLabel.Size = new Size(329, 63);
@@ -327,7 +333,7 @@
             // passwordLabel
             // 
             passwordLabel.Font = new Font("Rockwell", 25F);
-            passwordLabel.Location = new Point(147, 501);
+            passwordLabel.Location = new Point(147, 442);
             passwordLabel.Margin = new Padding(2, 0, 2, 0);
             passwordLabel.Name = "passwordLabel";
             passwordLabel.Size = new Size(329, 81);
@@ -338,7 +344,7 @@
             // emailLabel
             // 
             emailLabel.Font = new Font("Rockwell", 25F);
-            emailLabel.Location = new Point(147, 321);
+            emailLabel.Location = new Point(147, 262);
             emailLabel.Margin = new Padding(2, 0, 2, 0);
             emailLabel.Name = "emailLabel";
             emailLabel.Size = new Size(329, 75);
@@ -377,9 +383,9 @@
             // userPfpPictureBox
             // 
             userPfpPictureBox.InitialImage = Properties.Resources.sage_transparent;
-            userPfpPictureBox.Location = new Point(129, 83);
+            userPfpPictureBox.Location = new Point(115, 83);
             userPfpPictureBox.Name = "userPfpPictureBox";
-            userPfpPictureBox.Size = new Size(403, 397);
+            userPfpPictureBox.Size = new Size(425, 397);
             userPfpPictureBox.TabIndex = 2;
             userPfpPictureBox.TabStop = false;
             // 
@@ -393,6 +399,8 @@
             // 
             // updateUserGroupBox
             // 
+            updateUserGroupBox.Controls.Add(updateProfilePictureBox);
+            updateUserGroupBox.Controls.Add(updateProfilePictureLabel);
             updateUserGroupBox.Controls.Add(updateIsAdminCheck);
             updateUserGroupBox.Controls.Add(updateLastNameBox);
             updateUserGroupBox.Controls.Add(updateLastNameLabel);
@@ -414,29 +422,29 @@
             // 
             // updateIsAdminCheck
             // 
-            updateIsAdminCheck.AutoSize = true;
             updateIsAdminCheck.BackColor = Color.FromArgb(1, 255, 255);
             updateIsAdminCheck.Font = new Font("Rockwell", 25F);
-            updateIsAdminCheck.Location = new Point(195, 1005);
+            updateIsAdminCheck.Location = new Point(44, 1012);
             updateIsAdminCheck.Name = "updateIsAdminCheck";
-            updateIsAdminCheck.Size = new Size(308, 51);
+            updateIsAdminCheck.Size = new Size(640, 51);
             updateIsAdminCheck.TabIndex = 10;
             updateIsAdminCheck.Text = "Administrator";
+            updateIsAdminCheck.TextAlign = ContentAlignment.MiddleCenter;
             updateIsAdminCheck.UseVisualStyleBackColor = false;
             // 
             // updateLastNameBox
             // 
             updateLastNameBox.Font = new Font("Rockwell", 25F);
-            updateLastNameBox.Location = new Point(132, 877);
+            updateLastNameBox.Location = new Point(44, 719);
             updateLastNameBox.Name = "updateLastNameBox";
-            updateLastNameBox.Size = new Size(465, 56);
+            updateLastNameBox.Size = new Size(640, 56);
             updateLastNameBox.TabIndex = 9;
             // 
             // updateLastNameLabel
             // 
             updateLastNameLabel.AutoSize = true;
             updateLastNameLabel.Font = new Font("Rockwell", 25F);
-            updateLastNameLabel.Location = new Point(236, 801);
+            updateLastNameLabel.Location = new Point(232, 653);
             updateLastNameLabel.Name = "updateLastNameLabel";
             updateLastNameLabel.Size = new Size(231, 47);
             updateLastNameLabel.TabIndex = 8;
@@ -445,16 +453,16 @@
             // updateFirstNameBox
             // 
             updateFirstNameBox.Font = new Font("Rockwell", 25F);
-            updateFirstNameBox.Location = new Point(132, 706);
+            updateFirstNameBox.Location = new Point(44, 566);
             updateFirstNameBox.Name = "updateFirstNameBox";
-            updateFirstNameBox.Size = new Size(465, 56);
+            updateFirstNameBox.Size = new Size(640, 56);
             updateFirstNameBox.TabIndex = 7;
             // 
             // updateFirstNameLabel
             // 
             updateFirstNameLabel.AutoSize = true;
             updateFirstNameLabel.Font = new Font("Rockwell", 25F);
-            updateFirstNameLabel.Location = new Point(236, 624);
+            updateFirstNameLabel.Location = new Point(236, 498);
             updateFirstNameLabel.Name = "updateFirstNameLabel";
             updateFirstNameLabel.Size = new Size(240, 47);
             updateFirstNameLabel.TabIndex = 6;
@@ -463,17 +471,18 @@
             // updatePasswordBox
             // 
             updatePasswordBox.Font = new Font("Rockwell", 25F);
-            updatePasswordBox.Location = new Point(132, 535);
+            updatePasswordBox.Location = new Point(44, 415);
             updatePasswordBox.Name = "updatePasswordBox";
-            updatePasswordBox.PlaceholderText = "   Input new password";
-            updatePasswordBox.Size = new Size(465, 56);
+            updatePasswordBox.PlaceholderText = "Input new password";
+            updatePasswordBox.Size = new Size(640, 56);
             updatePasswordBox.TabIndex = 5;
+            updatePasswordBox.TextAlign = HorizontalAlignment.Center;
             // 
             // updatePasswordLabel
             // 
             updatePasswordLabel.AutoSize = true;
             updatePasswordLabel.Font = new Font("Rockwell", 25F);
-            updatePasswordLabel.Location = new Point(247, 453);
+            updatePasswordLabel.Location = new Point(247, 350);
             updatePasswordLabel.Name = "updatePasswordLabel";
             updatePasswordLabel.Size = new Size(216, 47);
             updatePasswordLabel.TabIndex = 4;
@@ -482,16 +491,16 @@
             // updateEmailBox
             // 
             updateEmailBox.Font = new Font("Rockwell", 25F);
-            updateEmailBox.Location = new Point(132, 341);
+            updateEmailBox.Location = new Point(44, 266);
             updateEmailBox.Name = "updateEmailBox";
-            updateEmailBox.Size = new Size(465, 56);
+            updateEmailBox.Size = new Size(640, 56);
             updateEmailBox.TabIndex = 3;
             // 
             // updateEmailLabel
             // 
             updateEmailLabel.AutoSize = true;
             updateEmailLabel.Font = new Font("Rockwell", 25F);
-            updateEmailLabel.Location = new Point(275, 261);
+            updateEmailLabel.Location = new Point(275, 203);
             updateEmailLabel.Name = "updateEmailLabel";
             updateEmailLabel.Size = new Size(140, 47);
             updateEmailLabel.TabIndex = 2;
@@ -501,7 +510,7 @@
             // 
             updateUsernameLabel.AutoSize = true;
             updateUsernameLabel.Font = new Font("Rockwell", 25F);
-            updateUsernameLabel.Location = new Point(236, 77);
+            updateUsernameLabel.Location = new Point(236, 52);
             updateUsernameLabel.Name = "updateUsernameLabel";
             updateUsernameLabel.Size = new Size(227, 47);
             updateUsernameLabel.TabIndex = 1;
@@ -510,9 +519,9 @@
             // updateUsernameBox
             // 
             updateUsernameBox.Font = new Font("Rockwell", 25F);
-            updateUsernameBox.Location = new Point(132, 145);
+            updateUsernameBox.Location = new Point(44, 120);
             updateUsernameBox.Name = "updateUsernameBox";
-            updateUsernameBox.Size = new Size(465, 56);
+            updateUsernameBox.Size = new Size(640, 56);
             updateUsernameBox.TabIndex = 0;
             // 
             // backToHomeBtn
@@ -539,6 +548,44 @@
             generalErrorLabel.Size = new Size(1508, 41);
             generalErrorLabel.TabIndex = 15;
             generalErrorLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // profilePictureLabel
+            // 
+            profilePictureLabel.Font = new Font("Rockwell", 25F);
+            profilePictureLabel.Location = new Point(147, 987);
+            profilePictureLabel.Margin = new Padding(2, 0, 2, 0);
+            profilePictureLabel.Name = "profilePictureLabel";
+            profilePictureLabel.Size = new Size(329, 63);
+            profilePictureLabel.TabIndex = 11;
+            profilePictureLabel.Text = "Profile Picture:";
+            profilePictureLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // updateUserPFP
+            // 
+            updateUserPFP.Font = new Font("Rockwell", 25F);
+            updateUserPFP.Location = new Point(36, 1079);
+            updateUserPFP.Margin = new Padding(2, 3, 2, 3);
+            updateUserPFP.Name = "updateUserPFP";
+            updateUserPFP.Size = new Size(558, 56);
+            updateUserPFP.TabIndex = 12;
+            // 
+            // updateProfilePictureBox
+            // 
+            updateProfilePictureBox.Font = new Font("Rockwell", 25F);
+            updateProfilePictureBox.Location = new Point(44, 884);
+            updateProfilePictureBox.Name = "updateProfilePictureBox";
+            updateProfilePictureBox.Size = new Size(640, 56);
+            updateProfilePictureBox.TabIndex = 12;
+            // 
+            // updateProfilePictureLabel
+            // 
+            updateProfilePictureLabel.AutoSize = true;
+            updateProfilePictureLabel.Font = new Font("Rockwell", 25F);
+            updateProfilePictureLabel.Location = new Point(204, 817);
+            updateProfilePictureLabel.Name = "updateProfilePictureLabel";
+            updateProfilePictureLabel.Size = new Size(306, 47);
+            updateProfilePictureLabel.TabIndex = 11;
+            updateProfilePictureLabel.Text = "Profile Picture:";
             // 
             // UserManagement
             // 
@@ -612,5 +659,9 @@
         private OpenFileDialog openFileDialog1;
         private Button updateUserBtn;
         private Label generalErrorLabel;
+        private TextBox updateUserPFP;
+        private Label profilePictureLabel;
+        private TextBox updateProfilePictureBox;
+        private Label updateProfilePictureLabel;
     }
 }
