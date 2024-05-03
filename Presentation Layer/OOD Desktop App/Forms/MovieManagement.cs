@@ -139,6 +139,7 @@ namespace DesktopApp.Forms
                 desktopController.backendService?.UpdateMovie(movieDto);
                 updateStatusLabel.Text = "Update successful!";
                 RefreshMovies();
+                UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
             }
             catch (Exception ex)
             {
