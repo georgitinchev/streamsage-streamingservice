@@ -119,5 +119,32 @@ namespace DesktopApp
             }
         }
 
+        public static void PopulateComboBox(ComboBox comboBox, IEnumerable<string> items)
+        {
+            comboBox.Items.Clear();
+            foreach (var item in items)
+            {
+                comboBox.Items.Add(item);
+            }
+        }
+
+        public static void MakeCheckBoxesMutuallyExclusive(CheckBox checkBox1, CheckBox checkBox2)
+        {
+            checkBox1.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox1.Checked && checkBox2.Checked)
+                {
+                    checkBox2.Checked = false;
+                }
+            };
+
+            checkBox2.CheckedChanged += (sender, e) =>
+            {
+                if (checkBox2.Checked && checkBox1.Checked)
+                {
+                    checkBox1.Checked = false;
+                }
+            };
+        }
     }
 }
