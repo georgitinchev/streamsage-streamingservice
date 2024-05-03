@@ -1,4 +1,6 @@
-﻿using LogicClassLibrary.Entities;
+﻿using DataAccessLibrary;
+using DataAccessLibrary.DataAccessLibrary;
+using DTOs;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,51 +8,82 @@ namespace LogicClassLibrary.Managers
 {
     public class MovieRecommender
     {
-        public List<Movie> RecommendMoviesBasedOnUserBehavior(User user, List<User> allUsers, List<Movie> allMovies)
+        private readonly UserDAL userDAL;
+
+        public MovieRecommender(UserDAL userDAL)
         {
-            List<int> movieScores = new List<int>(new int[allMovies.Count]); 
-
-            foreach (User otherUser in allUsers)
-            {
-                if (otherUser == user) continue;
-                // Calculate similarity score based on the number of favorite movies in common
-                int similarityScore = otherUser.FavoriteMovies.Intersect(user.FavoriteMovies).Count();
-
-                foreach (Movie movie in otherUser.FavoriteMovies)
-                {
-                    if (!user.FavoriteMovies.Contains(movie))
-                    {
-                        // Add the similarity score to the corresponding movie's score
-                        movieScores[allMovies.IndexOf(movie)] += similarityScore;
-                    }
-                }
-            }
-
-            // Recommend the movies with the highest scores
-            List<Movie> recommendedMovies = new List<Movie>();
-            for (int i = 0; i < 5 && i < movieScores.Count; i++)
-            {
-                int maxScoreIndex = movieScores.IndexOf(movieScores.Max());
-                recommendedMovies.Add(allMovies[maxScoreIndex]);
-                movieScores[maxScoreIndex] = int.MinValue;
-            }
-            return recommendedMovies;
+            this.userDAL = userDAL;
         }
 
-        public List<Movie> RecommendMoviesBasedOnContent(User user, List<Movie> allMovies)
+        // filter based on similar users favorite genres
+        public List<MovieDTO> RecommendMoviesBasedOnUserBehavior(string username, List<MovieDTO> allMovies)
         {
-            // For simplicity, let's say that movies are similar if they have the same genre.
-            List<Movie> recommendedMovies = new List<Movie>();
-            foreach (Movie movie in allMovies)
+            UserDTO user = userDAL.GetUserByUsername(username);
+            if (user != null)
             {
-                // Check if the movie has the same genre as any of the user's favorite movies
-                //if (user.FavoriteMovies.Any(favoriteMovie => favoriteMovie.Genre == movie.Genre && !user.FavoriteMovies.Contains(movie) && !recommendedMovies.Contains(movie)))
+                List<MovieDTO> userFavoriteMovies = user.FavoriteMovies ?? new List<MovieDTO>();
+                Dictionary<MovieDTO, int> movieScores = new Dictionary<MovieDTO, int>();
+                foreach (MovieDTO movie in allMovies)
                 {
-                    recommendedMovies.Add(movie);
-                    if (recommendedMovies.Count == 5) return recommendedMovies;
+                    movieScores.Add(movie, 0);
                 }
+                foreach (UserDTO otherUser in userDAL.ReadAllUsers())
+                {
+                    if (otherUser.Username == username) continue;
+                    var otherUserFavoriteMovies = otherUser.FavoriteMovies ?? new List<MovieDTO>();
+                    int similarityScore = otherUser.FavoriteMovies.Intersect(userFavoriteMovies).Count();
+                    foreach (MovieDTO movie in otherUser.FavoriteMovies)
+                    {
+                        if (movieScores.ContainsKey(movie))
+                        {
+                            movieScores[movie] += similarityScore;
+                        }
+                    }
+                }
+                // Sort movies by their scores and take the top 5.
+                List<MovieDTO> recommendedMovies = movieScores.OrderByDescending(pair => pair.Value)
+                                                                .Select(pair => pair.Key)
+                                                                .Take(5)
+                                                                .ToList();
+                return recommendedMovies;
             }
-            return recommendedMovies;
+            else
+            {
+                return new List<MovieDTO>();
+            }
+        }
+
+        // filter based on genres
+        public List<MovieDTO> RecommendMoviesBasedOnContent(string username, List<MovieDTO> allMovies, int numRecommendations = 5)
+        {
+            UserDTO user = userDAL.GetUserByUsername(username);
+            if (user != null && user.FavoriteMovies != null)
+            {
+                HashSet<string> favoriteGenres = new HashSet<string>(user.FavoriteMovies.SelectMany(m => m.Genres ?? Enumerable.Empty<string>()));
+                var moviesWithGenreMatchCount = allMovies.Select(movie => new
+                {
+                    Movie = movie,
+                    MatchCount = movie.Genres != null ? movie.Genres.Count(genre => favoriteGenres.Contains(genre)) : 0
+                });
+                var recommendedMovies = moviesWithGenreMatchCount.Where(x => x.MatchCount >= 2)
+                                                                 .Select(x => x.Movie)
+                                                                 .Take(numRecommendations)
+                                                                 .ToList();
+                if (recommendedMovies.Count < numRecommendations)
+                {
+                    var additionalMovies = moviesWithGenreMatchCount.Where(x => x.MatchCount == 1)
+                                                                    .Select(x => x.Movie)
+                                                                    .Take(numRecommendations - recommendedMovies.Count)
+                                                                    .ToList();
+                    recommendedMovies.AddRange(additionalMovies);
+                }
+
+                return recommendedMovies;
+            }
+            else
+            {
+                return new List<MovieDTO>();
+            }
         }
     }
 }
