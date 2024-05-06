@@ -54,8 +54,10 @@ namespace DataAccessLibrary
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = $"SELECT m.* FROM {tableName} as t JOIN Movie as m ON t.MovieId = m.ID WHERE t.UserId = @ID";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    string movieQuery = $"SELECT m.* FROM {tableName} as t JOIN Movie as m ON t.MovieId = m.ID WHERE t.UserId = @ID";
+                    string genreQuery = "SELECT mg.MovieID, g.Name FROM MovieGenre mg INNER JOIN Genre g ON mg.GenreID = g.ID WHERE mg.MovieID = @MovieID";
+
+                    using (SqlCommand cmd = new SqlCommand(movieQuery, conn))
                     {
                         cmd.Parameters.AddWithValue("@ID", userId);
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -71,15 +73,33 @@ namespace DataAccessLibrary
                                     PosterImageURL = reader["PosterImageURL"] as string,
                                     TrailerURL = reader["TrailerURL"] as string,
                                     RuntimeMinutes = (int)reader["RuntimeMinutes"],
-                                    AverageRating = reader["AverageRating"] == DBNull.Value ? (decimal?)null : (decimal)reader["AverageRating"]
+                                    AverageRating = reader["AverageRating"] == DBNull.Value ? (decimal?)null : (decimal)reader["AverageRating"],
+                                    Genres = new List<string>()
                                 };
                                 movies.Add(movie);
+                            }
+                        }
+                    }
+
+                    foreach (var movie in movies)
+                    {
+                        using (SqlCommand genreCmd = new SqlCommand(genreQuery, conn))
+                        {
+                            genreCmd.Parameters.AddWithValue("@MovieID", movie.Id);
+                            using (SqlDataReader genreReader = genreCmd.ExecuteReader())
+                            {
+                                while (genreReader.Read())
+                                {
+                                    string genreName = genreReader.GetString(1);
+                                    movie?.Genres.Add(genreName);
+                                }
                             }
                         }
                     }
                 }
                 return movies;
             }
+
 
             public void CreateUser(UserDTO user)
             {

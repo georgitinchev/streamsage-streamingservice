@@ -13,7 +13,7 @@ namespace LogicClassLibrary
         private MovieManager movieManager;
         private ReviewManager reviewManager;
         private InterpretationManager interpretationManager;
-        private RecommendationManager recommendationManager;
+        public RecommendationManager recommendationManager { get; private set; }
         private UserDAL userDAL;
         private MovieDAL movieDAL;
         private ReviewDAL reviewDAL;
@@ -29,7 +29,7 @@ namespace LogicClassLibrary
             userManager = new UserManager(userDAL, movieManager);
             reviewManager = new ReviewManager(reviewDAL);
             interpretationManager = new InterpretationManager(interpretationDAL);
-            recommendationManager = new RecommendationManager();
+            recommendationManager = new RecommendationManager(movieDAL,userDAL);
         }
 
         public List<string> GetAllGenres()
@@ -94,6 +94,11 @@ namespace LogicClassLibrary
         public List<User> GetAllUsers()
         {
             return userManager.users;
+        }
+
+        public RecommendationManager RecommendationManager
+        {
+            get { return recommendationManager; }
         }
     }
 }

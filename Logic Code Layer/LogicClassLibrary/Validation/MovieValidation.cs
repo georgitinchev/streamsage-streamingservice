@@ -40,7 +40,7 @@ namespace LogicClassLibrary.Validation
             }
             return errorMessage.ToString();
         }
-        private static bool IsValidUrl(string url)
+        public static bool IsValidUrl(string url)
         {
             string pattern = @"^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$";
             return Regex.IsMatch(url, pattern, RegexOptions.IgnoreCase);

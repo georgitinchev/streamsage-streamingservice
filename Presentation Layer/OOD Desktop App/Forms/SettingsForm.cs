@@ -26,12 +26,13 @@ namespace DesktopApp.Forms
 
         private async void DisplayRecommendations()
         {
+            settingsDisplayRecommendationsListBox.Items.Clear();
             if (settingsUserPicker.SelectedItem == null || (!selectBehaviorBasedCheckBox.Checked && !selectContentBasedCheckBox.Checked))
             {
                 return;
             }
             string username = settingsUserPicker.SelectedItem.ToString();
-            int numRecommendations = 5; // can be adjusted by user
+            int numRecommendations = 5; // can be adjusted here
             // determine type of recommend based on user selection
             var type = selectBehaviorBasedCheckBox.Checked ?
                 RecommendationManager.RecommendationType.BehaviorBased :
@@ -39,7 +40,6 @@ namespace DesktopApp.Forms
 
             var recommendations = await desktopController.backendService?.recommendationManager?.RecommendMoviesForUser(username, numRecommendations, type);
 
-            settingsDisplayRecommendationsListBox.Items.Clear();
             if (recommendations != null)
             {
                 foreach (var movie in recommendations)

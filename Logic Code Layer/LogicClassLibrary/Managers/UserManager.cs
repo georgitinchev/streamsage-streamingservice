@@ -44,14 +44,22 @@ namespace LogicClassLibrary.Managers
             List<Movie> movies = new List<Movie>();
             foreach (var movieDTO in movieDTOs)
             {
-                Movie movie = movieManager.TransformDTOtoEntity(movieDTO) as Movie;
-                if (movie != null)
+                try
                 {
-                    movies.Add(movie);
+                    Movie movie = movieManager.TransformDTOtoEntity(movieDTO) as Movie;
+                    if (movie != null)
+                    {
+                        movies.Add(movie);
+                    }
+                }
+                catch (Exception ex)
+                {
+                   throw ex;
                 }
             }
             return movies;
         }
+
 
         internal void GetAllUsers()
         {
