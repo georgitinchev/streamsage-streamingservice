@@ -3,33 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccessLibrary.DataAccessLibrary;
+using DTOs;
 using LogicClassLibrary.Entities;
 
 namespace LogicClassLibrary.Managers
 {
-    internal class RecommendationManager
+    public class RecommendationManager
     {
-        private List<Movie> userPreferences;
-        private List<Movie> movieCatalog;
-
-        public void updateUserPreferences(List<Movie> newPreferences)
+        private MovieRecommender movieRecommender;
+        private MovieDAL movieDAL;
+        public RecommendationManager(MovieDAL movieDAL, UserDAL userDAL)
         {
-            userPreferences = newPreferences;
+            movieRecommender = new MovieRecommender(userDAL);
+            this.movieDAL = movieDAL;
+        }
+        public async Task<List<MovieDTO>> RecommendMoviesForUser(string username, int numRecommendations, RecommendationType type)
+        {
+            List<MovieDTO> allMovies = await GetAllMovies();
+
+            switch (type)
+            {
+                case RecommendationType.BehaviorBased:
+                    return movieRecommender.RecommendMoviesBasedOnUserBehavior(username, allMovies).Take(numRecommendations).ToList();
+                case RecommendationType.ContentBased:
+                    return movieRecommender.RecommendMoviesBasedOnContent(username, allMovies).Take(numRecommendations).ToList();
+                default:
+                    return new List<MovieDTO>();
+            }
         }
 
-        public List<Movie> getRecommendedMovies(int userId, int numRecommendations)
+        private async Task<List<MovieDTO>> GetAllMovies()
         {
-            return new List<Movie>();
+            return await Task.Run(() => movieDAL.ReadAllMovies());
         }
 
-        public List<Movie> generateCollaborativeFilteringRecommendations(int userId, int numRecommendations)
+        public enum RecommendationType
         {
-            return new List<Movie>();
-        }
-
-        public List<Movie> generateContentBasedRecommendations(int userId, int numRecommendations)
-        {
-            return new List<Movie>();
+            BehaviorBased,
+            ContentBased
         }
     }
 }

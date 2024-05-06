@@ -16,7 +16,6 @@ namespace LogicClassLibrary.Entities
         public string? LastName { get; set; }
         public string? ProfilePictureURL { get; set; }
         public string? Settings { get; set; }
-
         public List<Movie>? FavoriteMovies { get; set; }
         public List<Movie>? WatchList { get; set; }
         public User(int id, string username, string passwordHash, string? email, string? firstName, string? lastName, string? profilePicture ,string? settings, List<Movie> favoriteMovies, List<Movie> watchList)
