@@ -1,0 +1,53 @@
+﻿@page
+@model StreamSageWAD.Pages.RegisterModel
+
+@{
+    Layout = "_UnauthenticatedLayout";
+    ViewData["Title"] = "Register";
+}
+
+<div class="container mt-5" style="font-size: 1.5rem;">
+    <div class="text-center mb-5">
+        <a href="/">
+            <img src="~/img/sage-transparent.png" alt="StreamSage Logo" class="img-fluid" style="max-width: 400px;">
+        </a>
+    </div>
+
+    <form method="post">
+        <div class="form-group">
+            <label for="registerEmail" style="font-size: 1.5rem;">Email address</label>
+            <input type="email" class="form-control" id="registerEmail" asp-for="registerDTO.Email" placeholder="Enter email" style="font-size: 1.5rem;">
+        </div>
+        <div class="form-group">
+            <label for="registerPassword" style="font-size: 1.5rem;">Password</label>
+            <input type="password" class="form-control" id="registerPassword" asp-for="registerDTO.Password" placeholder="Password" style="font-size: 1.5rem;">
+        </div>
+        <div class="form-group">
+            <label for="repeatPassword" style="font-size: 1.5rem;">Repeat Password</label>
+            <input type="password" class="form-control" id="repeatPassword" placeholder="Repeat Password" style="font-size: 1.5rem;">
+        </div>
+        <div class="form-group">
+            <label for="registerUsername" style="font-size: 1.5rem;">Username</label>
+            <input type="text" class="form-control" id="registerUsername" asp-for="registerDTO.Username" placeholder="Username" style="font-size: 1.5rem;">
+        </div>
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary" style="font-size: 1.75rem; padding: 10px 20px;">Register</button>
+        </div>
+    </form>
+
+    <div class="text-center mt-4">
+        <a href="./Login" class="btn btn-link" style="font-size: 1.5rem; color: white;">Already have an account? Login</a>
+    </div>
+
+    <div class="mt-4">
+        @if (!ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
+    </div>
+</div>
