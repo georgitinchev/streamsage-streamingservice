@@ -26,7 +26,11 @@ namespace StreamSageWAD.Pages
             {
                 return Page();
             }
-
+            if (registerDTO.Password != registerDTO.RepeatPassword)
+            {
+                ModelState.AddModelError(string.Empty, "Passwords do not match.");
+                return Page();
+            }
             try
             {
                 bool userExists = webController.loginUser(registerDTO.Email, registerDTO.Password);
