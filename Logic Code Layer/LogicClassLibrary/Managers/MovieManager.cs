@@ -94,39 +94,11 @@ public class MovieManager : GeneralManager
 
     public Movie ReadMovie(int movieId)
     {
-        PopulateMovies();
-        if (movies == null || !movies.Any())
-        {
-            throw new Exception("The movies list is not populated.");
-        }
-        var movie = movies.Find(m => m.Id == movieId);
-        if (movie == null)
-        {
-            throw new Exception($"Movie with ID {movieId} not found.");
-        }
-        return movie;
+        return movies?.Find(m => m.Id == movieId) ?? throw new Exception("Movie not found");
     }
 
     public List<string> GetAllGenres()
     {
         return movieDAL.GetAllGenres();
-    }
-
-
-    public List<Movie> SearchMovies(string criteria)
-    {
-        if (criteria.Length < 5)
-        {
-            throw new ArgumentException("Search criteria must be at least 5 characters long");
-        }
-        List<Movie> searchResults = new List<Movie>();
-        foreach (Movie movie in movies)
-        {
-            if (movie.Title.ToLower().Contains(criteria.ToLower()))
-            {
-                searchResults.Add(movie);
-            }
-        }
-        return searchResults;
     }
 }

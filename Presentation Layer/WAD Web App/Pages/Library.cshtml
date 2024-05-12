@@ -1,95 +1,74 @@
 ﻿@page
 @model StreamSageWAD.Pages.LibraryModel
 @{
-    Layout = "_Layout";
+	Layout = "_Layout";
 }
 
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
-    <div class="alert alert-danger" role="alert">
-        @Model.ErrorMessage
-    </div>
-}
+	<div class="alert alert-danger" role="alert">
+		@Model.ErrorMessage
+	</div>
+})
 
 <div class="container">
 
-    <hr style="border-top: 3px solid #7692FF;">
+	<hr style="border-top: 3px solid #7692FF;">
 
-    <h2>Featured Movies</h2>
-    <div class="row">
-        @if (Model.FeaturedMovies != null && Model.FeaturedMovies.Any())
-        {
-            foreach (var movie in Model.FeaturedMovies)
-            {
-                <div class="col-sm-3 mb-4">
-                    <div class="card">
-                        <a href="/Streaming?movieId=@movie.Id">
-                            <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@movie.Title</h5>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No featured movies to display.</p>
-        }
-    </div>
+	<h2>Featured Movies</h2>
+	<div class="row">
+		@foreach (var movie in Model.FeaturedMovies)
+		{
+			<div class="col-sm-3 mb-4">
+				<div class="card">
+					<a href="/Streaming?trailerUrl=@movie.TrailerURL&description=@movie.Description">
+						<img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+						<div class="card-body">
+							<h5 class="card-title">@movie.Title</h5>
+						</div>
+					</a>
+				</div>
+			</div>
+		}
+	</div>
 
-    <hr style="border-top: 3px solid #7692FF;">
+	<hr style="border-top: 3px solid #7692FF;">
 
-    <h2>Random Movies</h2>
-    <div class="row">
-        @if (Model.RandomMovies != null && Model.RandomMovies.Any())
-        {
-            foreach (var movie in Model.RandomMovies)
-            {
-                <div class="col-sm-3 mb-4">
-                    <div class="card">
-                        <a href="/Streaming?movieId=@movie.Id">
-                            <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@movie.Title</h5>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No random movies to display.</p>
-        }
-    </div>
+	<h2>Random Movies</h2>
+	<div class="row">
+		@foreach (var movie in Model.RandomMovies)
+		{
+			<div class="col-sm-3 mb-4">
+				<div class="card">
+					<a href="/Streaming?trailerUrl=@movie.TrailerURL&description=@movie.Description">
+						<img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+						<div class="card-body">
+							<h5 class="card-title">@movie.Title</h5>
+						</div>
+					</a>
+				</div>
+			</div>
+		}
+	</div>
 
-    <hr style="border-top: 3px solid #7692FF;">
+	<hr style="border-top: 3px solid #7692FF;">
 
-    <h2>Based on Your Usage</h2>
-    <div class="row">
-        @if (Model.UsageBasedMovies != null && Model.UsageBasedMovies.Any())
-        {
-            foreach (var movieDto in Model.UsageBasedMovies)
-            {
-                <div class="col-sm-3 mb-4">
-                    <div class="card">
-                        <a href="/Streaming?movieId=@movieDto.Id">
-                            <img class="card-img-top" src="@movieDto.PosterImageURL" alt="@movieDto.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@movieDto.Title</h5>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No usage-based movies to display.</p>
-        }
-    </div>
+	<h2>Based on Your Usage</h2>
+	<div class="row">
+		@foreach (var movie in Model.UsageBasedMovies)
+		{
+			<div class="col-sm-3 mb-4">
+				<div class="card">
+					<a href="/Streaming?trailerUrl=@movie.TrailerURL&description=@movie.Description">
+						<img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+						<div class="card-body">
+							<h5 class="card-title">@movie.Title</h5>
+						</div>
+					</a>
+				</div>
+			</div>
+		}
+	</div>
 
-    <hr style="border-top: 3px solid #7692FF;">
+	<hr style="border-top: 3px solid #7692FF;">
 </div>

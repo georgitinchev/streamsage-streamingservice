@@ -7,7 +7,7 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromMinutes(5);
+	options.IdleTimeout = TimeSpan.FromSeconds(60);
 	options.Cookie.HttpOnly = true;
 	options.Cookie.IsEssential = true;
 });
@@ -15,7 +15,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 	.AddCookie(options =>
 	{
-		options.LoginPath = new PathString("/Login");
+		options.LoginPath = new PathString("/Authentication");
 		options.AccessDeniedPath = new PathString("/Error");
 	});
 
@@ -27,6 +27,8 @@ if (!app.Environment.IsDevelopment())
 	app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -35,7 +37,6 @@ app.UseRouting();
 app.UseSession();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapRazorPages();

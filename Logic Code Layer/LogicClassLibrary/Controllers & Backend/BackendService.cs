@@ -4,11 +4,10 @@ using System.Data;
 using LogicClassLibrary.Managers;
 using DataAccessLibrary.DataAccessLibrary;
 using DTOs;
-using StreamSageWAD;
 
 namespace LogicClassLibrary
 {
-    public class BackendService : IBackendService 
+    public class BackendService
     {
         private UserManager userManager;
         private MovieManager movieManager;
@@ -60,17 +59,7 @@ namespace LogicClassLibrary
 
         public User GetUser(int id)
         {
-            return userManager?.ReadUser(id);
-        }
-
-        public User GetUser(string username)
-        {
-            return userManager?.ReadUser(username);
-        }
-
-        public List<Movie> SearchMovies(string criteria)
-        {
-            return movieManager.SearchMovies(criteria);
+            return userManager.ReadUser(id);
         }
 
         public void DeleteUser(int id)
@@ -110,16 +99,6 @@ namespace LogicClassLibrary
         public RecommendationManager RecommendationManager
         {
             get { return recommendationManager; }
-        }
-        public List<Movie> GetFeaturedMovies()
-        {
-            return GetAllMovies().Take(5).ToList();
-        }
-
-        public List<Movie> GetRandomMovies()
-        {
-            var allMovies = GetAllMovies();
-            return allMovies.OrderBy(x => Guid.NewGuid()).Take(5).ToList();
         }
     }
 }
