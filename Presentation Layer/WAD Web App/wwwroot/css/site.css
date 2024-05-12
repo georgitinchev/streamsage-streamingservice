@@ -79,3 +79,24 @@ body {
 .footer a {
     color: darkblue;
 }
+
+.footer a:hover {
+    color: blue;
+}
+
+.custom-search-bar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+    .custom-search-bar input[type="search"] {
+        flex-grow: 1; 
+        margin-right: 10px; 
+    }
+
+.search-icon {
+    width: auto;
+    height: 24px;
+    cursor: pointer;
+}

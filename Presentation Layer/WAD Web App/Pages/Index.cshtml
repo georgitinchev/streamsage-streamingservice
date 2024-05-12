@@ -3,23 +3,22 @@
 @using System.Security.Claims
 @model IndexModel
 @{
-	ViewData["Title"] = "Home";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-		<h1 class="display-4">Welcome to StreamSage</h1>
-	<p class="lead">The best place to find your favorite movies and TV shows</p
+<div class="jumbotron jumbotron-fluid bg-primary text-white">
+    <div class="container text-center">
+        <h1 class="display-4">StreamSage</h1>
+        <p class="lead">Your ultimate movie streaming guide.</p>
+    </div>
 </div>
 
-@if(Request.Cookies.ContainsKey(nameof(LoginDTO.Email)))
-{
-	<h3>Cookie Email: @Request.Cookies[nameof(LoginDTO.Email)]</h3>
-}
-@if(HttpContext.Session.Get(nameof(LoginDTO.Email)) != null)
-{
-	<h3>Session Email: @HttpContext.Session.GetString(nameof(LoginDTO.Email))</h3>
-}
-@if(User.FindFirst(ClaimTypes.Email) != null)
-{
-	<h3>Claim Email: @User.FindFirst(ClaimTypes.Email).Value</h3>
-}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Explore Our Library</h2>
+            <p>Discover your next favorite movie in our extensive library.</p>
+            <a class="btn btn-success" href="/Library">Go to Library</a>
+        </div>
+    </div>
+</div>

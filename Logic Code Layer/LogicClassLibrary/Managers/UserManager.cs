@@ -76,7 +76,12 @@ namespace LogicClassLibrary.Managers
         }
         internal User? ReadUser(int id)
         {
-            return users?.Find(u => u.Id == id) ?? throw new Exception("Movie not found");
+            return users?.Find(u => u.Id == id) ?? throw new Exception("User not found");
+        }
+
+        internal User? ReadUser(string username)
+        {
+            return users?.Find(u => u.Username == username) ?? throw new Exception("User not found");
         }
  
         internal bool AuthenticateUser(string username, string password)
@@ -153,6 +158,31 @@ namespace LogicClassLibrary.Managers
                 throw e;
             }
         }
+
+        internal void UpdateUser(int id, string username, string? email, string passwordHash, string firstName, string lastName, string profilePictureURL, string settings)
+        {
+            try
+            {
+                UserDTO userDTO = new UserDTO(
+                    id: id, 
+                    username: username,
+                    email: email,
+                    passwordHash: passwordHash,
+                    firstName: firstName,
+                    lastName: lastName,
+                    profilePicture: profilePictureURL,
+                    settings: settings,
+                    favoriteMovies: null, 
+                    watchList: null
+                );
+                UpdateUser(userDTO);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
 
         private void addToFavorites(int movieId)
         {
