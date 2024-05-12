@@ -1,7 +1,4 @@
-Please ensure that your display's DPI scaling is <= 125% before attempting use (For OOD only)
-
-Link to Luna:
-https://i524441.luna.fhict.nl/
+Please ensure that your display's DPI scaling is <= 125% before attempting use.
 
 Credentials that can be used:
 In order -> Username, Email, Password, FirstName, LastName
