@@ -10,7 +10,8 @@ namespace StreamSageWAD.Pages
 {
     public class RegisterModel : PageModel
     {
-        private WebController webController;
+        public WebController webController { get; private set; }
+        public string ReturnUrl { get; private set; }
 
         public RegisterModel(WebController webController)
         {
@@ -19,6 +20,11 @@ namespace StreamSageWAD.Pages
 
         [BindProperty]
         public RegisterDTO registerDTO { get; set; }
+
+        public void OnGet(string returnUrl = null)
+        {
+            ReturnUrl = returnUrl ?? Url.Content("~/");
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -44,7 +50,7 @@ namespace StreamSageWAD.Pages
                     };
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                    return RedirectToPage("/Index");
+                    return LocalRedirect(ReturnUrl ?? Url.Content("~/"));
                 }
                 else
                 {
