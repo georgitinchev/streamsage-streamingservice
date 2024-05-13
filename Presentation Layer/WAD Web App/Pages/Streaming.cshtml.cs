@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LogicClassLibrary;
-using LogicClassLibrary.Entities; // Assuming this namespace contains the Movie class
+using LogicClassLibrary.Entities; 
 
 namespace StreamSageWAD.Pages
 {
