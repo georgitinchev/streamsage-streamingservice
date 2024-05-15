@@ -10,6 +10,8 @@ namespace StreamSageWAD.Models
         [Required(ErrorMessage = "Password is required.")]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
+        [Required(ErrorMessage = "Repeat Password is required."),Compare(nameof(Password))]
+        [DataType(DataType.Password)]
         public string? RepeatPassword { get; set; }
 
         [Required(ErrorMessage = "Email is required.")]
