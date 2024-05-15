@@ -11,7 +11,7 @@ namespace StreamSageWAD.Pages
     public class RegisterModel : PageModel
     {
         public WebController webController { get; private set; }
-        public string ReturnUrl { get; private set; }
+        public string ReturnUrl { get; set; } = null;
 
         public RegisterModel(WebController webController)
         {
@@ -21,9 +21,9 @@ namespace StreamSageWAD.Pages
         [BindProperty]
         public RegisterDTO registerDTO { get; set; }
 
-        public void OnGet(string returnUrl = null)
+        public void OnGet(string ReturnUrl)
         {
-            ReturnUrl = returnUrl ?? Url.Content("~/");
+            this.ReturnUrl = ReturnUrl ?? Url.Content("~/");
         }
 
         public async Task<IActionResult> OnPostAsync()

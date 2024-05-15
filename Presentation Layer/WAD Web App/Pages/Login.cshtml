@@ -27,13 +27,13 @@
             <label class="form-check-label" for="rememberMe" style="font-size: 1.5rem;">Remember me</label>
         </div>
         <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary" style="font-size: 1.75rem; padding: 10px 20px;">Login</button>
+            <button type="submit" class="btn btn-primary" style="font-size: 1.75rem;padding: 15px 40px; margin-top:15px;">Login</button>
         </div>
         <input type="hidden" asp-for="ReturnUrl" />
     </form>
 
     <div class="text-center mt-4">
-        <a href="./Register" class="btn btn-link" style="font-size: 1.5rem; color: white;">Need an account? Register</a>
+        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" style="color: white">Need an account? Register</a>
     </div>
 
     <div class="mt-4">

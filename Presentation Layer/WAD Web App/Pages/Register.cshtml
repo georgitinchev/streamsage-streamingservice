@@ -39,13 +39,13 @@
             <input type="text" class="form-control" id="registerLastName" asp-for="registerDTO.LastName" placeholder="Last Name" style="font-size: 1.5rem;">
         </div>
         <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary" style="font-size: 1.75rem; padding: 10px 20px;">Register</button>
+            <button type="submit" class="btn btn-primary" style="font-size: 1.75rem; padding: 15px 40px; margin-top: 15px;">Register</button>
         </div>
         <input type="hidden" asp-for="ReturnUrl" />
     </form>
 
     <div class="text-center mt-4">
-        <a href="./Login" class="btn btn-link" style="font-size: 1.5rem; color: white;">Already have an account? Login</a>
+        <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" style="color: white">Have an account? Login</a>
     </div>
 
     <div class="mt-4">
