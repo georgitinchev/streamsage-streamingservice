@@ -15,3 +15,23 @@ In order -> Username, Email, Password, FirstName, LastName
 
 Link to Repo:
 https://git.fhict.nl/I524441/individual-project-sem2
+
+Discussed my WAD Stream Sage website progression so far. 
+Positives:
+- Movie fetching is per ID now, without exposing information in the front-end.
+- Authentication & Cookies & Remember me works well.
+- Site layout and structure is present.
+- Auth DTOs and proper separation & usage of models.
+- DB design and layer design.
+
+Points for improvement:
+- Authentication calls do not resolve in 1 call, but several calls to other layers are made for it.
+- Interfaces & Dependency Inversion is not present as of today, hence the Unit Tests can't be seen.
+- Edge scenarios for objects fetches within Models have to be addressed.
+- Web Controller should not store user session info, as Razor Pages handle it for us.
+- Logout should not do POST requests.
+- Repeat password for example can be handled within the Auth DTOs.
+
+I will make sure to work towards the LOs and address all of the above concerns & get ready to prove a good site product by the time for the last feedback session.
+
+

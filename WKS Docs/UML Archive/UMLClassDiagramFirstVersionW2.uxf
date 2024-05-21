@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>16</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1152</x>
+      <y>976</y>
+      <w>480</w>
+      <h>208</h>
+    </coordinates>
+    <panel_attributes>User
+-
+- username: string
+- password: string
+- email: string
+- profilePicture: Image
+-
++ submitReview(media,rating,reviewText): void
++ contributeArtwork(media,artwork): void
+
+ </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1232</x>
+      <y>656</y>
+      <w>272</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>Review
+-
+- reviewID: int
+- user: User
+- media: Media
+- rating: float
+- reviewText: string
+-
++ getRating(): float
++ getReviewText(): string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1632</x>
+      <y>704</y>
+      <w>560</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Recommendation
+-
++ getRandomRecommendation(): Media
++ getPersonalizedRecommendation(user: User): Media</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1744</x>
+      <y>304</y>
+      <w>320</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>Movie
+-
+- director: string
+- plot: string
+- plotInterpretation: string
+-
++ getMovieInformation(): string</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1216</x>
+      <y>352</y>
+      <w>320</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>Media 
+-
+- mediaSession: int
+- title: string
+- genre: string
+- releaseDate: Date
+- averageRating: float
+-
++ getMediaInformation(): string
++ getAverageRating(): float</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>624</x>
+      <y>656</y>
+      <w>368</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>DB Operations
+-
+- medialist: List&lt;Media&gt;
+- users: List&lt;User&gt;
+- reviews: List&lt;Review&gt;
+- leaderboards: List&lt;Leaderboard&gt;
+-
++ addMedia(media: Media): void
++ addUser(user: User): void
++ addReview(review: Review): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>624</x>
+      <y>112</y>
+      <w>368</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>Leaderboard
+-
+- title: string
+- creationDate: Date
+- mediaList: List&lt;Media&gt;
+-
++ generateLeaderboard(): List&lt;Media&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1360</x>
+      <y>880</y>
+      <w>48</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1344</x>
+      <y>576</y>
+      <w>80</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>784</x>
+      <y>448</y>
+      <w>464</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes>
+    <additional_attributes>270.0;10.0;10.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>976</x>
+      <y>752</y>
+      <w>288</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes>
+    <additional_attributes>160.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>768</x>
+      <y>880</y>
+      <w>416</w>
+      <h>256</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1..n</panel_attributes>
+    <additional_attributes>240.0;130.0;10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>784</x>
+      <y>256</y>
+      <w>80</w>
+      <h>416</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>64</x>
+      <y>688</y>
+      <w>480</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>Auth Manager
+-
++ authenticateUser(username, password): User
++ logoutUser(): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>528</x>
+      <y>720</y>
+      <w>128</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
