@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Interface.DAL
 {
-    internal class IReviewDAL
+    public interface IReviewDAL
     {
     }
 }

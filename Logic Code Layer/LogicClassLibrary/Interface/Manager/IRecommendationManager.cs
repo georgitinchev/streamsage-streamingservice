@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Interface.Manager
 {
-    internal class IRecommendationManager
+    public interface IRecommendationManager
     {
     }
 }
