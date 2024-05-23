@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LogicClassLibrary.Interface.DAL
+namespace LogicClassLibrary.Service_Classes
 {
-    public interface IUserDAL
+    internal class InterpretationService
     {
     }
 }
