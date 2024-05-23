@@ -1,16 +1,11 @@
 ﻿using DTOs;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLibrary
 {
     namespace DataAccessLibrary
     {
-        public class UserDAL : BaseDAL
+        public class UserDAL : BaseDAL, IUserDAL
         {
             public UserDAL(string connectionString) : base(connectionString)
             {

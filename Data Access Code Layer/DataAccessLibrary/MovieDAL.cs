@@ -11,7 +11,7 @@ namespace DataAccessLibrary
 {
     namespace DataAccessLibrary
     {
-        public class MovieDAL : BaseDAL
+        public class MovieDAL : BaseDAL, IMovieDAL
         {
 
             public MovieDAL(string connectionString) : base(connectionString)
