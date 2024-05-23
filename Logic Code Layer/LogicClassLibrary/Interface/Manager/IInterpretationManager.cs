@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Interface.Manager
 {
-    internal class IInterpretationManager
+    public interface IInterpretationManager
     {
     }
 }

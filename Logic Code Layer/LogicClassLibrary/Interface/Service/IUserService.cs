@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Interface.Service
 {
-    internal class IUserService
+    internal interface IUserService
     {
     }
 }
