@@ -8,23 +8,25 @@ namespace DTOs
 {
     public class UserDTO
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string? Email { get; set; }
-        public string? PasswordHash { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? ProfilePictureURL { get; set; }
-        public string? Settings { get; set; }
-        public List<MovieDTO>? FavoriteMovies { get; set; }
-        public List<MovieDTO>? WatchList { get; set; }
+        public int Id { get; private set; }
+        public string Username { get; private set; }
+        public string? Email { get; private set; }
+        public string? PasswordHash { get; private set; }
+        public string? PasswordSalt { get; private set; }
+        public string? FirstName { get; private set; }
+        public string? LastName { get; private set; }
+        public string? ProfilePictureURL { get; private set; }
+        public string? Settings { get; private set; }
+        public List<MovieDTO>? FavoriteMovies { get; private set; }
+        public List<MovieDTO>? WatchList { get; private set; }
 
-        public UserDTO(int id, string username, string email, string passwordHash, string firstName, string lastName, string profilePicture, string settings, List<MovieDTO> favoriteMovies, List<MovieDTO> watchList)
+        public UserDTO(int id, string username, string email, string passwordHash, string passwordSalt, string firstName, string lastName, string profilePicture, string settings, List<MovieDTO> favoriteMovies, List<MovieDTO> watchList)
         {
             Id = id;
             Username = username;
             Email = email;
             PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
             FirstName = firstName;
             LastName = lastName;
             ProfilePictureURL = profilePicture;
@@ -32,6 +34,7 @@ namespace DTOs
             FavoriteMovies = favoriteMovies;
             WatchList = watchList;
         }
+
         public UserDTO(int id, string username, string? email, string firstName, string lastName, string profilePicture, string settings)
         {
             Id = id;
