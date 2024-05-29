@@ -8,79 +8,14 @@ using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Managers
 {
-	public class GeneralManager
+	// Abstract class with specifiable DTO type and Entity type for transform method + CRUD methods
+	public abstract class GeneralManager<TDto, TEntity> where TEntity: Entity
 	{
-		private User? currentUser;
-		private List<Movie>? searchResults;
-
-        public virtual Entity? TransformDTOtoEntity(object dto)
-        {
-            throw new NotImplementedException("This method should be overridden in a derived class.");
-        }
-
-        public void Create()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Read()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void fetchUserData(int userId)
-		{
-
-		}
-
-		public void fetchMovieData(int movieId)
-		{
-
-        }
-
-		public void fetchReviewData(int reviewId)
-		{
-
-        }
-
-		public void fetchInterpretationData(int interpretationId)
-		{
-
-        }	
-
-		public void searchMovies(string searchQuery)
-		{
-
-        }
-
-		public void executeQuery(string query)
-		{
-
-        }
-
-		public void fetchResults()
-		{
-
-        }
-
-		public void executeAnalysis()
-		{
-
-        }
-
-		public void generateRecommendations()
-		{
-
-        }
-	}
+		public abstract TEntity? TransformDTOToEntity(TDto dto);
+		public abstract TDto TransformEntityToDTO(TEntity entity);
+		public abstract void Create(TEntity entity);
+		public abstract TEntity Read(int id);
+		public abstract void Update(TEntity entity);
+		public abstract void Delete(int id);
+    }
 }
