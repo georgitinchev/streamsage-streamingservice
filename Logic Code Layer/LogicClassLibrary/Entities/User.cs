@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LogicClassLibrary.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,21 +9,23 @@ namespace LogicClassLibrary.Entities
 {
     public class User : Entity
     {
-        public override int Id { get; set; }
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
-        public string? Email { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? ProfilePictureURL { get; set; }
-        public string? Settings { get; set; }
-        public List<Movie>? FavoriteMovies { get; set; }
-        public List<Movie>? WatchList { get; set; }
-        public User(int id, string username, string passwordHash, string? email, string? firstName, string? lastName, string? profilePicture ,string? settings, List<Movie> favoriteMovies, List<Movie> watchList)
+        public override int Id { get; protected set; }
+        public string Username { get; private set; }
+        private string PasswordHash;
+        private string PasswordSalt;  
+        public string? Email { get; private set; }
+        public string? FirstName { get; private set; }
+        public string? LastName { get; private set; }
+        public string? ProfilePictureURL { get; private set; }
+        public string? Settings { get; private set; }
+        public List<Movie>? FavoriteMovies { get; private set; }
+        public List<Movie>? WatchList { get; private set; }
+
+        public User(int id, string username, string password, string? email, string? firstName, string? lastName, string? profilePicture, string? settings, List<Movie> favoriteMovies, List<Movie> watchList)
         {
             Id = id;
             Username = username;
-            PasswordHash = passwordHash;
+            SetPassword(password); 
             Email = email;
             FirstName = firstName;
             LastName = lastName;
@@ -30,6 +33,29 @@ namespace LogicClassLibrary.Entities
             Settings = settings;
             FavoriteMovies = favoriteMovies;
             WatchList = watchList;
+        }
+
+        public void Update(string username, string? email, string? firstName, string? lastName, string? profilePicture, string? settings, List<Movie> favoriteMovies, List<Movie> watchList)
+        {
+            Username = username;
+            Email = email;
+            FirstName = firstName;
+            LastName = lastName;
+            ProfilePictureURL = profilePicture;
+            Settings = settings;
+            FavoriteMovies = favoriteMovies;
+            WatchList = watchList;
+        }
+
+        public void SetPassword(string password)
+        {
+            PasswordSalt = PasswordHelper.GenerateSalt();
+            PasswordHash = PasswordHelper.HashPassword(password, PasswordSalt);
+        }
+
+        public bool VerifyPassword(string password)
+        {
+            return PasswordHash == PasswordHelper.HashPassword(password, PasswordSalt);
         }
     }
 }
