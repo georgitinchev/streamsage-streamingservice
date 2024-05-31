@@ -1,14 +1,13 @@
-﻿using LogicClassLibrary.Entities;
-using DataAccessLibrary;
-using System.Data;
-using LogicClassLibrary.Managers;
+﻿using DataAccessLibrary;
 using DataAccessLibrary.DataAccessLibrary;
 using DTOs;
-using StreamSageWAD;
+using LogicClassLibrary.Entities;
+using LogicClassLibrary.Managers;
+using System.Data;
 
 namespace LogicClassLibrary
 {
-    public class BackendService : IBackendService 
+    public class BackendService
     {
         private UserManager userManager;
         private MovieManager movieManager;
@@ -21,16 +20,15 @@ namespace LogicClassLibrary
         private InterpretationDAL interpretationDAL;
         public BackendService()
         {
-            string connectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id=dbi524441_streamsage;Password=e9999619;TrustServerCertificate=true";
-            movieDAL = new MovieDAL(connectionString);
-            userDAL = new UserDAL(connectionString);
-            reviewDAL = new ReviewDAL(connectionString);
-            interpretationDAL = new InterpretationDAL(connectionString);
+            movieDAL = new MovieDAL();
+            userDAL = new UserDAL();
+            reviewDAL = new ReviewDAL();
+            interpretationDAL = new InterpretationDAL();
             movieManager = new MovieManager(movieDAL);
             userManager = new UserManager(userDAL, movieManager);
             reviewManager = new ReviewManager(reviewDAL);
             interpretationManager = new InterpretationManager(interpretationDAL);
-            recommendationManager = new RecommendationManager(movieDAL,userDAL);
+            recommendationManager = new RecommendationManager(movieDAL, userDAL);
         }
 
         public List<string> GetAllGenres()
@@ -46,7 +44,7 @@ namespace LogicClassLibrary
         public void AddMovie(MovieDTO movie)
         {
             movieManager.CreateMovie(movie);
-		}
+        }
 
         public void UpdateMovie(MovieDTO movieDto)
         {
@@ -55,7 +53,7 @@ namespace LogicClassLibrary
 
         public void DeleteMovie(int id)
         {
-			movieManager.DeleteMovie(id);
+            movieManager.DeleteMovie(id);
         }
 
         public User GetUser(int id)
@@ -89,18 +87,18 @@ namespace LogicClassLibrary
         }
         public bool AuthenticateUser(string username, string password)
         {
-            return userManager.AuthenticateUser(username,password);
+            return userManager.AuthenticateUser(username, password);
         }
 
-        public void RegisterUser(string username, string email, string password, string firstName, string lastName, string profilePicture ,string settings)
+        public void RegisterUser(string username, string email, string password, string firstName, string lastName, string profilePicture, string settings)
         {
-            userManager.RegisterUser(username, email, password, firstName, lastName,profilePicture, settings);
+            userManager.RegisterUser(username, email, password, firstName, lastName, profilePicture, settings);
         }
-		
+
         public List<Movie> GetAllMovies()
         {
             return movieManager.movies;
-		}
+        }
 
         public List<User> GetAllUsers()
         {
