@@ -1,14 +1,10 @@
 ﻿using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Interface.Algorhitmic
 {
     public interface IRecommendationStrategy
     {
-        List<MovieDTO> RecommendMovies(string username, List<MovieDTO> allMovies);
+        List<MovieDTO> RecommendMoviesBasedOnUserBehavior(string username, List<MovieDTO> allMovies);
+        List<MovieDTO> RecommendMoviesBasedOnContent(string username, List<MovieDTO> allMovies, int numRecommendations = 5);
     }
 }

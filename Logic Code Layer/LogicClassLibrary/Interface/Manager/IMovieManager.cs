@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LogicClassLibrary.Entities;
 
 namespace LogicClassLibrary.Interface.Manager
 {
-    public interface IMovieManager
+    public interface IMovieManager : IGeneralManager
     {
+        List<Movie>? movies { get; }
+        void PopulateMovies();
+        List<string> GetAllGenres();
+        List<Movie> SearchMovies(string criteria);
     }
 }

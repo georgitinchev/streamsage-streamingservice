@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using DataAccessLibrary.DataAccessLibrary;
+﻿using DataAccessLibrary;
 using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Exception;
 
 namespace LogicClassLibrary.Managers;
 
-public class MovieManager : GeneralManager
+public class MovieManager : GeneralManager<MovieDTO, Movie>
 {
-    private MovieDAL movieDAL;
+    private IMovieDAL movieDAL;
     public List<Movie>? movies { get; private set; }
 
-    public MovieManager(MovieDAL movieDAL)
+    public MovieManager(IMovieDAL movieDAL)
     {
         this.movieDAL = movieDAL;
         movies = new List<Movie>();
@@ -20,91 +19,95 @@ public class MovieManager : GeneralManager
 
     public void PopulateMovies()
     {
-        movies?.Clear();
-        foreach (MovieDTO movie in movieDAL.ReadAllMovies())
+        try
         {
-            if (TransformDTOtoEntity(movie) is Movie movieEntity)
+            movies?.Clear();
+            foreach (MovieDTO movie in movieDAL.ReadAllMovies())
             {
-                movies?.Add(movieEntity);
-                continue;
+                movies?.Add(TransformDTOToEntity(movie));
             }
-            throw new Exception("Movie could not be created");
         }
-    }
-
-    public override Entity TransformDTOtoEntity(object dto)
-    {
-        if (dto is MovieDTO movieDto)
+        catch (System.Exception)
         {
-            return new Movie(
-                movieDto.Id,
-                movieDto.Title,
-                movieDto.ReleaseDate,
-                movieDto.Description,
-                movieDto.PosterImageURL,
-                movieDto.TrailerURL,
-                movieDto.RuntimeMinutes,
-                movieDto.AverageRating,
-                movieDto.Genres
-            );
+            throw new PopulatingMoviesError();
         }
-        throw new ArgumentException("dto is not of type MovieDTO");
     }
 
+    public override void Update(MovieDTO dto)
+    {
+        // Genre validation (must have atleast 1 and not more than 3)
+        try
+        {
+            if (dto.Genres?.Count > 3 || dto.Genres?.Count <= 0)
+            {
+                throw new InvalidGenreException();
+            }
+            movieDAL.UpdateMovie(dto);
+            PopulateMovies();
+        }
+        catch (System.Exception)
+        {
+            throw new UpdateMovieError();
+        }
+    }
 
-    public void UpdateMovie(MovieDTO movie)
+    public override void Delete(int movieId)
+    {
+        try
+        {
+            movieDAL.DeleteMovie(movieId);
+            if (movies != null)
+            {
+                Movie? movie = movies.FirstOrDefault(m => m.Id == movieId);
+                if (movie != null)
+                {
+                    movies.Remove(movie);
+                }
+            }
+        }
+        catch (System.Exception)
+        {
+            throw new DeleteMovieError(movieId);
+        }
+    }
+
+    public override void Create(Movie movie)
     {
         try
         {
             if (movie.Genres?.Count > 3 || movie.Genres?.Count <= 0)
             {
-                throw new ArgumentException("A movie must have 1 to 3 genres");
+                throw new InvalidGenreException();
             }
-            movieDAL.UpdateMovie(movie);
+            movieDAL.CreateMovie(TransformEntityToDTO(movie));
             PopulateMovies();
         }
-        catch (Exception ex)
+        catch (System.Exception)
         {
-            throw new Exception("Movie could not be updated: " + ex.Message);
+            throw new CreateMovieError();
         }
     }
 
-    public void DeleteMovie(int movieId)
+    public override Movie Read(int movieId)
     {
-        movieDAL.DeleteMovie(movieId);
-        if (movies != null)
+        try
         {
-            Movie? movie = movies.FirstOrDefault(m => m.Id == movieId);
-            if (movie != null)
+            PopulateMovies();
+            if (movies == null || !movies.Any())
             {
-                movies.Remove(movie);
+                throw new PopulatingMoviesError();
             }
+            var movie = movies.Find(m => m.Id == movieId);
+            if (movie == null)
+            {
+                throw new MovieNotFoundException(movieId);
+            }
+            return movie;
         }
-    }
-
-    public void CreateMovie(MovieDTO movie)
-    {
-        if(movie.Genres?.Count > 3 || movie.Genres?.Count <= 0)
+        catch (System.Exception)
         {
-            throw new ArgumentException("A movie must have 1 to 3 genres");
+            throw new MovieNotFoundException(movieId);
         }
-        movieDAL.CreateMovie(movie);
-        PopulateMovies();
-    }
-
-    public Movie ReadMovie(int movieId)
-    {
-        PopulateMovies();
-        if (movies == null || !movies.Any())
-        {
-            throw new Exception("The movies list is not populated.");
-        }
-        var movie = movies.Find(m => m.Id == movieId);
-        if (movie == null)
-        {
-            throw new Exception($"Movie with ID {movieId} not found.");
-        }
-        return movie;
     }
 
     public List<string> GetAllGenres()
@@ -112,21 +115,58 @@ public class MovieManager : GeneralManager
         return movieDAL.GetAllGenres();
     }
 
-
     public List<Movie> SearchMovies(string criteria)
     {
-        if (criteria.Length < 5)
+        try
         {
-            throw new ArgumentException("Search criteria must be at least 5 characters long");
-        }
-        List<Movie> searchResults = new List<Movie>();
-        foreach (Movie movie in movies)
-        {
-            if (movie.Title.ToLower().Contains(criteria.ToLower()))
+            if (criteria.Length < 5)
             {
-                searchResults.Add(movie);
+                throw new SearchCriteriaError();
             }
+            List<Movie> searchResults = new List<Movie>();
+            foreach (Movie movie in movies)
+            {
+                if (movie.Title.ToLower().Contains(criteria.ToLower()))
+                {
+                    searchResults.Add(movie);
+                }
+            }
+            return searchResults;
         }
-        return searchResults;
+        catch (System.Exception)
+        {
+            throw new SearchCriteriaError();
+        }
+    }
+
+    // 2 over ridden methods specific to transforming DTO to Entity and Entity to DTO
+    public override Movie? TransformDTOToEntity(MovieDTO dto)
+    {
+        return new Movie(
+            dto.Id,
+            dto.Title,
+            dto.ReleaseDate,
+            dto.Description,
+            dto.PosterImageURL,
+            dto.TrailerURL,
+            dto.RuntimeMinutes,
+            dto.AverageRating,
+            dto.Genres
+        );
+    }
+
+    public override MovieDTO? TransformEntityToDTO(Movie movie)
+    {
+        return new MovieDTO(
+       movie.Id,
+       movie.Title,
+       movie.Year,
+       movie.Description,
+       movie.PosterImageURL,
+       movie.TrailerURL,
+       movie.RuntimeMinutes,
+       movie.AverageRating,
+       movie.Genres
+       );
     }
 }

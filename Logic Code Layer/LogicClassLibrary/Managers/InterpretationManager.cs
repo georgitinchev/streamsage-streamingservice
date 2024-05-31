@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccessLibrary;
+﻿using DataAccessLibrary;
 using LogicClassLibrary.Entities;
 
 namespace LogicClassLibrary.Managers
@@ -14,9 +9,9 @@ namespace LogicClassLibrary.Managers
         public InterpretationDAL? interpretationDAL;
         public InterpretationManager(InterpretationDAL _interpretationDAL)
         {
-			interpretations = new List<Interpretation>();
+            interpretations = new List<Interpretation>();
             interpretationDAL = _interpretationDAL;
-		}
+        }
 
         private void createInterpretation(int userId, int movieId, string interpretationText)
         {

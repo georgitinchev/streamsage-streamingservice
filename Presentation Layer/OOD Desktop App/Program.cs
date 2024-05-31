@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-
 namespace DesktopApp
 {
     public static class Program
@@ -16,7 +11,7 @@ namespace DesktopApp
             if (currentForm != null)
             {
                 currentForm.Hide();
-                newForm.Location = currentForm.Location; 
+                newForm.Location = currentForm.Location;
             }
             formStack.Push(newForm);
             newForm.Show();

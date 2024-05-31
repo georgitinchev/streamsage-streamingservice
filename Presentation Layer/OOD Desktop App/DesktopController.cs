@@ -1,58 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LogicClassLibrary;
-using LogicClassLibrary.Entities;
+﻿using DTOs;
+using LogicClassLibrary.Interface.Service;
 
 namespace DesktopApp
 {
-    public class DesktopController : UserInterface
+    public class DesktopController
     {
-        private User? loggedInUser;
-        private string? searchCriteria;
-        internal BackendService? backendService;
+        public IUserService userService { get; private set; }
+        public IMovieService movieService { get; private set; }
+        public IReviewService reviewService { get; private set; }
+        public IInterpretationService interpretationService { get; private set; }
 
-        public DesktopController()
+        public DesktopController(IUserService userService, IMovieService movieService, IReviewService reviewService, IInterpretationService interpretationService)
         {
-            backendService = new BackendService();
+            this.userService = userService;
+            this.movieService = movieService;
+            this.reviewService = reviewService;
+            this.interpretationService = interpretationService;
         }
         public void displayHomePage()
         {
+
         }
-        public List<Movie> displayMoviePage()
+        public List<MovieDTO> displayMoviePage()
         {
-            if (backendService != null)
+            if (movieService != null)
             {
-                return backendService.GetAllMovies();
+                return movieService.GetAllMovies();
             }
-            return new List<Movie>();
+            return new List<MovieDTO>();
         }
 
-        public List<User> displayUserPage()
+        public List<UserDTO> displayUserPage()
         {
-            if(backendService != null)
+            if (userService != null)
             {
-                return backendService.GetAllUsers();
+                return userService.GetAllUsers();
             }
-            return new List<User>();
+            return new List<UserDTO>();
         }
-        public bool loginUser(string username, string password)
+        public void loginUser(string username, string password)
         {
-           return backendService.AuthenticateUser(username, password);
+            try
+            {
+                userService.AuthenticateUser(username, password);
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
-        public void registerUser(string username, string email, string password, string firstName, string lastName,string profilePicture, string settings)
+        public void registerUser(string username, string email, string password, string firstName, string lastName)
         {
-            backendService?.RegisterUser(username, email, password, firstName, lastName,profilePicture , settings);
+            userService?.RegisterUser(username, email, password, firstName, lastName);
         }
         public void changeUserPassword(string username, string newPassword)
         {
-            backendService?.ChangePassword(username, newPassword);
-        }
-        public void logoutUser()
-        {
-
+            userService?.ChangePassword(username, newPassword);
         }
     }
 }

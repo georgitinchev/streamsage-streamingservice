@@ -1,9 +1,4 @@
 ﻿using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLibrary
 {
@@ -14,5 +9,6 @@ namespace DataAccessLibrary
         void UpdateMovie(MovieDTO movie);
         void DeleteMovie(int movieId);
         List<MovieDTO> ReadAllMovies();
+        List<string> GetAllGenres();
     }
 }

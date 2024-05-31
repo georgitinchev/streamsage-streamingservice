@@ -1,16 +1,16 @@
 ﻿using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLibrary
 {
     public class InterpretationDAL : BaseDAL
     {
-        public InterpretationDAL(string connectionString) : base(connectionString)
+        public InterpretationDAL() : base()
         {
+        }
+
+        public void ReadAllInterpretations()
+        {
+            throw new NotImplementedException();
         }
 
         public void CreateInterpretation(InterpretationDTO interpretation)

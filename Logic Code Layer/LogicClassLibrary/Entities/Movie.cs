@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogicClassLibrary.Entities
+﻿namespace LogicClassLibrary.Entities
 {
     public class Movie : Entity
     {
@@ -14,22 +8,22 @@ namespace LogicClassLibrary.Entities
         public string? Description { get; private set; }
         public string? PosterImageURL { get; private set; }
         public string? TrailerURL { get; private set; }
-		public int RuntimeMinutes { get; private set; }
-		public decimal? AverageRating { get; private set; } = null;
+        public int RuntimeMinutes { get; private set; }
+        public decimal? AverageRating { get; private set; } = null;
         public List<string> Genres { get; private set; } = new List<string>();
         public override DateTime CreatedAt { get; protected set; } = DateTime.Now;
-		public Movie(int id, string title, DateTime year, string description, string posterImageURL, string trailerURL, int runtimeMinutes, decimal? averageRating, List<string> genres)
-		{
-			Id = id;
-			Title = title;
-			Year = year;
-			Description = description;
-			PosterImageURL = posterImageURL;
-			TrailerURL = trailerURL;
-			RuntimeMinutes = runtimeMinutes;
-			AverageRating = averageRating;
+        public Movie(int id, string title, DateTime year, string description, string posterImageURL, string trailerURL, int runtimeMinutes, decimal? averageRating, List<string> genres)
+        {
+            Id = id;
+            Title = title;
+            Year = year;
+            Description = description;
+            PosterImageURL = posterImageURL;
+            TrailerURL = trailerURL;
+            RuntimeMinutes = runtimeMinutes;
+            AverageRating = averageRating;
             Genres = genres;
-		}
+        }
         public Movie(int id, string title, DateTime year, string description, string posterImageURL, string trailerURL, int runtimeMinutes, decimal? averageRating, List<string> genres, DateTime createdAt)
         {
             Id = id;
@@ -55,5 +49,5 @@ namespace LogicClassLibrary.Entities
             AverageRating = averageRating;
             Genres = genres;
         }
-	}
+    }
 }

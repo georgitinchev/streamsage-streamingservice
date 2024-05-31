@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DTOs;
 
 namespace LogicClassLibrary.Interface.DAL
 {
     public interface IInterpretationDAL
     {
+        void ReadAllInterpretations();
+        void CreateInterpretation(InterpretationDTO interpretation);
+        InterpretationDTO ReadInterpretation(int interpretationId);
+        void UpdateInterpretation(InterpretationDTO interpretation);
+        void DeleteInterpretation(int interpretationId);
     }
 }

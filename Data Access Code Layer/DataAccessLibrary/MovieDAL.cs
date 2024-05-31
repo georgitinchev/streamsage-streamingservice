@@ -1,11 +1,6 @@
 ﻿using DTOs;
 using Microsoft.Data.SqlClient;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLibrary
 {
@@ -13,8 +8,7 @@ namespace DataAccessLibrary
     {
         public class MovieDAL : BaseDAL, IMovieDAL
         {
-
-            public MovieDAL(string connectionString) : base(connectionString)
+            public MovieDAL() : base()
             {
             }
 
@@ -24,7 +18,7 @@ namespace DataAccessLibrary
                 var movies = new List<MovieDTO>();
                 var movieQuery = "SELECT ID, Title, ReleaseDate, Description, PosterImageURL, TrailerURL, RuntimeMinutes, AverageRating FROM Movie";
                 var genreQuery = "SELECT mg.MovieID, g.Name FROM MovieGenre mg INNER JOIN Genre g ON mg.GenreID = g.ID";
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = new SqlConnection())
                 {
                     connection.Open();
                     using (var command = new SqlCommand(movieQuery, connection))
@@ -70,7 +64,7 @@ namespace DataAccessLibrary
             {
                 string query = "UPDATE Movie SET Title = @Title, ReleaseDate = @ReleaseDate, Description = @Description, PosterImageURL = @PosterImageURL, TrailerURL = @TrailerURL, RuntimeMinutes = @RuntimeMinutes, AverageRating = @AverageRating WHERE ID = @Id";
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection())
                 {
                     connection.Open();
                     using (SqlTransaction transaction = connection.BeginTransaction())
@@ -112,7 +106,7 @@ namespace DataAccessLibrary
                 string deleteMovieQuery = "DELETE FROM Movie WHERE ID = @Id";
                 try
                 {
-                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    using (SqlConnection connection = new SqlConnection())
                     {
                         connection.Open();
                         using (SqlTransaction transaction = connection.BeginTransaction())
@@ -138,12 +132,12 @@ namespace DataAccessLibrary
             public void CreateMovie(MovieDTO movie)
             {
                 string query = "INSERT INTO Movie (Title, ReleaseDate, Description, PosterImageURL, TrailerURL, RuntimeMinutes, AverageRating) OUTPUT INSERTED.ID VALUES (@Title, @ReleaseDate, @Description, @PosterImageURL, @TrailerURL, @RuntimeMinutes, NULL)";
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection())
                 {
                     connection.Open();
-                    using (SqlTransaction transaction = connection.BeginTransaction()) 
+                    using (SqlTransaction transaction = connection.BeginTransaction())
                     {
-                        using (SqlCommand command = new SqlCommand(query, connection, transaction)) 
+                        using (SqlCommand command = new SqlCommand(query, connection, transaction))
                         {
                             command.Parameters.AddWithValue("@Title", movie.Title);
                             command.Parameters.AddWithValue("@ReleaseDate", movie.ReleaseDate);
@@ -154,9 +148,9 @@ namespace DataAccessLibrary
                             int movieId = (int)command.ExecuteScalar();
                             if (movie.Genres != null && movie.Genres.Count > 0)
                             {
-                                InsertMovieGenres(movieId, movie.Genres, connection, transaction); 
+                                InsertMovieGenres(movieId, movie.Genres, connection, transaction);
                             }
-                            transaction.Commit(); 
+                            transaction.Commit();
                         }
                     }
                 }
@@ -193,7 +187,7 @@ namespace DataAccessLibrary
             private int GetGenreIdByName(string genreName, SqlConnection connection, SqlTransaction transaction)
             {
                 string query = "SELECT ID FROM Genre WHERE Name = @GenreName";
-                using (SqlCommand command = new SqlCommand(query, connection, transaction)) 
+                using (SqlCommand command = new SqlCommand(query, connection, transaction))
                 {
                     command.Parameters.AddWithValue("@GenreName", genreName);
                     var result = command.ExecuteScalar();
@@ -214,7 +208,7 @@ namespace DataAccessLibrary
             {
                 List<string> genres = new List<string>();
                 string query = "SELECT Name FROM Genre";
-                using (SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection())
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(query, connection))

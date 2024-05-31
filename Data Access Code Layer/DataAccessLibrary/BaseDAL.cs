@@ -1,35 +1,34 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
-using System.Data;
 
 
 namespace DataAccessLibrary
 {
     public class BaseDAL
     {
-        internal string connectionString;
-        public BaseDAL(string connectionString)
+        protected const string ConnectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id=dbi524441_streamsage;Password=e9999619;TrustServerCertificate=true";
+
+        public BaseDAL()
         {
-            this.connectionString = connectionString;
+
         }
 
-        public void CreateConnection()
+        protected SqlConnection CreateConnection()
         {
             try
             {
-                SqlConnection connection = new SqlConnection(connectionString);
+                SqlConnection connection = new SqlConnection(ConnectionString);
                 connection.Open();
-                connection.ConnectionString = connectionString;
+                return connection;
             }
             catch (SqlException ex)
             {
-                Console.WriteLine("An error occurred while connecting to the database: " + ex.Message);
+                throw new Exception("An error occurred while connecting to the database: " + ex.Message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                throw new Exception("An error occurred: " + ex.Message);
             }
         }
-
     }
 }
+
