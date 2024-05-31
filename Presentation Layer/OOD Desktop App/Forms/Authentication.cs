@@ -1,15 +1,4 @@
-﻿using System;
-using DesktopApp;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Drawing.Drawing2D;
 
 namespace DesktopApp.Forms
 {
@@ -49,17 +38,20 @@ namespace DesktopApp.Forms
                 errorLabelAuth.Text = "Username and password cannot be empty";
                 return;
             }
-            bool isAuthenticated = _desktopController.loginUser(userNameLoginTextBox.Text, passwordLoginTextBox.Text);
-            if (isAuthenticated)
+            try
             {
+                _desktopController.loginUser(userNameLoginTextBox.Text, passwordLoginTextBox.Text);
                 AdminDashboard adminDashboard = new AdminDashboard(_desktopController);
                 Program.SwitchToForm(adminDashboard);
             }
-            else
+            catch (System.Exception)
             {
                 errorLabelAuth.Text = "Invalid credentials";
             }
-            ClearInputs();
+            finally
+            {
+                ClearInputs();
+            }
         }
 
         private void ClearInputs()

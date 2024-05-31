@@ -1,5 +1,4 @@
 using DesktopApp.Forms;
-using LogicClassLibrary;
 
 namespace DesktopApp
 {
