@@ -7,14 +7,14 @@ namespace DataAccessLibrary
     {
         public class UserDAL : BaseDAL, IUserDAL
         {
-            public UserDAL(string connectionString) : base(connectionString)
+            public UserDAL() : base()
             {
             }
 
             public List<UserDTO> ReadAllUsers()
             {
                 List<UserDTO> users = new List<UserDTO>();
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection())
                 {
                     conn.Open();
                     using (SqlCommand cmd = new SqlCommand("SELECT * FROM [User]", conn))
@@ -46,7 +46,7 @@ namespace DataAccessLibrary
             private List<MovieDTO> GetMoviesForUser(int userId, string tableName)
             {
                 List<MovieDTO> movies = new List<MovieDTO>();
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection())
                 {
                     conn.Open();
                     string movieQuery = $"SELECT m.* FROM {tableName} as t JOIN Movie as m ON t.MovieId = m.ID WHERE t.UserId = @ID";
@@ -98,7 +98,7 @@ namespace DataAccessLibrary
 
             public void CreateUser(UserDTO user)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection())
                 {
                     conn.Open();
                     string query = "INSERT INTO [User] (Username, Email, PasswordHash, FirstName, LastName, ProfilePictureURL, Settings) VALUES (@Username, @Email, @PasswordHash, @FirstName, @LastName, @ProfilePictureURL, @Settings)";
@@ -118,7 +118,7 @@ namespace DataAccessLibrary
 
             public UserDTO GetUserByUsername(string username)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection())
                 {
                     conn.Open();
                     string query = "SELECT * FROM [User] WHERE Username = @Username";
@@ -153,7 +153,7 @@ namespace DataAccessLibrary
 
             public void ChangePassword(string username, string newPassword)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection())
                 {
                     conn.Open();
                     string query = "UPDATE [User] SET PasswordHash = @PasswordHash WHERE Username = @Username";
@@ -168,7 +168,7 @@ namespace DataAccessLibrary
 
             public void UpdateUser(UserDTO user)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection())
                 {
                     conn.Open();
                     string query = "UPDATE [User] SET Username = @Username, Email = @Email, FirstName = @FirstName, LastName = @LastName, ProfilePictureURL = @ProfilePictureURL, Settings = @Settings WHERE ID = @ID";
@@ -188,7 +188,7 @@ namespace DataAccessLibrary
 
             public void DeleteUser(int userId)
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                using (SqlConnection conn = new SqlConnection())
                 {
                     conn.Open();
                     string query = "DELETE FROM [User] WHERE ID = @ID";

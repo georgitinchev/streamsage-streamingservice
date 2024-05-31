@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogicClassLibrary.Interface.Manager
+﻿namespace LogicClassLibrary.Interface.Manager
 {
-    public interface IReviewManager
+    public interface IReviewManager : IGeneralManager
     {
+        void getMoviesReviews(int movieId);
     }
 }

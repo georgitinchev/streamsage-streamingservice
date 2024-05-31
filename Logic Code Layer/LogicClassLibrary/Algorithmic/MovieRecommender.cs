@@ -1,9 +1,5 @@
-﻿using DataAccessLibrary;
-using DataAccessLibrary.DataAccessLibrary;
+﻿using DataAccessLibrary.DataAccessLibrary;
 using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LogicClassLibrary.Managers
 {

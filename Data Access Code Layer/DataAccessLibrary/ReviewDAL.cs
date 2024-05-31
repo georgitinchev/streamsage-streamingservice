@@ -1,9 +1,4 @@
 ﻿using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccessLibrary
 {
@@ -11,11 +6,13 @@ namespace DataAccessLibrary
     {
         public class ReviewDAL : BaseDAL
         {
-            public ReviewDAL(string connectionString) : base(connectionString)
+            public ReviewDAL() : base()
             {
-
             }
-
+            public void ReadAllReviews()
+            {
+                throw new NotImplementedException();
+            }
             public void CreateReview(ReviewDTO review)
             {
                 throw new NotImplementedException();

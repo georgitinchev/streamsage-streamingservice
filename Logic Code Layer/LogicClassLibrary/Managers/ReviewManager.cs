@@ -1,10 +1,5 @@
 ﻿using DataAccessLibrary.DataAccessLibrary;
 using LogicClassLibrary.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Managers
 {
@@ -15,8 +10,8 @@ namespace LogicClassLibrary.Managers
         public ReviewManager(ReviewDAL _reviewDAL)
         {
             reviews = new List<Review>();
-			reviewDAL = _reviewDAL;
-		}
+            reviewDAL = _reviewDAL;
+        }
         internal void getMovieReviews(int movieId)
         {
             throw new NotImplementedException();

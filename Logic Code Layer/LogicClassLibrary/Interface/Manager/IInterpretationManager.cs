@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LogicClassLibrary.Interface.Manager
+﻿namespace LogicClassLibrary.Interface.Manager
 {
-    public interface IInterpretationManager
+    public interface IInterpretationManager : IGeneralManager
     {
+        void createInterpretation(int userId, int movieId, string interpretationText);
+        void updateInterpretation(int interpretationId, string interpretationText);
+        void deleteInterpretation(int interpretationId);
     }
 }

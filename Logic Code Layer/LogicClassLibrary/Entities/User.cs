@@ -1,9 +1,4 @@
 ﻿using LogicClassLibrary.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Entities
 {
@@ -12,7 +7,7 @@ namespace LogicClassLibrary.Entities
         public override int Id { get; protected set; }
         public string Username { get; private set; }
         private string PasswordHash;
-        private string PasswordSalt;  
+        private string PasswordSalt;
         public string? Email { get; private set; }
         public string? FirstName { get; private set; }
         public string? LastName { get; private set; }
@@ -25,7 +20,7 @@ namespace LogicClassLibrary.Entities
         {
             Id = id;
             Username = username;
-            SetPassword(password); 
+            SetPassword(password);
             Email = email;
             FirstName = firstName;
             LastName = lastName;
@@ -56,6 +51,22 @@ namespace LogicClassLibrary.Entities
         public bool VerifyPassword(string password)
         {
             return PasswordHash == PasswordHelper.HashPassword(password, PasswordSalt);
+        }
+
+        public void SetPasswordHashAndSalt(string passwordHash, string passwordSalt)
+        {
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
+        }
+
+        public string GetPasswordHash()
+        {
+            return PasswordHash;
+        }
+
+        public string GetPasswordSalt()
+        {
+            return PasswordSalt;
         }
     }
 }

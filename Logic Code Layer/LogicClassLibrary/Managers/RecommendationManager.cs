@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccessLibrary.DataAccessLibrary;
+﻿using DataAccessLibrary.DataAccessLibrary;
 using DTOs;
-using LogicClassLibrary.Entities;
 
 namespace LogicClassLibrary.Managers
 {

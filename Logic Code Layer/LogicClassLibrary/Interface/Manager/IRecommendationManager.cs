@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DTOs;
+using LogicClassLibrary.Managers;
 
 namespace LogicClassLibrary.Interface.Manager
 {
     public interface IRecommendationManager
     {
+        Task<List<MovieDTO>> RecommendMoviesForUser(string username, int numRecommendations, RecommendationManager.RecommendationType type);
     }
 }

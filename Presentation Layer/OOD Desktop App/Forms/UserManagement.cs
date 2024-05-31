@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using DTOs;
+﻿using DTOs;
 using LogicClassLibrary.Entities;
 using LogicClassLibrary.NewFolder;
 
@@ -45,7 +42,7 @@ namespace DesktopApp.Forms
                 errorLabel.Text = "User created successfully!";
                 ClearInputFields();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 errorLabel.ForeColor = Color.Red;
                 errorLabel.Text = ex.Message;
@@ -75,7 +72,7 @@ namespace DesktopApp.Forms
             }
             try
             {
-                User currentUser = _desktopController.backendService.GetUser(currentUserId);
+                UserDTO currentUser = _desktopController.userService.Read(currentUserId);
                 bool detailsUnchanged = username == currentUser.Username &&
                                         email == currentUser.Email &&
                                         firstName == currentUser.FirstName &&
@@ -83,7 +80,7 @@ namespace DesktopApp.Forms
 
                 if (detailsUnchanged && !string.IsNullOrEmpty(password))
                 {
-                    _desktopController.backendService?.ChangePassword(username, password);
+                    _desktopController.userService?.ChangePassword(username, password);
                     updateErrorLabel.ForeColor = Color.Green;
                     updateErrorLabel.Text = "Password updated successfully!";
                     return;
@@ -91,16 +88,16 @@ namespace DesktopApp.Forms
                 else
                 {
                     UserDTO userToUpdate = new UserDTO(currentUserId, username, email, firstName, lastName, "", "");
-                    _desktopController.backendService?.UpdateUser(userToUpdate);
+                    _desktopController.userService?.Update(currentUserId, username, email, firstName, lastName, "", "");
                     if (!string.IsNullOrEmpty(password))
                     {
-                        _desktopController.backendService?.ChangePassword(username, password);
+                        _desktopController.userService?.ChangePassword(username, password);
                     }
                     updateErrorLabel.ForeColor = Color.Green;
                     updateErrorLabel.Text = "User details updated successfully!";
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 updateErrorLabel.ForeColor = Color.Red;
                 updateErrorLabel.Text = ex.Message;
@@ -142,14 +139,14 @@ namespace DesktopApp.Forms
 
         private void RefreshUsers()
         {
-            List<User> users = _desktopController.displayUserPage();
+            List<UserDTO> users = _desktopController.displayUserPage();
             userManagementDataGrid.DataSource = null;
             userManagementDataGrid.DataSource = users;
             totalUsersLabel.Text = $"Total Users: {users.Count}";
             userManagementDataGrid.Refresh();
         }
 
-        private async void userManagementDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private async void userManagementDataGrid_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
             var senderGrid = (DataGridView)sender;
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
@@ -171,11 +168,11 @@ namespace DesktopApp.Forms
                     {
                         try
                         {
-                            _desktopController.backendService?.DeleteUser(user.Id);
+                            _desktopController.userService?.Delete(user.Id);
                             generalErrorLabel.ForeColor = Color.DarkGreen;
                             generalErrorLabel.Text = "User deleted successfully!";
                         }
-                        catch (Exception ex)
+                        catch (System.Exception ex)
                         {
                             generalErrorLabel.ForeColor = Color.Red;
                             generalErrorLabel.Text = ex.Message;
