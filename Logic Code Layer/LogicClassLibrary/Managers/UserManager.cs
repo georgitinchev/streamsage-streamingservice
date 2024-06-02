@@ -41,8 +41,8 @@ namespace LogicClassLibrary.Managers
             var user = users.Find(x => x.Id == dto.Id);
             if (user != null)
             {
-                var favoriteMovies = dto.FavoriteMovies?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>())).ToList();
-                var watchList = dto.WatchList?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>())).ToList();
+                var favoriteMovies = dto.FavoriteMovies?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
+                var watchList = dto.WatchList?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
                 user.Update(dto.Username, dto.Email, dto.FirstName, dto.LastName, dto.ProfilePictureURL, dto.Settings, favoriteMovies, watchList);
                 user.SetPasswordHashAndSalt(dto.PasswordHash ?? string.Empty, dto.PasswordSalt ?? string.Empty);
                 userDAL.UpdateUser(TransformEntityToDTO(user));
@@ -106,13 +106,13 @@ namespace LogicClassLibrary.Managers
         {
             if (dto == null) return null;
 
-            var favoriteMovies = dto.FavoriteMovies?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>())).ToList();
-            var watchList = dto.WatchList?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>())).ToList();
+            var favoriteMovies = dto.FavoriteMovies?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
+            var watchList = dto.WatchList?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
 
             var user = new User(
                 dto.Id,
                 dto.Username,
-                string.Empty,  // Placeholder for password, assume password is not set directly from DTO    
+                string.Empty, 
                 dto.Email,
                 dto.FirstName,
                 dto.LastName,
@@ -121,7 +121,6 @@ namespace LogicClassLibrary.Managers
                 favoriteMovies ?? new List<Movie>(),
                 watchList ?? new List<Movie>()
             );
-            // Setting password hash and salt directly
             user.SetPasswordHashAndSalt(dto.PasswordHash ?? string.Empty, dto.PasswordSalt ?? string.Empty);
             return user;
         }
@@ -130,8 +129,8 @@ namespace LogicClassLibrary.Managers
         {
             if (entity == null) return null;
 
-            var favoriteMovies = entity.FavoriteMovies?.Select(m => new MovieDTO(m.Id, m.Title ?? string.Empty, m.Year, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>())).ToList();
-            var watchList = entity.WatchList?.Select(m => new MovieDTO(m.Id, m.Title ?? string.Empty, m.Year, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>())).ToList();
+            var favoriteMovies = entity.FavoriteMovies?.Select(m => new MovieDTO(m.Id, m.Title ?? string.Empty, m.Year, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Actors ?? new List<string>(), m.Directors ?? new List<string>())).ToList();
+            var watchList = entity.WatchList?.Select(m => new MovieDTO(m.Id, m.Title ?? string.Empty, m.Year, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Actors ?? new List<string>(), m.Directors ?? new List<string>())).ToList();
 
             return new UserDTO(
                 entity.Id,

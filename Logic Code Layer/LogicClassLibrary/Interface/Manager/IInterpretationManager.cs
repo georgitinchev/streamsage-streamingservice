@@ -1,9 +1,15 @@
-﻿namespace LogicClassLibrary.Interface.Manager
+﻿using DTOs;
+using LogicClassLibrary.Entities;
+
+namespace LogicClassLibrary.Interface.Manager
 {
-    public interface IInterpretationManager : IGeneralManager
+    public interface IInterpretationManager 
     {
-        void createInterpretation(int userId, int movieId, string interpretationText);
-        void updateInterpretation(int interpretationId, string interpretationText);
-        void deleteInterpretation(int interpretationId);
+        Interpretation TransformDTOToEntity(InterpretationDTO dto);
+        InterpretationDTO TransformEntityToDTO(Interpretation entity);
+        void Create(InterpretationDTO dto);
+        InterpretationDTO Read(int id);
+        void Update(InterpretationDTO dto);
+        void Delete(int id);
     }
 }

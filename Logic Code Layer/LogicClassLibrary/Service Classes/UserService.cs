@@ -5,7 +5,7 @@ using LogicClassLibrary.Interface.Service;
 
 namespace LogicClassLibrary.Service_Classes
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private IUserManager userManager;
 

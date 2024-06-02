@@ -2,18 +2,19 @@
 using DTOs;
 using LogicClassLibrary.Entities;
 using LogicClassLibrary.Exception;
+using LogicClassLibrary.Interface.Manager;
+using System.ComponentModel;
 
 namespace LogicClassLibrary.Managers;
 
-public class MovieManager : GeneralManager<MovieDTO, Movie>
+public class MovieManager : GeneralManager<MovieDTO, Movie>, IMovieManager
 {
     private IMovieDAL movieDAL;
-    public List<Movie>? movies { get; private set; }
+    public List<Movie>? movies { get; private set; } = new List<Movie>();
 
     public MovieManager(IMovieDAL movieDAL)
     {
         this.movieDAL = movieDAL;
-        movies = new List<Movie>();
         PopulateMovies();
     }
 
@@ -33,9 +34,13 @@ public class MovieManager : GeneralManager<MovieDTO, Movie>
         }
     }
 
+    public List<Movie> GetAllMovies()
+    {
+        return movies;
+    }
+
     public override void Update(MovieDTO dto)
     {
-        // Genre validation (must have atleast 1 and not more than 3)
         try
         {
             if (dto.Genres?.Count > 3 || dto.Genres?.Count <= 0)
@@ -43,7 +48,11 @@ public class MovieManager : GeneralManager<MovieDTO, Movie>
                 throw new InvalidGenreException();
             }
             movieDAL.UpdateMovie(dto);
-            PopulateMovies();
+            var movie = movies.Find(m => m.Id == dto.Id);
+            if (movie != null)
+            {
+                movie.Update(dto.Title, dto.ReleaseDate, dto.Description, dto.PosterImageURL, dto.TrailerURL, dto.RuntimeMinutes, dto.AverageRating, dto.Genres, dto.Actors, dto.Directors);
+            }
         }
         catch (System.Exception)
         {
@@ -56,13 +65,10 @@ public class MovieManager : GeneralManager<MovieDTO, Movie>
         try
         {
             movieDAL.DeleteMovie(movieId);
-            if (movies != null)
+            var movie = movies.Find(m => m.Id == movieId);
+            if (movie != null)
             {
-                Movie? movie = movies.FirstOrDefault(m => m.Id == movieId);
-                if (movie != null)
-                {
-                    movies.Remove(movie);
-                }
+                movies.Remove(movie);
             }
         }
         catch (System.Exception)
@@ -71,7 +77,7 @@ public class MovieManager : GeneralManager<MovieDTO, Movie>
         }
     }
 
-    public override void Create(Movie movie)
+    public override void Create(MovieDTO movie)
     {
         try
         {
@@ -79,8 +85,8 @@ public class MovieManager : GeneralManager<MovieDTO, Movie>
             {
                 throw new InvalidGenreException();
             }
-            movieDAL.CreateMovie(TransformEntityToDTO(movie));
-            PopulateMovies();
+            movieDAL.CreateMovie(movie);
+            movies.Add(TransformDTOToEntity(movie));
         }
         catch (System.Exception)
         {
@@ -88,11 +94,11 @@ public class MovieManager : GeneralManager<MovieDTO, Movie>
         }
     }
 
-    public override Movie Read(int movieId)
+    public override MovieDTO Read(int movieId)
     {
         try
         {
-            PopulateMovies();
+            GetAllMovies();
             if (movies == null || !movies.Any())
             {
                 throw new PopulatingMoviesError();
@@ -102,7 +108,7 @@ public class MovieManager : GeneralManager<MovieDTO, Movie>
             {
                 throw new MovieNotFoundException(movieId);
             }
-            return movie;
+            return TransformEntityToDTO(movie);
         }
         catch (System.Exception)
         {
@@ -151,22 +157,25 @@ public class MovieManager : GeneralManager<MovieDTO, Movie>
             dto.TrailerURL,
             dto.RuntimeMinutes,
             dto.AverageRating,
-            dto.Genres
+            dto.Genres,
+            dto.Directors, 
+            dto.Actors 
         );
     }
-
     public override MovieDTO? TransformEntityToDTO(Movie movie)
     {
         return new MovieDTO(
-       movie.Id,
-       movie.Title,
-       movie.Year,
-       movie.Description,
-       movie.PosterImageURL,
-       movie.TrailerURL,
-       movie.RuntimeMinutes,
-       movie.AverageRating,
-       movie.Genres
-       );
+            movie.Id,
+            movie.Title,
+            movie.Year,
+            movie.Description,
+            movie.PosterImageURL,
+            movie.TrailerURL,
+            movie.RuntimeMinutes,
+            movie.AverageRating,
+            movie.Genres,
+            movie.Directors,
+            movie.Actors 
+        );
     }
 }

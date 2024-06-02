@@ -1,6 +1,8 @@
-﻿namespace LogicClassLibrary.Service_Classes
+﻿using LogicClassLibrary.Interface.Service;
+
+namespace LogicClassLibrary.Service_Classes
 {
-    internal class InterpretationService
+    public class InterpretationService : IInterpretationService
     {
     }
 }

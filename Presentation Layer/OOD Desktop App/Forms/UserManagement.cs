@@ -37,7 +37,7 @@ namespace DesktopApp.Forms
 
             try
             {
-                _desktopController.registerUser(username, email, password, firstName, lastName, "", "");
+                //_desktopController.registerUser(username, email, password, firstName, lastName, "", "");
                 errorLabel.ForeColor = Color.Green;
                 errorLabel.Text = "User created successfully!";
                 ClearInputFields();
