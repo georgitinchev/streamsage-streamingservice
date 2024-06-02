@@ -16,7 +16,7 @@ namespace DesktopApp
         private void logoutBtn_Click(object sender, EventArgs e)
         {
             this.Close();
-            Program.SwitchToForm(new Authentication());
+            Program.SwitchToForm(new Authentication(_desktopController.userService, _desktopController.movieService, _desktopController.reviewService, _desktopController.interpretationService));
         }
 
         private void AdminDashboard_Activated(object sender, EventArgs e)

@@ -1,7 +1,7 @@
 ﻿namespace LogicClassLibrary.Interface.Manager
 {
-    public interface IReviewManager : IGeneralManager
+    public interface IReviewManager 
     {
-        void getMoviesReviews(int movieId);
+       
     }
 }

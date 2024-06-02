@@ -29,15 +29,15 @@ namespace DesktopApp.Forms
                 RecommendationManager.RecommendationType.BehaviorBased :
                 RecommendationManager.RecommendationType.ContentBased;
 
-            var recommendations = await desktopController.backendService?.recommendationManager?.RecommendMoviesForUser(username, numRecommendations, type);
+            //var recommendations = await desktopController.backendService?.recommendationManager?.RecommendMoviesForUser(username, numRecommendations, type);
 
-            if (recommendations != null)
-            {
-                foreach (var movie in recommendations)
-                {
-                    settingsDisplayRecommendationsListBox.Items.Add(movie.Title);
-                }
-            }
+            //if (recommendations != null)
+            //{
+            //    foreach (var movie in recommendations)
+            //    {
+            //        settingsDisplayRecommendationsListBox.Items.Add(movie.Title);
+            //    }
+            //}
         }
 
         private void settingsTestAlgorithm_Click(object sender, EventArgs e)
@@ -47,8 +47,8 @@ namespace DesktopApp.Forms
 
         private void PopulateUserPicker()
         {
-            var userNames = desktopController.backendService?.GetAllUsers().Select(u => u.Username).ToList();
-            UIStyler.PopulateComboBox(settingsUserPicker, userNames);
+            //var userNames = desktopController.backendService?.GetAllUsers().Select(u => u.Username).ToList();
+            //UIStyler.PopulateComboBox(settingsUserPicker, userNames);
         }
     }
 }

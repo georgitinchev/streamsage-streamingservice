@@ -6,7 +6,7 @@ namespace LogicClassLibrary.Interface.Service
     public interface IMovieService
     {
         List<string> GetAllGenres();
-        Movie GetMovie(int id);
+        MovieDTO GetMovie(int id);
         void AddMovie(MovieDTO movie);
         void UpdateMovie(MovieDTO movieDto);
         void DeleteMovie(int id);

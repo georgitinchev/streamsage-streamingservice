@@ -1,40 +1,60 @@
-﻿using DataAccessLibrary.DataAccessLibrary;
+﻿using DataAccessLibrary;
+using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Interface.Manager;
 
 namespace LogicClassLibrary.Managers
 {
-    public class ReviewManager : GeneralManager
+    public class ReviewManager : GeneralManager<ReviewDTO, Review>, IReviewManager
     {
-        private List<Review>? reviews;
-        private ReviewDAL? reviewDAL;
-        public ReviewManager(ReviewDAL _reviewDAL)
+        private IReviewDAL reviewDAL;
+
+        public ReviewManager(IReviewDAL _reviewDAL)
         {
-            reviews = new List<Review>();
             reviewDAL = _reviewDAL;
         }
-        internal void getMovieReviews(int movieId)
+
+        public override Review? TransformDTOToEntity(ReviewDTO dto)
         {
-            throw new NotImplementedException();
+            if (dto == null)
+            {
+                return null;
+            }
+
+            return new Review(dto.UserId, dto.MovieId, dto.Content ?? string.Empty, dto.Rating);
         }
 
-        public void CreateReview(Review review)
+        public override ReviewDTO TransformEntityToDTO(Review entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return new ReviewDTO(entity.Id, entity.UserId, entity.MovieId, entity.Content, entity.Rating);
         }
 
-        public Review ReadReview(int reviewId)
+        // implement getMoviesReview(int)
+
+
+        public override void Create(ReviewDTO dto)
         {
-            throw new NotImplementedException();
+            reviewDAL.CreateReview(dto);
         }
 
-        public void UpdateReview(Review review)
+        public override ReviewDTO Read(int id)
         {
-            throw new NotImplementedException();
+            return reviewDAL.ReadReview(id);
         }
 
-        public void DeleteReview(int reviewId)
+        public override void Update(ReviewDTO dto)
         {
-            throw new NotImplementedException();
+            reviewDAL.UpdateReview(dto);
+        }
+
+        public override void Delete(int id)
+        {
+            reviewDAL.DeleteReview(id);
         }
     }
 }

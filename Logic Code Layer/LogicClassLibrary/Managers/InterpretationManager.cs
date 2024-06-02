@@ -1,40 +1,56 @@
 ﻿using DataAccessLibrary;
+using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Interface.Manager;
 
 namespace LogicClassLibrary.Managers
 {
-    public class InterpretationManager
+    public class InterpretationManager : GeneralManager<InterpretationDTO, Interpretation>, IInterpretationManager
     {
-        public List<Interpretation>? interpretations;
-        public InterpretationDAL? interpretationDAL;
-        public InterpretationManager(InterpretationDAL _interpretationDAL)
+        public IInterpretationDAL? interpretationDAL;
+        public InterpretationManager(IInterpretationDAL _interpretationDAL)
         {
-            interpretations = new List<Interpretation>();
-            interpretationDAL = _interpretationDAL;
+            this.interpretationDAL = _interpretationDAL;
         }
 
-        private void createInterpretation(int userId, int movieId, string interpretationText)
+        public override Interpretation? TransformDTOToEntity(InterpretationDTO dto)
         {
-            Interpretation interpretation = new Interpretation(userId, movieId, interpretationText);
-            interpretations?.Add(interpretation);
-        }
-
-        private void updateInterpretation(int interpretationId, string newInterpretationText)
-        {
-            Interpretation interpretation = interpretations?.Find(i => i.Id == interpretationId);
-            if (interpretation != null)
+            if (dto == null)
             {
-                interpretation.InterpretationText = newInterpretationText;
+                return null;
+            }
+
+            return new Interpretation(dto.UserId, dto.MovieId, dto.InterpretationText);
+        }
+
+        public override InterpretationDTO TransformEntityToDTO(Interpretation entity)
+        {
+            return new InterpretationDTO(entity.Id, entity.UserId, entity.MovieId, entity.InterpretationText);
+        }
+
+        public override void Create(InterpretationDTO dto)
+        {
+            var entity = TransformDTOToEntity(dto);
+            if (entity != null)
+            {
+                interpretationDAL.CreateInterpretation(dto);
             }
         }
 
-        private void deleteInterpretation(int interpretationId)
+        public override InterpretationDTO Read(int id)
         {
-            Interpretation interpretation = interpretations?.Find(i => i.Id == interpretationId);
-            if (interpretation != null)
-            {
-                interpretations.Remove(interpretation);
-            }
+            return interpretationDAL.ReadInterpretation(id);
         }
+
+        public override void Update(InterpretationDTO dto)
+        {
+            interpretationDAL.UpdateInterpretation(dto);
+        }
+
+        public override void Delete(int id)
+        {
+            interpretationDAL.DeleteInterpretation(id);
+        }
+
     }
 }

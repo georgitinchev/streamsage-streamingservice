@@ -12,64 +12,64 @@ namespace DesktopApp.Forms
         {
             InitializeComponent();
             this.desktopController = _desktopController;
-            moviesDataGrid.CellContentClick += moviesDataGrid_CellContentClick;
+            //moviesDataGrid.CellContentClick += moviesDataGrid_CellContentClick;
             InitializeMoviesGrid();
-            PopulateGenreCheckListBoxes();
+            //PopulateGenreCheckListBoxes();
             RefreshMovies();
         }
 
-        private async void moviesDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var senderGrid = (DataGridView)sender;
-            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
-            {
-                Movie movie = (Movie)senderGrid.Rows[e.RowIndex].DataBoundItem;
-                MovieDTO movieDto = new MovieDTO
-                {
-                    Id = movie.Id,
-                    Title = movie.Title,
-                    ReleaseDate = movie.Year,
-                    Description = movie.Description,
-                    PosterImageURL = movie.PosterImageURL,
-                    TrailerURL = movie.TrailerURL,
-                    RuntimeMinutes = movie.RuntimeMinutes,
-                    Genres = movie.Genres
-                };
-                if (senderGrid.Columns[e.ColumnIndex].Name == "Edit")
-                {
-                    movieDashTabCtrl.SelectedIndex = 1;
-                    currentMovieId = movieDto.Id;
-                    movieTitleBox.Text = movieDto.Title;
-                    movieYearPicker.Value = movieDto.ReleaseDate;
-                    descriptionTextBox.Text = movieDto.Description;
-                    posterUrlTextBox.Text = movieDto.PosterImageURL;
-                    trailerUrlTextBox.Text = movieDto.TrailerURL;
-                    runTimeTextBox.Text = movieDto.RuntimeMinutes.ToString();
-                    SetSelectedMovieGenres(movieDto);
-                    UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
-                }
-                else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
-                {
-                    try
-                    {
-                        desktopController.backendService?.DeleteMovie(movieDto.Id);
-                        RefreshMovies();
-                        movieMgmtErrorLabel.Text = "Movie deleted successfully!";
-                    }
-                    catch (Exception ex)
-                    {
-                        movieMgmtErrorLabel.Text = ex.Message;
-                    }
-                    finally
-                    {
-                        await Task.Delay(3000);
-                        movieMgmtErrorLabel.Text = "";
-                        senderGrid.CurrentCell = null;
-                    }
-                }
-                senderGrid.CurrentCell = null;
-            }
-        }
+        //private async void moviesDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        //{
+        //    var senderGrid = (DataGridView)sender;
+        //    if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
+        //    {
+        //        Movie movie = (Movie)senderGrid.Rows[e.RowIndex].DataBoundItem;
+        //        MovieDTO movieDto = new MovieDTO
+        //        {
+        //            Id = movie.Id,
+        //            Title = movie.Title,
+        //            ReleaseDate = movie.Year,
+        //            Description = movie.Description,
+        //            PosterImageURL = movie.PosterImageURL,
+        //            TrailerURL = movie.TrailerURL,
+        //            RuntimeMinutes = movie.RuntimeMinutes,
+        //            Genres = movie.Genres
+        //        };
+        //        if (senderGrid.Columns[e.ColumnIndex].Name == "Edit")
+        //        {
+        //            movieDashTabCtrl.SelectedIndex = 1;
+        //            currentMovieId = movieDto.Id;
+        //            movieTitleBox.Text = movieDto.Title;
+        //            movieYearPicker.Value = movieDto.ReleaseDate;
+        //            descriptionTextBox.Text = movieDto.Description;
+        //            posterUrlTextBox.Text = movieDto.PosterImageURL;
+        //            trailerUrlTextBox.Text = movieDto.TrailerURL;
+        //            runTimeTextBox.Text = movieDto.RuntimeMinutes.ToString();
+        //            SetSelectedMovieGenres(movieDto);
+        //            UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
+        //        }
+        //        else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
+        //        {
+        //            try
+        //            {
+        //                //desktopController.backendService?.DeleteMovie(movieDto.Id);
+        //                RefreshMovies();
+        //                movieMgmtErrorLabel.Text = "Movie deleted successfully!";
+        //            }
+        //            catch (System.Exception ex)
+        //            {
+        //                movieMgmtErrorLabel.Text = ex.Message;
+        //            }
+        //            finally
+        //            {
+        //                await Task.Delay(3000);
+        //                movieMgmtErrorLabel.Text = "";
+        //                senderGrid.CurrentCell = null;
+        //            }
+        //        }
+        //        senderGrid.CurrentCell = null;
+        //    }
+        //}
 
         private void InitializeMoviesGrid()
         {
@@ -86,10 +86,10 @@ namespace DesktopApp.Forms
 
         private void RefreshMovies()
         {
-            List<Movie> movies = desktopController.displayMoviePage();
+            //List<Movie> movies = desktopController.displayMoviePage();
             moviesDataGrid.DataSource = null;
-            moviesDataGrid.DataSource = movies;
-            totalMoviesLabel.Text = $"Total Movies: {movies.Count}";
+            //moviesDataGrid.DataSource = movies;
+            //totalMoviesLabel.Text = $"Total Movies: {movies.Count}";
             moviesDataGrid.Refresh();
         }
 
@@ -112,26 +112,26 @@ namespace DesktopApp.Forms
                 return;
             }
 
-            MovieDTO movieDto = new MovieDTO
-            {
-                Id = currentMovieId,
-                Title = movieTitleBox.Text,
-                ReleaseDate = movieYearPicker.Value,
-                Description = descriptionTextBox.Text,
-                PosterImageURL = posterUrlTextBox.Text,
-                TrailerURL = trailerUrlTextBox.Text,
-                RuntimeMinutes = runtime,
-                Genres = GetSelectedGenres(updateMovieCheckListBox)
-            };
+            //MovieDTO movieDto = new MovieDTO
+            //{
+            //    Id = currentMovieId,
+            //    Title = movieTitleBox.Text,
+            //    ReleaseDate = movieYearPicker.Value,
+            //    Description = descriptionTextBox.Text,
+            //    PosterImageURL = posterUrlTextBox.Text,
+            //    TrailerURL = trailerUrlTextBox.Text,
+            //    RuntimeMinutes = runtime,
+            //    Genres = GetSelectedGenres(updateMovieCheckListBox)
+            //};
 
             try
             {
-                desktopController.backendService?.UpdateMovie(movieDto);
+                //desktopController.backendService?.UpdateMovie(movieDto);
                 updateStatusLabel.Text = "Update successful!";
                 RefreshMovies();
-                UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
+                //UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 updateStatusLabel.Text = ex.Message;
             }
@@ -176,25 +176,25 @@ namespace DesktopApp.Forms
                 return;
             }
 
-            MovieDTO newMovie = new MovieDTO
-            {
-                Title = createMovieTitleBox.Text,
-                ReleaseDate = createMovieDatePicker.Value,
-                Description = createMovieDescriptionBox.Text,
-                PosterImageURL = createMoviePosterBox.Text,
-                TrailerURL = createMovieUrlBox.Text,
-                RuntimeMinutes = runtime,
-                Genres = GetSelectedGenres(createMovieGenresCheckList)
-            };
+            //MovieDTO newMovie = new MovieDTO
+            //{
+            //    Title = createMovieTitleBox.Text,
+            //    ReleaseDate = createMovieDatePicker.Value,
+            //    Description = createMovieDescriptionBox.Text,
+            //    PosterImageURL = createMoviePosterBox.Text,
+            //    TrailerURL = createMovieUrlBox.Text,
+            //    RuntimeMinutes = runtime,
+            //    Genres = GetSelectedGenres(createMovieGenresCheckList)
+            //};
 
             try
             {
-                desktopController.backendService?.AddMovie(newMovie);
+                //desktopController.backendService?.AddMovie(newMovie);
                 createMovieErrorLabel.Text = "Movie created successfully!";
                 ClearCreateMovieFields();
                 RefreshMovies();
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 createMovieErrorLabel.Text = $"Failed to create movie: {ex.Message}";
             }
@@ -217,12 +217,12 @@ namespace DesktopApp.Forms
         }
 
         // 3 Methods for checkListBox ops
-        private void PopulateGenreCheckListBoxes()
-        {
-            var genres = desktopController.backendService?.GetAllGenres();
-            UIStyler.PopulateCheckListBox(createMovieGenresCheckList, genres);
-            UIStyler.PopulateCheckListBox(updateMovieCheckListBox, genres);
-        }
+        //private void PopulateGenreCheckListBoxes()
+        //{
+        //    var genres = desktopController.backendService?.GetAllGenres();
+        //    UIStyler.PopulateCheckListBox(createMovieGenresCheckList, genres);
+        //    UIStyler.PopulateCheckListBox(updateMovieCheckListBox, genres);
+        //}
 
         private List<string> GetSelectedGenres(CheckedListBox box)
         {

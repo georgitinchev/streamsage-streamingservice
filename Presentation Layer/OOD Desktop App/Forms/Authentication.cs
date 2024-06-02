@@ -1,15 +1,16 @@
-﻿using System.Drawing.Drawing2D;
+﻿using LogicClassLibrary.Interface.Service;
+using System.Drawing.Drawing2D;
 
 namespace DesktopApp.Forms
 {
     public partial class Authentication : Form
     {
         private DesktopController _desktopController;
-        public Authentication()
+        public Authentication(IUserService userService, IMovieService movieService, IReviewService reviewService, IInterpretationService interpretationService)
         {
             InitializeComponent();
             CustomizeButton(loginBtn);
-            _desktopController = new DesktopController();
+            _desktopController = new DesktopController(userService, movieService, reviewService, interpretationService);
             this.AcceptButton = loginBtn;
         }
 
