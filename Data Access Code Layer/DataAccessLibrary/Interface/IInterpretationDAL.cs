@@ -1,6 +1,6 @@
 ﻿using DTOs;
 
-namespace LogicClassLibrary.Interface.DAL
+namespace DataAccessLibrary
 {
     public interface IInterpretationDAL
     {

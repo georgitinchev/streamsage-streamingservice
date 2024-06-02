@@ -2,7 +2,7 @@
 
 namespace DataAccessLibrary
 {
-    public class InterpretationDAL : BaseDAL
+    public class InterpretationDAL : BaseDAL, IInterpretationDAL
     {
         public InterpretationDAL() : base()
         {
