@@ -47,11 +47,12 @@ namespace DesktopApp
             catch (System.Exception e)
             {
                 Console.WriteLine(e.Message);
+                throw;
             }
         }
         public void registerUser(string username, string email, string password, string firstName, string lastName)
         {
-            userService?.RegisterUser(username, email, password, firstName, lastName);
+            userService?.Create(username, email, password, firstName, lastName, string.Empty);
         }
         public void changeUserPassword(string username, string newPassword)
         {

@@ -29,15 +29,31 @@
             WatchList = watchList;
         }
 
-        public UserDTO(int id, string username, string? email, string firstName, string lastName, string profilePicture, string settings)
+        public UserDTO(int id, string username, string email, string passwordHash, string passwordSalt, string firstName, string lastName, string settings)
+        {
+            Id = id;
+            Username = username;
+            Email = email;
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
+            FirstName = firstName;
+            LastName = lastName;
+            Settings = settings;
+        }
+        public UserDTO(int id, string username, string email, string firstName, string lastName, string settings)
         {
             Id = id;
             Username = username;
             Email = email;
             FirstName = firstName;
             LastName = lastName;
-            ProfilePictureURL = profilePicture;
             Settings = settings;
+        }
+
+        public void SetPasswordHashAndSalt(string passwordHash, string passwordSalt)
+        {
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
         }
     }
 }

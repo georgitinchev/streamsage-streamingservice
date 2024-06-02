@@ -10,13 +10,13 @@ namespace LogicClassLibrary.Managers
     {
         public IUserDAL? userDAL { get; private set; }
         public IMovieManager movieManager { get; private set; }
-        public List<User>? users { get; private set; }
+        public List<User>? users { get; private set; } = new List<User>();
 
         public UserManager(IUserDAL userDAL, IMovieManager movieManager)
         {
-            users = new List<User>();
             this.userDAL = userDAL;
             this.movieManager = movieManager;
+            this.users = userDAL.ReadAllUsers().Select(u => TransformDTOToEntity(u)).ToList();
         }
 
         public override void Create(UserDTO userDTO)
@@ -60,18 +60,17 @@ namespace LogicClassLibrary.Managers
             var user = users.Find(x => x.Username == username);
             return TransformEntityToDTO(user);
         }
-
         public void AuthenticateUser(string username, string password)
         {
-            var user = users.FirstOrDefault(u => u.Username == username);
-            if (user == null)
+            UserDTO userDto = userDAL.GetUserByUsername(username);
+            if (userDto == null)
             {
-                throw new SystemException("User not found");
+                throw new System.Exception("User not found.");
             }
-            var hashedPassword = PasswordHelper.HashPassword(password, user.GetPasswordSalt());
-            if (hashedPassword != user.GetPasswordHash())
+
+            if (!PasswordHelper.VerifyPassword(password, userDto.PasswordHash, userDto.PasswordSalt))
             {
-                throw new SystemException("Invalid password");
+                throw new System.Exception("Invalid password.");
             }
         }
 
@@ -89,17 +88,11 @@ namespace LogicClassLibrary.Managers
             userDAL.CreateUser(TransformEntityToDTO(user));
         }
 
-        public void ChangePassword(string username, string newPassword)
+        public void ChangePassword(string username, string newPasswordHash, string newPasswordSalt)
         {
-            var user = users.FirstOrDefault(u => u.Username == username);
-            if (user == null)
-            {
-                throw new SystemException("User not found");
-            }
-            var passwordSalt = PasswordHelper.GenerateSalt();
-            var passwordHash = PasswordHelper.HashPassword(newPassword, passwordSalt);
-            user.SetPasswordHashAndSalt(passwordHash, passwordSalt);
-            userDAL.UpdateUser(TransformEntityToDTO(user));
+            UserDTO userDto = Read(username);
+            userDto.SetPasswordHashAndSalt(newPasswordHash, newPasswordSalt);
+            Update(userDto);
         }
 
         public override User? TransformDTOToEntity(UserDTO dto)

@@ -45,9 +45,9 @@ namespace DesktopApp.Forms
                 AdminDashboard adminDashboard = new AdminDashboard(_desktopController);
                 Program.SwitchToForm(adminDashboard);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                errorLabelAuth.Text = "Invalid credentials";
+                errorLabelAuth.Text = ex.Message;
             }
             finally
             {

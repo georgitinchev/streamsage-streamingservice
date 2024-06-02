@@ -30,5 +30,11 @@ namespace LogicClassLibrary.Helpers
                 return builder.ToString();
             }
         }
+
+        public static bool VerifyPassword(string password, string storedHash, string storedSalt)
+        {
+            string hash = HashPassword(password, storedSalt);
+            return hash == storedHash;
+        }
     }
 }

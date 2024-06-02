@@ -1,6 +1,8 @@
 ﻿using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Helpers;
 using LogicClassLibrary.NewFolder;
+using Microsoft.Data.SqlClient;
 
 namespace DesktopApp.Forms
 {
@@ -24,7 +26,7 @@ namespace DesktopApp.Forms
             string password = userPasswordTextBox.Text;
             string firstName = userFirstNameTextBox.Text;
             string lastName = userLastNameTextBox.Text;
-
+            string settings = settingsTextBox.Text;
             string errorMessage = UserValidation.ValidateCreateInput(username, email, password, firstName, lastName);
             if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -34,10 +36,9 @@ namespace DesktopApp.Forms
                 errorLabel.Text = "";
                 return;
             }
-
             try
             {
-                //_desktopController.registerUser(username, email, password, firstName, lastName, "", "");
+               _desktopController.userService?.Create(username, email, password, firstName, lastName, settings);
                 errorLabel.ForeColor = Color.Green;
                 errorLabel.Text = "User created successfully!";
                 ClearInputFields();
@@ -57,11 +58,15 @@ namespace DesktopApp.Forms
 
         private async void updateUserBtn_Click(object sender, EventArgs e)
         {
+            // Gather data from the form
             string username = updateUsernameBox.Text;
             string email = updateEmailBox.Text;
             string password = updatePasswordBox.Text;
             string firstName = updateFirstNameBox.Text;
             string lastName = updateLastNameBox.Text;
+            string settings = settingsTextBox.Text;
+
+            // Validate the input
             string errorMessage = UserValidation.ValidateUpdateInput(username, email, password, firstName, lastName);
             if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -70,44 +75,32 @@ namespace DesktopApp.Forms
                 updateErrorLabel.Text = "";
                 return;
             }
+
             try
             {
-                UserDTO currentUser = _desktopController.userService.Read(currentUserId);
-                bool detailsUnchanged = username == currentUser.Username &&
-                                        email == currentUser.Email &&
-                                        firstName == currentUser.FirstName &&
-                                        lastName == currentUser.LastName;
+                // Update the user
+                _desktopController.userService.Update(currentUserId, username, email, firstName, lastName, settings);
+                _desktopController.userService.ChangePassword(username, password);
 
-                if (detailsUnchanged && !string.IsNullOrEmpty(password))
-                {
-                    _desktopController.userService?.ChangePassword(username, password);
-                    updateErrorLabel.ForeColor = Color.Green;
-                    updateErrorLabel.Text = "Password updated successfully!";
-                    return;
-                }
-                else
-                {
-                    UserDTO userToUpdate = new UserDTO(currentUserId, username, email, firstName, lastName, "", "");
-                    _desktopController.userService?.Update(currentUserId, username, email, firstName, lastName, "", "");
-                    if (!string.IsNullOrEmpty(password))
-                    {
-                        _desktopController.userService?.ChangePassword(username, password);
-                    }
-                    updateErrorLabel.ForeColor = Color.Green;
-                    updateErrorLabel.Text = "User details updated successfully!";
-                }
+                // Refresh the user list
+                RefreshUsers();
+                updateErrorLabel.ForeColor = Color.Green;
+                updateErrorLabel.Text = "User updated successfully!";
+            }
+            catch (SqlException ex)
+            {
+                updateErrorLabel.ForeColor = Color.Red;
+                updateErrorLabel.Text = "Database error: " + ex.Message;
             }
             catch (System.Exception ex)
             {
                 updateErrorLabel.ForeColor = Color.Red;
-                updateErrorLabel.Text = ex.Message;
+                updateErrorLabel.Text = "An error occurred: " + ex.Message;
             }
             finally
             {
-                RefreshUsers();
                 await Task.Delay(5000);
                 updateErrorLabel.Text = "";
-                updatePasswordBox.Text = "";
             }
         }
 
@@ -151,7 +144,7 @@ namespace DesktopApp.Forms
             var senderGrid = (DataGridView)sender;
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
-                User user = (User)senderGrid.Rows[e.RowIndex].DataBoundItem;
+                UserDTO user = (UserDTO)senderGrid.Rows[e.RowIndex].DataBoundItem;
                 if (senderGrid.Columns[e.ColumnIndex].Name == "Edit")
                 {
                     userOperationsTabCtrl.SelectedIndex = 2;
