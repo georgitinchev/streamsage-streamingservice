@@ -1,204 +1,375 @@
 ﻿using DTOs;
 using Microsoft.Data.SqlClient;
+using System;
+using System.Collections.Generic;
 
 namespace DataAccessLibrary
 {
-    namespace DataAccessLibrary
+    public class UserDAL : BaseDAL, IUserDAL
     {
-        public class UserDAL : BaseDAL, IUserDAL
+        public UserDAL() : base()
         {
-            public UserDAL() : base()
-            {
-            }
+        }
 
-            public List<UserDTO> ReadAllUsers()
+        public List<UserDTO> ReadAllUsers()
+        {
+            List<UserDTO> users = new List<UserDTO>();
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                List<UserDTO> users = new List<UserDTO>();
-                using (SqlConnection conn = new SqlConnection())
+                conn.Open();
+                string query = "SELECT * FROM [User]";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT * FROM [User]", conn))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                UserDTO user = new UserDTO(
+                            UserDTO user = new UserDTO(
                                 id: (int)reader["ID"],
                                 username: reader["Username"] as string,
                                 email: reader["Email"] as string,
                                 passwordHash: reader["PasswordHash"] as string,
+                                passwordSalt: reader["PasswordSalt"] as string,
                                 firstName: reader["FirstName"] as string,
                                 lastName: reader["LastName"] as string,
                                 profilePicture: reader["ProfilePictureURL"] as string,
                                 settings: reader["Settings"] as string,
                                 favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
                                 watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
- );
-                                users.Add(user);
-                            }
+                            );
+                            users.Add(user);
                         }
                     }
                 }
-                return users;
             }
+            return users;
+        }
 
-            private List<MovieDTO> GetMoviesForUser(int userId, string tableName)
+        public void CreateUser(UserDTO user)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                List<MovieDTO> movies = new List<MovieDTO>();
-                using (SqlConnection conn = new SqlConnection())
-                {
-                    conn.Open();
-                    string movieQuery = $"SELECT m.* FROM {tableName} as t JOIN Movie as m ON t.MovieId = m.ID WHERE t.UserId = @ID";
-                    string genreQuery = "SELECT mg.MovieID, g.Name FROM MovieGenre mg INNER JOIN Genre g ON mg.GenreID = g.ID WHERE mg.MovieID = @MovieID";
+                conn.Open();
+                string query = "INSERT INTO [User] (Username, Email, PasswordHash, FirstName, LastName, ProfilePictureURL, Settings, PasswordSalt) " +
+                               "VALUES (@Username, @Email, @PasswordHash, @FirstName, @LastName, @ProfilePictureURL, @Settings, @PasswordSalt)";
 
-                    using (SqlCommand cmd = new SqlCommand(movieQuery, conn))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Username", user.Username);
+                    cmd.Parameters.AddWithValue("@Email", user.Email ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
+                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@LastName", user.LastName ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ProfilePictureURL", user.ProfilePictureURL ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Settings", user.Settings ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public UserDTO? GetUserByUsername(string username)
+        {
+            UserDTO? user = null;
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = "SELECT * FROM [User] WHERE Username = @Username";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Username", username);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@ID", userId);
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                MovieDTO movie = new MovieDTO
-                                {
-                                    Id = (int)reader["ID"],
-                                    Title = reader["Title"] as string,
-                                    ReleaseDate = (DateTime)reader["ReleaseDate"],
-                                    Description = reader["Description"] as string,
-                                    PosterImageURL = reader["PosterImageURL"] as string,
-                                    TrailerURL = reader["TrailerURL"] as string,
-                                    RuntimeMinutes = (int)reader["RuntimeMinutes"],
-                                    AverageRating = reader["AverageRating"] == DBNull.Value ? (decimal?)null : (decimal)reader["AverageRating"],
-                                    Genres = new List<string>()
-                                };
-                                movies.Add(movie);
-                            }
+                            user = new UserDTO(
+                                id: (int)reader["ID"],
+                                username: reader["Username"] as string,
+                                email: reader["Email"] as string,
+                                passwordHash: reader["PasswordHash"] as string,
+                                passwordSalt: reader["PasswordSalt"] as string,
+                                firstName: reader["FirstName"] as string,
+                                lastName: reader["LastName"] as string,
+                                profilePicture: reader["ProfilePictureURL"] as string,
+                                settings: reader["Settings"] as string,
+                                favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
+                            );
                         }
                     }
+                }
+            }
+            return user;
+        }
 
-                    foreach (var movie in movies)
+        public UserDTO? GetUserById(int userId)
+        {
+            UserDTO? user = null;
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = "SELECT * FROM [User] WHERE ID = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        using (SqlCommand genreCmd = new SqlCommand(genreQuery, conn))
+                        if (reader.Read())
                         {
-                            genreCmd.Parameters.AddWithValue("@MovieID", movie.Id);
-                            using (SqlDataReader genreReader = genreCmd.ExecuteReader())
-                            {
-                                while (genreReader.Read())
-                                {
-                                    string genreName = genreReader.GetString(1);
-                                    movie?.Genres.Add(genreName);
-                                }
-                            }
+                            user = new UserDTO(
+                                id: (int)reader["ID"],
+                                username: reader["Username"] as string,
+                                email: reader["Email"] as string,
+                                passwordHash: reader["PasswordHash"] as string,
+                                passwordSalt: reader["PasswordSalt"] as string,
+                                firstName: reader["FirstName"] as string,
+                                lastName: reader["LastName"] as string,
+                                profilePicture: reader["ProfilePictureURL"] as string,
+                                settings: reader["Settings"] as string,
+                                favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
+                            );
                         }
                     }
                 }
-                return movies;
             }
+            return user;
+        }
 
-
-            public void CreateUser(UserDTO user)
+        public void UpdateUser(UserDTO user)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                using (SqlConnection conn = new SqlConnection())
+                conn.Open();
+                string query = "UPDATE [User] SET Username = @Username, Email = @Email, PasswordHash = @PasswordHash, " +
+                               "FirstName = @FirstName, LastName = @LastName, ProfilePictureURL = @ProfilePictureURL, " +
+                               "Settings = @Settings, PasswordSalt = @PasswordSalt WHERE ID = @Id";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    conn.Open();
-                    string query = "INSERT INTO [User] (Username, Email, PasswordHash, FirstName, LastName, ProfilePictureURL, Settings) VALUES (@Username, @Email, @PasswordHash, @FirstName, @LastName, @ProfilePictureURL, @Settings)";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@Username", user.Username);
-                        cmd.Parameters.AddWithValue("@Email", user.Email);
-                        cmd.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
-                        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
-                        cmd.Parameters.AddWithValue("@LastName", user.LastName);
-                        cmd.Parameters.AddWithValue("@ProfilePictureURL", user.ProfilePictureURL);
-                        cmd.Parameters.AddWithValue("@Settings", user.Settings);
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.Parameters.AddWithValue("@Username", user.Username);
+                    cmd.Parameters.AddWithValue("@Email", user.Email ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
+                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@LastName", user.LastName ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@ProfilePictureURL", user.ProfilePictureURL ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Settings", user.Settings ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
+                    cmd.Parameters.AddWithValue("@Id", user.Id);
+                    cmd.ExecuteNonQuery();
                 }
             }
+        }
 
-            public UserDTO GetUserByUsername(string username)
+        public void DeleteUser(int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                using (SqlConnection conn = new SqlConnection())
+                conn.Open();
+                string query = "DELETE FROM [User] WHERE ID = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    conn.Open();
-                    string query = "SELECT * FROM [User] WHERE Username = @Username";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void ChangePassword(int userId, string newPasswordHash, string newPasswordSalt)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = "UPDATE [User] SET PasswordHash = @PasswordHash, PasswordSalt = @PasswordSalt WHERE ID = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@PasswordHash", newPasswordHash);
+                    cmd.Parameters.AddWithValue("@PasswordSalt", newPasswordSalt);
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void AddMovieToFavorites(int userId, int movieId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = "INSERT INTO UserFavorite (UserID, MovieID) VALUES (@UserId, @MovieId)";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@MovieId", movieId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void AddMovieToWatchlist(int userId, int movieId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = "INSERT INTO Watchlist (UserID, MovieID) VALUES (@UserId, @MovieId)";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@MovieId", movieId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void RemoveMovieFromFavorites(int userId, int movieId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = "DELETE FROM UserFavorite WHERE UserID = @UserId AND MovieID = @MovieId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@MovieId", movieId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void RemoveMovieFromWatchlist(int userId, int movieId)
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = "DELETE FROM Watchlist WHERE UserID = @UserId AND MovieID = @MovieId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@MovieId", movieId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private List<MovieDTO> GetMoviesForUser(int userId, string tableName)
+        {
+            List<MovieDTO> movies = new List<MovieDTO>();
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                conn.Open();
+                string query = $"SELECT m.* FROM [Movie] m " +
+                               $"JOIN [{tableName}] um ON m.ID = um.MovieID " +
+                               $"WHERE um.UserID = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            if (reader.Read())
-                            {
-                                return new UserDTO(
-                                    id: (int)reader["ID"],
-                                    username: reader["Username"] as string,
-                                    email: reader["Email"] as string,
-                                    passwordHash: reader["PasswordHash"] as string,
-                                    firstName: reader["FirstName"] as string,
-                                    lastName: reader["LastName"] as string,
-                                    profilePicture: reader["ProfilePictureURL"] as string,
-                                    settings: reader["Settings"] as string,
-                                    favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
-                                    watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
-                                );
-                            }
-                            else
-                            {
-                                return null;
-                            }
+                            MovieDTO movie = new MovieDTO(
+                                id: (int)reader["ID"],
+                                title: reader["Title"] as string,
+                                releaseDate: (DateTime)reader["ReleaseDate"],
+                                description: reader["Description"] as string,
+                                posterImageURL: reader["PosterImageURL"] as string,
+                                trailerURL: reader["TrailerURL"] as string,
+                                runtimeMinutes: (int)reader["RuntimeMinutes"],
+                                averageRating: reader["AverageRating"] as decimal?,
+                                genres: GetMovieGenres((int)reader["ID"]),
+                                  directors: GetMovieDirectors((int)reader["ID"]), 
+                        actors: GetMovieActors((int)reader["ID"])
+                            );
+                            movies.Add(movie);
                         }
                     }
                 }
             }
+            return movies;
+        }
 
-            public void ChangePassword(string username, string newPassword)
+        private List<string> GetMovieGenres(int movieId)
+        {
+            List<string> genres = new List<string>();
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                using (SqlConnection conn = new SqlConnection())
+                conn.Open();
+                string query = "SELECT g.Name FROM MovieGenre mg " +
+                               "JOIN Genre g ON mg.GenreID = g.ID " +
+                               "WHERE mg.MovieID = @MovieID";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    conn.Open();
-                    string query = "UPDATE [User] SET PasswordHash = @PasswordHash WHERE Username = @Username";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    cmd.Parameters.AddWithValue("@MovieID", movieId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@PasswordHash", newPassword);
-                        cmd.Parameters.AddWithValue("@Username", username);
-                        cmd.ExecuteNonQuery();
+                        while (reader.Read())
+                        {
+                            genres.Add(reader["Name"] as string);
+                        }
                     }
                 }
             }
-
-            public void UpdateUser(UserDTO user)
+            return genres;
+        }
+        private List<string> GetMovieDirectors(int movieId)
+        {
+            List<string> directors = new List<string>();
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                using (SqlConnection conn = new SqlConnection())
+                conn.Open();
+                string query = @"SELECT d.Name FROM MovieDirector md
+                         JOIN Director d ON md.DirectorID = d.ID
+                         WHERE md.MovieID = @MovieID";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    conn.Open();
-                    string query = "UPDATE [User] SET Username = @Username, Email = @Email, FirstName = @FirstName, LastName = @LastName, ProfilePictureURL = @ProfilePictureURL, Settings = @Settings WHERE ID = @ID";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    cmd.Parameters.AddWithValue("@MovieID", movieId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@Username", user.Username);
-                        cmd.Parameters.AddWithValue("@Email", user.Email);
-                        cmd.Parameters.AddWithValue("@FirstName", user.FirstName);
-                        cmd.Parameters.AddWithValue("@LastName", user.LastName);
-                        cmd.Parameters.AddWithValue("@ProfilePictureURL", user.ProfilePictureURL);
-                        cmd.Parameters.AddWithValue("@Settings", user.Settings);
-                        cmd.Parameters.AddWithValue("@ID", user.Id);
-                        cmd.ExecuteNonQuery();
+                        while (reader.Read())
+                        {
+                            directors.Add(reader["Name"] as string);
+                        }
                     }
                 }
             }
+            return directors;
+        }
 
-            public void DeleteUser(int userId)
+        private List<string> GetMovieActors(int movieId)
+        {
+            List<string> actors = new List<string>();
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
-                using (SqlConnection conn = new SqlConnection())
+                conn.Open();
+                string query = @"SELECT a.Name FROM MovieActor ma
+                         JOIN Actor a ON ma.ActorID = a.ID
+                         WHERE ma.MovieID = @MovieID";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    conn.Open();
-                    string query = "DELETE FROM [User] WHERE ID = @ID";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    cmd.Parameters.AddWithValue("@MovieID", movieId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@ID", userId);
-                        cmd.ExecuteNonQuery();
+                        while (reader.Read())
+                        {
+                            actors.Add(reader["Name"] as string);
+                        }
                     }
                 }
             }
+            return actors;
         }
     }
 }
