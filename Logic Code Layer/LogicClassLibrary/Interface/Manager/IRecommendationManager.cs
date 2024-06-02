@@ -5,6 +5,6 @@ namespace LogicClassLibrary.Interface.Manager
 {
     public interface IRecommendationManager
     {
-        Task<List<MovieDTO>> RecommendMoviesForUser(string username, int numRecommendations, RecommendationManager.RecommendationType type);
+        List<MovieDTO> RecommendMoviesForUser(string username, int numRecommendations, RecommendationManager.RecommendationType type);
     }
 }

@@ -1,35 +1,32 @@
-﻿using DataAccessLibrary.DataAccessLibrary;
+﻿using DataAccessLibrary;
 using DTOs;
+using LogicClassLibrary.Entities;
+using LogicClassLibrary.Interface.Algorhitmic;
+using LogicClassLibrary.Interface.Manager;
 
 namespace LogicClassLibrary.Managers
 {
-    public class RecommendationManager
+    public class RecommendationManager : IRecommendationManager
     {
-        private MovieRecommender movieRecommender;
-        private MovieDAL movieDAL;
-        public RecommendationManager(MovieDAL movieDAL, UserDAL userDAL)
+        private IRecommendationStrategy recommendationStrategy;
+        private IUserManager userManager;
+        private IMovieManager movieManager;
+        public RecommendationManager(IRecommendationStrategy recommendationStrategy, IUserManager userManager, IMovieManager movieManager)
         {
-            movieRecommender = new MovieRecommender(userDAL);
-            this.movieDAL = movieDAL;
+            this.recommendationStrategy = recommendationStrategy;
+            this.userManager = userManager;
+            this.movieManager = movieManager;
         }
-        public async Task<List<MovieDTO>> RecommendMoviesForUser(string username, int numRecommendations, RecommendationType type)
+        public List<MovieDTO> RecommendMoviesForUser(string username, int numRecommendations, RecommendationType type)
         {
-            List<MovieDTO> allMovies = await GetAllMovies();
-
-            switch (type)
-            {
-                case RecommendationType.BehaviorBased:
-                    return movieRecommender.RecommendMoviesBasedOnUserBehavior(username, allMovies).Take(numRecommendations).ToList();
-                case RecommendationType.ContentBased:
-                    return movieRecommender.RecommendMoviesBasedOnContent(username, allMovies).Take(numRecommendations).ToList();
-                default:
-                    return new List<MovieDTO>();
-            }
+            List<Movie> allMovies = movieManager.GetAllMovies();
+            List<MovieDTO> allMovieDTOs = allMovies.Select(movie => movieManager.TransformEntityToDTO(movie)).ToList();
+            return recommendationStrategy.RecommendMovies(username, allMovieDTOs, numRecommendations);
         }
 
-        private async Task<List<MovieDTO>> GetAllMovies()
+        public void SetRecommendationStrategy(IRecommendationStrategy strategy)
         {
-            return await Task.Run(() => movieDAL.ReadAllMovies());
+            this.recommendationStrategy = strategy;
         }
 
         public enum RecommendationType
