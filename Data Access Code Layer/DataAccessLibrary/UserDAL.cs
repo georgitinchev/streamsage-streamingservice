@@ -14,13 +14,12 @@ namespace DataAccessLibrary
         public List<UserDTO> ReadAllUsers()
         {
             List<UserDTO> users = new List<UserDTO>();
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
-                conn.Open();
                 string query = "SELECT * FROM [User]";
-
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
+                    conn.Open();
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -48,7 +47,7 @@ namespace DataAccessLibrary
 
         public void CreateUser(UserDTO user)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "INSERT INTO [User] (Username, Email, PasswordHash, FirstName, LastName, ProfilePictureURL, Settings, PasswordSalt) " +
@@ -72,7 +71,7 @@ namespace DataAccessLibrary
         public UserDTO? GetUserByUsername(string username)
         {
             UserDTO? user = null;
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "SELECT * FROM [User] WHERE Username = @Username";
@@ -107,7 +106,7 @@ namespace DataAccessLibrary
         public UserDTO? GetUserById(int userId)
         {
             UserDTO? user = null;
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "SELECT * FROM [User] WHERE ID = @UserId";
@@ -141,7 +140,7 @@ namespace DataAccessLibrary
 
         public void UpdateUser(UserDTO user)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "UPDATE [User] SET Username = @Username, Email = @Email, PasswordHash = @PasswordHash, " +
@@ -166,7 +165,7 @@ namespace DataAccessLibrary
 
         public void DeleteUser(int userId)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "DELETE FROM [User] WHERE ID = @UserId";
@@ -181,7 +180,7 @@ namespace DataAccessLibrary
 
         public void ChangePassword(int userId, string newPasswordHash, string newPasswordSalt)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "UPDATE [User] SET PasswordHash = @PasswordHash, PasswordSalt = @PasswordSalt WHERE ID = @UserId";
@@ -198,7 +197,7 @@ namespace DataAccessLibrary
 
         public void AddMovieToFavorites(int userId, int movieId)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "INSERT INTO UserFavorite (UserID, MovieID) VALUES (@UserId, @MovieId)";
@@ -214,7 +213,7 @@ namespace DataAccessLibrary
 
         public void AddMovieToWatchlist(int userId, int movieId)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "INSERT INTO Watchlist (UserID, MovieID) VALUES (@UserId, @MovieId)";
@@ -230,7 +229,7 @@ namespace DataAccessLibrary
 
         public void RemoveMovieFromFavorites(int userId, int movieId)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "DELETE FROM UserFavorite WHERE UserID = @UserId AND MovieID = @MovieId";
@@ -246,7 +245,7 @@ namespace DataAccessLibrary
 
         public void RemoveMovieFromWatchlist(int userId, int movieId)
         {
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "DELETE FROM Watchlist WHERE UserID = @UserId AND MovieID = @MovieId";
@@ -263,7 +262,7 @@ namespace DataAccessLibrary
         private List<MovieDTO> GetMoviesForUser(int userId, string tableName)
         {
             List<MovieDTO> movies = new List<MovieDTO>();
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = $"SELECT m.* FROM [Movie] m " +
@@ -287,7 +286,7 @@ namespace DataAccessLibrary
                                 runtimeMinutes: (int)reader["RuntimeMinutes"],
                                 averageRating: reader["AverageRating"] as decimal?,
                                 genres: GetMovieGenres((int)reader["ID"]),
-                                  directors: GetMovieDirectors((int)reader["ID"]), 
+                                  directors: GetMovieDirectors((int)reader["ID"]),
                         actors: GetMovieActors((int)reader["ID"])
                             );
                             movies.Add(movie);
@@ -301,7 +300,7 @@ namespace DataAccessLibrary
         private List<string> GetMovieGenres(int movieId)
         {
             List<string> genres = new List<string>();
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = "SELECT g.Name FROM MovieGenre mg " +
@@ -325,7 +324,7 @@ namespace DataAccessLibrary
         private List<string> GetMovieDirectors(int movieId)
         {
             List<string> directors = new List<string>();
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = @"SELECT d.Name FROM MovieDirector md
@@ -350,7 +349,7 @@ namespace DataAccessLibrary
         private List<string> GetMovieActors(int movieId)
         {
             List<string> actors = new List<string>();
-            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlConnection conn = CreateConnection())
             {
                 conn.Open();
                 string query = @"SELECT a.Name FROM MovieActor ma

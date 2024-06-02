@@ -11,12 +11,7 @@ namespace DataAccessLibrary
         {
             try
             {
-                SqlConnection connection = new SqlConnection(ConnectionString);
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-                return connection;
+                return new SqlConnection(ConnectionString);
             }
             catch (SqlException ex)
             {

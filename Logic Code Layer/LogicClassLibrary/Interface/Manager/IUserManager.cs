@@ -7,7 +7,7 @@ namespace LogicClassLibrary.Interface.Manager
     {
         void AuthenticateUser(string username, string password);
         void RegisterUser(string username, string email, string password, string firstName, string lastName);
-        void ChangePassword(string username, string newPassword);
+        void ChangePassword(string username, string newPasswordHash, string newPasswordSalt);
         void Create(UserDTO userDTO);
         UserDTO Read(int id);
         UserDTO Read(string username);

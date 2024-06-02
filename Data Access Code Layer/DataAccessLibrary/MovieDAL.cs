@@ -32,6 +32,7 @@ namespace DataAccessLibrary
 
             using (var connection = CreateConnection())
             {
+                connection.Open();
                 using (var command = new SqlCommand(movieQuery, connection))
                 using (var reader = command.ExecuteReader())
                 {
