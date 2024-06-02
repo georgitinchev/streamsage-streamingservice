@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace DesktopApp
 {
     public static class Program
@@ -7,7 +9,7 @@ namespace DesktopApp
         // We use a stack to keep track of the forms that are currently open & we pop closed forms.
         public static void SwitchToForm(Form newForm)
         {
-            Form currentForm = formStack.Count > 0 ? formStack.Peek() : null;
+            Form? currentForm = formStack.Count > 0 ? formStack.Peek() : null;
             if (currentForm != null)
             {
                 currentForm.Hide();
@@ -47,9 +49,15 @@ namespace DesktopApp
         [STAThread]
         static void Main()
         {
+            // New instance of Startup class and build the service provider
+            var startup = new Startup();
+            var serviceProvider = startup.ConfigureServices();
+
             ApplicationConfiguration.Initialize();
-            SwitchToForm(new Forms.Authentication());
+            var authenticationForm = serviceProvider.GetRequiredService<Forms.Authentication>();
+            SwitchToForm(authenticationForm);
             Application.Run();
         }
+
     }
 }
