@@ -14,7 +14,8 @@
         public List<MovieDTO>? FavoriteMovies { get; private set; }
         public List<MovieDTO>? WatchList { get; private set; }
 
-        public UserDTO(int id, string username, string email, string passwordHash, string passwordSalt, string firstName, string lastName, string profilePicture, string settings, List<MovieDTO> favoriteMovies, List<MovieDTO> watchList)
+        // main constructor
+        public UserDTO(int id, string username, string email, string passwordHash, string passwordSalt, string firstName, string lastName, string profilePictureURL, string settings, List<MovieDTO> favoriteMovies, List<MovieDTO> watchList)
         {
             Id = id;
             Username = username;
@@ -23,12 +24,13 @@
             PasswordSalt = passwordSalt;
             FirstName = firstName;
             LastName = lastName;
-            ProfilePictureURL = profilePicture;
+            ProfilePictureURL = profilePictureURL;
             Settings = settings;
             FavoriteMovies = favoriteMovies;
             WatchList = watchList;
         }
 
+        // No watchlist or favorite movies constructor
         public UserDTO(int id, string username, string email, string passwordHash, string passwordSalt, string firstName, string lastName, string settings)
         {
             Id = id;
@@ -40,6 +42,7 @@
             LastName = lastName;
             Settings = settings;
         }
+        // No password constructor
         public UserDTO(int id, string username, string email, string firstName, string lastName, string settings)
         {
             Id = id;
@@ -49,7 +52,7 @@
             LastName = lastName;
             Settings = settings;
         }
-
+        // pwd hash + salt setter
         public void SetPasswordHashAndSalt(string passwordHash, string passwordSalt)
         {
             PasswordHash = passwordHash;
