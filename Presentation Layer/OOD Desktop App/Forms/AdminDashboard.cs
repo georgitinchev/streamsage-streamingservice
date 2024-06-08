@@ -4,8 +4,8 @@ namespace DesktopApp
 {
     public partial class AdminDashboard : Form
     {
-        private DesktopController _desktopController;
-        public AdminDashboard(DesktopController desktopController)
+        private IDesktopController _desktopController;
+        public AdminDashboard(IDesktopController desktopController)
         {
             InitializeComponent();
             _desktopController = desktopController;
@@ -16,7 +16,7 @@ namespace DesktopApp
         private void logoutBtn_Click(object sender, EventArgs e)
         {
             this.Close();
-            Program.SwitchToForm(new Authentication(_desktopController.userService, _desktopController.movieService, _desktopController.reviewService, _desktopController.interpretationService));
+            Program.SwitchToForm(new Authentication(_desktopController));
         }
 
         private void AdminDashboard_Activated(object sender, EventArgs e)
@@ -55,9 +55,9 @@ namespace DesktopApp
 
         private void UpdateTotalCounts()
         {
-            totalUsersLabel.Text = $"Total Users:\n{_desktopController.displayUserPage().Count}";
-            totalMoviesLabel.Text = $"Total Movies:\n{_desktopController.displayMoviePage().Count}";
-            // totalReviewsLabel.Text = $"Total Reviews: {_desktopController.GetTotalReviews()}";
+            totalUsersLabel.Text = $"Total Users:\n{_desktopController.GetTotalUsers()}";
+            totalMoviesLabel.Text = $"Total Movies:\n{_desktopController.GetTotalMovies()}";
+            totalReviewsLabel.Text = $"Total Reviews:\n{_desktopController.GetTotalReviews()}";
             // totalInterpretationsLabel.Text = $"Total Interpretations: {_desktopController.GetTotalInterpretations()}";
         }
 

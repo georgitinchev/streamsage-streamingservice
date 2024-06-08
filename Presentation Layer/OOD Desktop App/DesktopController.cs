@@ -1,48 +1,61 @@
 ﻿using DTOs;
+using LogicClassLibrary.Interface.Manager;
 using LogicClassLibrary.Interface.Service;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace DesktopApp
 {
-    public class DesktopController
+    public class DesktopController : IDesktopController
     {
-        public IUserService userService { get; private set; }
-        public IMovieService movieService { get; private set; }
-        public IReviewService reviewService { get; private set; }
-        public IInterpretationService interpretationService { get; private set; }
+        // Service Layer Interface Inversion
+        public IUserService UserService { get; private set; }
+        public IMovieService MovieService { get; private set; }
+        public IReviewService ReviewService { get; private set; }
+        public IInterpretationService InterpretationService { get; private set; }
 
+
+        // page size of the application
+        private int pageSize = 25;
+
+        // Dependency Injection of service interfaces
         public DesktopController(IUserService userService, IMovieService movieService, IReviewService reviewService, IInterpretationService interpretationService)
         {
-            this.userService = userService;
-            this.movieService = movieService;
-            this.reviewService = reviewService;
-            this.interpretationService = interpretationService;
-        }
-        public void displayHomePage()
-        {
-
-        }
-        public List<MovieDTO> displayMoviePage()
-        {
-            if (movieService != null)
-            {
-                return movieService.GetAllMovies();
-            }
-            return new List<MovieDTO>();
+            this.UserService = userService;
+            this.MovieService = movieService;
+            this.ReviewService = reviewService;
+            this.InterpretationService = interpretationService;
         }
 
-        public List<UserDTO> displayUserPage()
+        // Page size methods
+        public int GetPageSize()
         {
-            if (userService != null)
-            {
-                return userService.GetAllUsers();
-            }
-            return new List<UserDTO>();
+            return pageSize;
         }
-        public void loginUser(string username, string password)
+        public void UpdatePageSize(int newPageSize)
+        {
+            pageSize = newPageSize;
+        }
+
+        // Get Total Entity Methods
+        public int GetTotalUsers()
+        {
+            return UserService.GetTotalUsers();
+        }
+
+        public int GetTotalMovies()
+        {
+            return MovieService.GetTotalMovies();
+        }
+
+        // User Methods
+
+        public void LoginUser(string username, string password)
         {
             try
             {
-                userService.AuthenticateUser(username, password);
+                UserService.AuthenticateUser(username, password);
             }
             catch (System.Exception e)
             {
@@ -50,13 +63,119 @@ namespace DesktopApp
                 throw;
             }
         }
-        public void registerUser(string username, string email, string password, string firstName, string lastName)
+
+        public void RegisterUser(string username, string email, string password, string firstName, string lastName)
         {
-            userService?.Create(username, email, password, firstName, lastName, string.Empty);
+            var userSettings = new UserSettingsDTO(); 
+            UserService?.Create(username, email, password, firstName, lastName, userSettings);
         }
-        public void changeUserPassword(string username, string newPassword)
+
+        public List<UserDTO> GetUserPage(int pageNumber, int pageSize)
         {
-            userService?.ChangePassword(username, newPassword);
+            return UserService.GetUsersPage(pageNumber, pageSize);
+        }
+
+        public void ChangeUserPassword(string username, string newPassword)
+        {
+            UserService?.ChangePassword(username, newPassword);
+        }
+
+        public List<UserDTO> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public UserDTO GetUserById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateUser(UserDTO user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteUser(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        // Movies Methods 
+        public List<MovieDTO> GetMoviesPage(int pageNumber, int pageSize)
+        {
+            return MovieService.GetMoviesPage(pageNumber, pageSize);
+        }
+
+        public List<MovieDTO> GetAllMovies()
+        {
+            return MovieService.GetAllMovies();
+        }
+
+        public MovieDTO GetMovieById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateMovie(MovieDTO movie)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteMovie(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        // Review Methods
+
+        public List<ReviewDTO> GetReviewPage(int pageNumber, int pageSize)
+        {
+            return ReviewService.GetReviewsPage(pageNumber, pageSize);
+        }
+        public List<ReviewDTO> GetAllReviews()
+        {
+            return ReviewService.GetAllReviews();
+        }
+
+        public ReviewDTO GetReviewById(int id)
+        {
+            return ReviewService.GetReview(id);
+        }
+
+        public void UpdateReview(ReviewDTO review)
+        {
+            ReviewService.UpdateReview(review);
+        }
+
+        public void DeleteReview(int id)
+        {
+            ReviewService.DeleteReview(id);
+        }
+        public int GetTotalReviews()
+        {
+            return ReviewService.GetTotalReviews();
+        }
+
+        // Interpretation Methods
+
+        public List<InterpretationDTO> GetAllInterpretations()
+        {
+            throw new NotImplementedException();
+        }
+
+        public InterpretationDTO GetInterpretationById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateInterpretation(InterpretationDTO interpretation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteInterpretation(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
