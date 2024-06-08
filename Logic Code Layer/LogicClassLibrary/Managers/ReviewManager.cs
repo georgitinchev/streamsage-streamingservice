@@ -14,28 +14,10 @@ namespace LogicClassLibrary.Managers
             reviewDAL = _reviewDAL;
         }
 
-        public override Review? TransformDTOToEntity(ReviewDTO dto)
+        public List<ReviewDTO> GetAllReviews()
         {
-            if (dto == null)
-            {
-                return null;
-            }
-
-            return new Review(dto.UserId, dto.MovieId, dto.Content ?? string.Empty, dto.Rating);
+            return reviewDAL.ReadAllReviews();
         }
-
-        public override ReviewDTO TransformEntityToDTO(Review entity)
-        {
-            if (entity == null)
-            {
-                return null;
-            }
-
-            return new ReviewDTO(entity.Id, entity.UserId, entity.MovieId, entity.Content, entity.Rating);
-        }
-
-        // implement getMoviesReview(int)
-
 
         public override void Create(ReviewDTO dto)
         {
@@ -55,6 +37,36 @@ namespace LogicClassLibrary.Managers
         public override void Delete(int id)
         {
             reviewDAL.DeleteReview(id);
+        }
+
+        public int GetTotalReviews()
+        {
+            return reviewDAL.GetTotalReviews();
+        }
+
+        public List<ReviewDTO> GetReviewsPage(int pageNumber, int pageSize)
+        {
+            return reviewDAL.GetReviewsPage(pageNumber, pageSize);
+        }
+
+        public override Review? TransformDTOToEntity(ReviewDTO dto)
+        {
+            if (dto == null)
+            {
+                return null;
+            }
+
+            return new Review(dto.Id, dto.UserId, dto.MovieId, dto.Title ?? string.Empty, dto.Content ?? string.Empty, dto.Rating);
+        }
+
+        public override ReviewDTO TransformEntityToDTO(Review entity)
+        {
+            if (entity == null)
+            {
+                return null!;
+            }
+
+            return new ReviewDTO(entity.Id, entity.UserId, entity.MovieId, entity.Title, entity.Content, entity.Rating, entity.ReviewDate);
         }
     }
 }
