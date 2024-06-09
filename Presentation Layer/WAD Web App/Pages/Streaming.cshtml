@@ -3,20 +3,74 @@
 @{
 }
 
-<div class="container">
+<div class="container streaming-page">
     <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
-            <h2 class="text-center">@Model.MovieDetails?.Title</h2>
+        <div class="col-lg-12 col-md-12">
+            <h2 class="text-center" style="font-family: 'Arial', sans-serif; font-size: 2.5em;">@Model.MovieDetails?.Title</h2>
             <hr style="border-top: 3px solid #7692FF;">
-            <div class="embed-responsive embed-responsive-16by9">
-                <iframe class="embed-responsive-item" src="@Model.MovieDetails?.TrailerURL" allowfullscreen></iframe>
+            @if (Model.MovieDetails?.TrailerURL != null)
+            {
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item" src="@(Model.MovieDetails.TrailerURL.Replace("watch?v=", "embed/") + "?rel=0&modestbranding=1&autohide=1&showinfo=0")" allowfullscreen></iframe>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5 d-flex">
+        <div class="col-lg-6 d-flex">
+            <div class="card flex-fill">
+                <div class="card-body">
+                    <h4>Description:</h4>
+                    <p>@Model.MovieDetails?.Description</p>
+                </div>
             </div>
-            <div class="mt-3">
-                <h3>Description:</h3>
-                <p>@Model.MovieDetails?.Description</p>
+        </div>
+        <div class="col-lg-6 d-flex">
+            <div class="card flex-fill">
+                <div class="card-body">
+                    <h4 class="card-title">Directors:</h4>
+                    @if (Model.MovieDetails?.Directors != null)
+                    {
+                        @foreach (var director in Model.MovieDetails.Directors)
+                        {
+                            <p><a href="https://www.google.com/search?q=@director" target="_blank">@director</a></p>
+                        }
+                    }
+                    <h4 class="card-title">Genres:</h4>
+                    <p>@string.Join(", ", Model.MovieDetails?.Genres ?? Enumerable.Empty<string>())</p>
+                    <h4 class="card-title">Actors:</h4>
+                    @if (Model.MovieDetails?.Actors != null)
+                    {
+                        @foreach (var actor in Model.MovieDetails.Actors)
+                        {
+                            <p><a href="https://www.google.com/search?q=@actor" target="_blank">@actor</a></p>
+                        }
+                    }
+                </div>
             </div>
-            <div class="mt-3 text-center">
-                <a href="/Library" class="btn btn-primary">Back to Library</a>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-lg-3">
+            <button class="btn btn-primary btn-lg btn-block"><i class="fas fa-heart"></i> Add to Favorites</button>
+        </div>
+        <div class="col-lg-3">
+            <button class="btn btn-secondary btn-lg btn-block"><i class="fas fa-list"></i> Add to Watchlist</button>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-lg-6">
+            <a href="/Library" class="btn btn-primary btn-lg btn-block">Back to Library</a>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-lg-6">
+            <!-- Placeholder for reviews and interpretations -->
+            <div class="card border-dark">
+                <div class="card-body">
+                    <h4>Reviews and Interpretations:</h4>
+                    <!-- Content goes here -->
+                </div>
             </div>
         </div>
     </div>
