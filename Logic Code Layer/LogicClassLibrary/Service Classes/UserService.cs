@@ -2,6 +2,7 @@
 using LogicClassLibrary.Helpers;
 using LogicClassLibrary.Interface.Manager;
 using LogicClassLibrary.Interface.Service;
+using LogicClassLibrary.Managers;
 
 namespace LogicClassLibrary.Service_Classes
 {
@@ -46,19 +47,41 @@ namespace LogicClassLibrary.Service_Classes
             return userManager.Read(username);
         }
 
-        public void Update(int id, string username, string email, string firstName, string lastName, string settings)
+        public void Update(int id, string username, string email, string firstName, string lastName, UserSettingsDTO settings)
         {
             UserDTO userDto = new UserDTO(id, username, email, firstName, lastName, settings);
             userManager.Update(userDto);
         }
-
-        public void Create(string username, string email, string password, string firstName, string lastName, string settings)
+        public void Create(string username, string email, string password, string firstName, string lastName, UserSettingsDTO settings)
         {
-            string passwordSalt = PasswordHelper.GenerateSalt();
-            string passwordHash = PasswordHelper.HashPassword(password, passwordSalt);
-            UserDTO userDto = new UserDTO(0, username, email, passwordHash, passwordSalt, firstName, lastName, settings);
-            userManager.Create(userDto);
+            var userSettings = userManager.TransformDTOToEntity(settings);
+            userManager.RegisterUser(username, email, password, firstName, lastName, userSettings);
+        }
+
+        public void AddToRecentlyWatched(int userId, int movieId)
+        {
+            userManager.AddToRecentlyWatched(userId, movieId);
+        }
+
+        public void AddToWatchlist(int userId, int movieId)
+        {
+            userManager.AddToWatchlist(userId, movieId);
+        }
+
+        public void AddToFavorites(int userId, int movieId)
+        {
+            userManager.AddToFavorites(userId, movieId);
+        }
+
+        public int GetTotalUsers()
+        {
+            return userManager.GetTotalUsers();
+        }
+
+        public List<UserDTO> GetUsersPage(int pageNumber, int pageSize)
+        {
+          var users = userManager.GetUsersPage(pageNumber, pageSize);
+          return users.Select(userManager.TransformEntityToDTO).ToList();
         }
     }
 }
-

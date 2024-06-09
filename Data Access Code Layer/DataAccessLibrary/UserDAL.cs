@@ -1,5 +1,7 @@
-﻿using DTOs;
+﻿using DataAccessLibrary.Exception;
+using DTOs;
 using Microsoft.Data.SqlClient;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -32,10 +34,11 @@ namespace DataAccessLibrary
                                 passwordSalt: reader["PasswordSalt"] as string,
                                 firstName: reader["FirstName"] as string,
                                 lastName: reader["LastName"] as string,
-                                profilePicture: reader["ProfilePictureURL"] as string,
-                                settings: reader["Settings"] as string,
+                                profilePictureURL: reader["ProfilePictureURL"] as string,
+                                settings: reader["Settings"] == DBNull.Value ? null : JsonConvert.DeserializeObject<UserSettingsDTO>(reader["Settings"] as string),
                                 favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
-                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist"),
+                                recentlyWatchedMovieIds: GetRecentlyWatchedMoviesForUser((int)reader["ID"])
                             );
                             users.Add(user);
                         }
@@ -61,7 +64,7 @@ namespace DataAccessLibrary
                     cmd.Parameters.AddWithValue("@FirstName", user.FirstName ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@LastName", user.LastName ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@ProfilePictureURL", user.ProfilePictureURL ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Settings", user.Settings ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Settings", user.Settings == null ? (object)DBNull.Value : JsonConvert.SerializeObject(user.Settings));
                     cmd.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
                     cmd.ExecuteNonQuery();
                 }
@@ -91,10 +94,11 @@ namespace DataAccessLibrary
                                 passwordSalt: reader["PasswordSalt"] as string,
                                 firstName: reader["FirstName"] as string,
                                 lastName: reader["LastName"] as string,
-                                profilePicture: reader["ProfilePictureURL"] as string,
-                                settings: reader["Settings"] as string,
+                                profilePictureURL: reader["ProfilePictureURL"] as string,
+                                settings: reader["Settings"] == DBNull.Value ? null : JsonConvert.DeserializeObject<UserSettingsDTO>(reader["Settings"] as string),
                                 favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
-                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist"),
+                                recentlyWatchedMovieIds: GetRecentlyWatchedMoviesForUser((int)reader["ID"])
                             );
                         }
                     }
@@ -126,10 +130,11 @@ namespace DataAccessLibrary
                                 passwordSalt: reader["PasswordSalt"] as string,
                                 firstName: reader["FirstName"] as string,
                                 lastName: reader["LastName"] as string,
-                                profilePicture: reader["ProfilePictureURL"] as string,
-                                settings: reader["Settings"] as string,
+                                profilePictureURL: reader["ProfilePictureURL"] as string,
+                                settings: reader["Settings"] == DBNull.Value ? null : JsonConvert.DeserializeObject<UserSettingsDTO>(reader["Settings"] as string),
                                 favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
-                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist")
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist"),
+                                recentlyWatchedMovieIds: GetRecentlyWatchedMoviesForUser((int)reader["ID"])
                             );
                         }
                     }
@@ -155,7 +160,7 @@ namespace DataAccessLibrary
                     cmd.Parameters.AddWithValue("@FirstName", user.FirstName ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@LastName", user.LastName ?? (object)DBNull.Value);
                     cmd.Parameters.AddWithValue("@ProfilePictureURL", user.ProfilePictureURL ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("@Settings", user.Settings ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Settings", user.Settings == null ? (object)DBNull.Value : JsonConvert.SerializeObject(user.Settings));
                     cmd.Parameters.AddWithValue("@PasswordSalt", user.PasswordSalt);
                     cmd.Parameters.AddWithValue("@Id", user.Id);
                     cmd.ExecuteNonQuery();
@@ -286,8 +291,8 @@ namespace DataAccessLibrary
                                 runtimeMinutes: (int)reader["RuntimeMinutes"],
                                 averageRating: reader["AverageRating"] as decimal?,
                                 genres: GetMovieGenres((int)reader["ID"]),
-                                  directors: GetMovieDirectors((int)reader["ID"]),
-                        actors: GetMovieActors((int)reader["ID"])
+                                directors: GetMovieDirectors((int)reader["ID"]),
+                                actors: GetMovieActors((int)reader["ID"])
                             );
                             movies.Add(movie);
                         }
@@ -369,6 +374,163 @@ namespace DataAccessLibrary
                 }
             }
             return actors;
+        }
+
+        // get users page method
+
+        public List<UserDTO> GetUsersPage(int pageNumber, int pageSize)
+        {
+            try
+            {
+                var users = new List<UserDTO>();
+                var userQuery = @"
+        WITH UserPage AS (
+            SELECT 
+                u.ID, u.Username, u.Email, u.FirstName, u.LastName, 
+                u.ProfilePictureURL, u.Settings, u.PasswordHash, u.PasswordSalt,
+                ROW_NUMBER() OVER (ORDER BY u.ID) AS RowNum
+            FROM [User] u
+        )
+        SELECT 
+            up.ID, up.Username, up.Email, up.FirstName, up.LastName, 
+            up.ProfilePictureURL, up.Settings, up.PasswordHash, up.PasswordSalt
+        FROM UserPage up
+        WHERE up.RowNum BETWEEN @StartRow AND @EndRow
+        ORDER BY up.ID";
+
+                int startRow = (pageNumber - 1) * pageSize + 1;
+                int endRow = pageNumber * pageSize;
+
+                using (var connection = CreateConnection())
+                {
+                    connection.Open();
+                    using (var command = new SqlCommand(userQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@StartRow", startRow);
+                        command.Parameters.AddWithValue("@EndRow", endRow);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var userId = reader.GetInt32(0);
+                                var user = new UserDTO(
+                                id: (int)reader["ID"],
+                                username: reader["Username"] as string,
+                                email: reader["Email"] as string,
+                                passwordHash: reader["PasswordHash"] as string,
+                                passwordSalt: reader["PasswordSalt"] as string,
+                                firstName: reader["FirstName"] as string,
+                                lastName: reader["LastName"] as string,
+                                profilePictureURL: reader["ProfilePictureURL"] as string,
+                                settings: reader["Settings"] == DBNull.Value ? null : JsonConvert.DeserializeObject<UserSettingsDTO>(reader["Settings"] as string),
+                                favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist"),
+                                recentlyWatchedMovieIds: GetRecentlyWatchedMoviesForUser((int)reader["ID"])
+                                );
+                                users.Add(user);
+                            }
+                        }
+                    }
+                }
+                return users;
+            }
+            catch (SqlException ex)
+            {
+                throw new DataAccessException("A database error occurred while reading users page.", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessException("An error occurred while reading users page. The operation is not valid due to the current state of the object.", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new DataAccessException("An unexpected error occurred while reading users page.", ex);
+            }
+        }
+
+        public void AddMovieToRecentlyWatched(int userId, int movieId)
+        {
+            var recentlyWatchedMovies = GetRecentlyWatchedMoviesForUser(userId);
+            using (SqlConnection conn = CreateConnection())
+            {
+                conn.Open();
+                if (recentlyWatchedMovies.Contains(movieId))
+                {
+                    string updateQuery = "UPDATE RecentlyWatched SET WatchedDate = @WatchedDate WHERE UserID = @UserId AND MovieID = @MovieId";
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.Parameters.AddWithValue("@MovieId", movieId);
+                        cmd.Parameters.AddWithValue("@WatchedDate", DateTime.Now);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    string insertQuery = "INSERT INTO RecentlyWatched (UserID, MovieID, WatchedDate) VALUES (@UserId, @MovieId, @WatchedDate)";
+                    using (SqlCommand cmd = new SqlCommand(insertQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        cmd.Parameters.AddWithValue("@MovieId", movieId);
+                        cmd.Parameters.AddWithValue("@WatchedDate", DateTime.Now);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+
+        public void RemoveMovieFromRecentlyWatched(int userId, int movieId)
+        {
+            using (SqlConnection conn = CreateConnection())
+            {
+                conn.Open();
+                string query = "DELETE FROM RecentlyWatched WHERE UserID = @UserId AND MovieID = @MovieId";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    cmd.Parameters.AddWithValue("@MovieId", movieId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        public List<int> GetRecentlyWatchedMoviesForUser(int userId)
+        {
+            List<int> movieIds = new List<int>();
+
+            using (SqlConnection conn = CreateConnection())
+            {
+                conn.Open();
+                string query = "SELECT MovieID FROM RecentlyWatched WHERE UserID = @UserId ORDER BY WatchedDate DESC";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            movieIds.Add((int)reader["MovieID"]);
+                        }
+                    }
+                }
+            }
+            return movieIds;
+        }
+
+        public int GetTotalUsers()
+        {
+            using (SqlConnection connection = CreateConnection())
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM [User]", connection))
+                {
+                    return (int)command.ExecuteScalar();
+                }
+            }
         }
     }
 }
