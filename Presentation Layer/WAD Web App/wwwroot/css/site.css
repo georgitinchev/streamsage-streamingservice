@@ -80,6 +80,33 @@ body {
         padding: 1rem 5rem;
     }
 
+/* Styles for movie cards in library */
+.card {
+    transition: transform .2s; 
+    position: relative; 
+}
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+.rating-star {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #ffc107;
+    font-size: 2em;
+    opacity: 0; 
+    transition: opacity .2s;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 5px; 
+    border-radius: 5px; 
+}
+
+.card:hover .rating-star {
+    opacity: 1; 
+}
+
 /* Styles for footer */
 .footer {
     position: absolute;
@@ -90,5 +117,3 @@ body {
     background-color: #091540; 
     color: #fff; 
 }
-
-

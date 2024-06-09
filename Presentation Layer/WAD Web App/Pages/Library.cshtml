@@ -12,7 +12,6 @@
 }
 
 <div class="container">
-
     <hr style="border-top: 3px solid #7692FF;">
 
     <h2>Featured Movies</h2>
@@ -28,6 +27,12 @@
                             <div class="card-body">
                                 <h5 class="card-title">@movie.Title</h5>
                             </div>
+                            @if (movie.AverageRating.HasValue)
+                            {
+                                <span class="rating-star">
+                                    <i class="fas fa-star"></i> @movie.AverageRating.Value
+                                </span>
+                            }
                         </a>
                     </div>
                 </div>
@@ -54,6 +59,12 @@
                             <div class="card-body">
                                 <h5 class="card-title">@movie.Title</h5>
                             </div>
+                            @if (movie.AverageRating.HasValue)
+                            {
+                                <span class="rating-star">
+                                    <i class="fas fa-star"></i> @movie.AverageRating.Value
+                                </span>
+                            }
                         </a>
                     </div>
                 </div>
@@ -71,15 +82,21 @@
     <div class="row">
         @if (Model.UsageBasedMovies != null && Model.UsageBasedMovies.Any())
         {
-            foreach (var movieDto in Model.UsageBasedMovies)
+            foreach (var movie in Model.UsageBasedMovies)
             {
                 <div class="col-sm-3 mb-4">
                     <div class="card">
-                        <a href="/Streaming?movieId=@movieDto.Id">
-                            <img class="card-img-top" src="@movieDto.PosterImageURL" alt="@movieDto.Title">
+                        <a href="/Streaming?movieId=@movie.Id">
+                            <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
                             <div class="card-body">
-                                <h5 class="card-title">@movieDto.Title</h5>
+                                <h5 class="card-title">@movie.Title</h5>
                             </div>
+                            @if (movie.AverageRating.HasValue)
+                            {
+                                <span class="rating-star">
+                                    <i class="fas fa-star"></i> @movie.AverageRating.Value
+                                </span>
+                            }
                         </a>
                     </div>
                 </div>
@@ -91,5 +108,5 @@
         }
     </div>
 
-    <hr style="border-top: 3px solid #7692FF;">
+    <hr style="border-top: 3px solid #7692FF; margin-bottom: 100px;">
 </div>
