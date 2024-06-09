@@ -20,5 +20,6 @@
             Rating = rating;
             ReviewDate = reviewDate;
         }
+        public ReviewDTO() { }
     }
 }
