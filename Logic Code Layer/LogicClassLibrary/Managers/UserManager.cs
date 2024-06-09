@@ -10,7 +10,7 @@ namespace LogicClassLibrary.Managers
     {
         public IUserDAL? userDAL { get; private set; }
         public IMovieManager movieManager { get; private set; }
-        public List<User>? users { get; private set; } = new List<User>();
+        public List<User> users { get; private set; } = new List<User>();
 
         public UserManager(IUserDAL userDAL, IMovieManager movieManager)
         {
@@ -21,9 +21,16 @@ namespace LogicClassLibrary.Managers
 
         public override void Create(UserDTO userDTO)
         {
+            string passwordSalt = PasswordHelper.GenerateSalt();
+            string passwordHash = PasswordHelper.HashPassword(userDTO.PasswordHash, passwordSalt);
+            userDTO.PasswordHash = passwordHash;
+            userDTO.PasswordSalt = passwordSalt;
             var user = TransformDTOToEntity(userDTO);
             users.Add(user);
-            userDAL.CreateUser(userDTO);
+            if (userDAL != null)
+            {
+                userDAL.CreateUser(userDTO);
+            }
         }
 
         public override void Delete(int id)
@@ -43,10 +50,20 @@ namespace LogicClassLibrary.Managers
             {
                 var favoriteMovies = dto.FavoriteMovies?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
                 var watchList = dto.WatchList?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
-                user.Update(dto.Username, dto.Email, dto.FirstName, dto.LastName, dto.ProfilePictureURL, dto.Settings, favoriteMovies, watchList);
+                var recentlyWatched = dto.RecentlyWatchedMovieIds ?? new List<int>();
+                user.Update(dto.Username, dto.Email, dto.FirstName, dto.LastName, dto.ProfilePictureURL, TransformDTOToEntity(dto.Settings), favoriteMovies, watchList, recentlyWatched);
                 user.SetPasswordHashAndSalt(dto.PasswordHash ?? string.Empty, dto.PasswordSalt ?? string.Empty);
                 userDAL.UpdateUser(TransformEntityToDTO(user));
             }
+        }
+        public int GetTotalUsers()
+        {
+            return userDAL.GetTotalUsers();
+        }
+        public List<UserDTO> GetAllUsers()
+        {
+            var userDTOs = userDAL.ReadAllUsers();
+            return userDTOs;
         }
 
         public override UserDTO Read(int id)
@@ -74,7 +91,7 @@ namespace LogicClassLibrary.Managers
             }
         }
 
-        public void RegisterUser(string username, string email, string password, string firstName, string lastName)
+        public void RegisterUser(string username, string email, string password, string firstName, string lastName, UserSettings settings)
         {
             if (users.Any(u => u.Username == username))
             {
@@ -82,7 +99,7 @@ namespace LogicClassLibrary.Managers
             }
             var passwordSalt = PasswordHelper.GenerateSalt();
             var passwordHash = PasswordHelper.HashPassword(password, passwordSalt);
-            var user = new User(0, username, string.Empty, email, firstName, lastName, string.Empty, string.Empty, new List<Movie>(), new List<Movie>());
+            var user = new User(0, username, string.Empty, email, firstName, lastName, string.Empty, settings, new List<Movie>(), new List<Movie>(), new List<int>());
             user.SetPasswordHashAndSalt(passwordHash, passwordSalt);
             users.Add(user);
             userDAL.CreateUser(TransformEntityToDTO(user));
@@ -91,8 +108,15 @@ namespace LogicClassLibrary.Managers
         public void ChangePassword(string username, string newPasswordHash, string newPasswordSalt)
         {
             UserDTO userDto = Read(username);
-            userDto.SetPasswordHashAndSalt(newPasswordHash, newPasswordSalt);
+            userDto.PasswordHash = newPasswordHash;
+            userDto.PasswordSalt = newPasswordSalt;
             Update(userDto);
+        }
+
+        public List<User> GetUsersPage(int pageNumber, int pageSize)
+        {
+            var userDTOs = userDAL?.GetUsersPage(pageNumber, pageSize);
+            return userDTOs.Select(TransformDTOToEntity).ToList();
         }
 
         public override User? TransformDTOToEntity(UserDTO dto)
@@ -110,9 +134,11 @@ namespace LogicClassLibrary.Managers
                 dto.FirstName,
                 dto.LastName,
                 dto.ProfilePictureURL,
-                dto.Settings,
+                settings: TransformDTOToEntity(dto.Settings),
                 favoriteMovies ?? new List<Movie>(),
-                watchList ?? new List<Movie>()
+                watchList ?? new List<Movie>(),
+                recentlyWatchedMovieIds: dto.RecentlyWatchedMovieIds ?? new List<int>()
+
             );
             user.SetPasswordHashAndSalt(dto.PasswordHash ?? string.Empty, dto.PasswordSalt ?? string.Empty);
             return user;
@@ -134,10 +160,43 @@ namespace LogicClassLibrary.Managers
                 entity.FirstName,
                 entity.LastName,
                 entity.ProfilePictureURL,
-                entity.Settings,
+                settings: TransformEntityToDTO(entity.Settings),
                 favoriteMovies ?? new List<MovieDTO>(),
-                watchList ?? new List<MovieDTO>()
+                watchList ?? new List<MovieDTO>(),
+                recentlyWatchedMovieIds: entity.RecentlyWatchedMovieIds
             );
+        }
+
+        public void AddToRecentlyWatched(int userId, int movieId)
+        {
+            userDAL?.AddMovieToRecentlyWatched(userId, movieId);
+        }
+
+        public void AddToWatchlist(int userId, int movieId)
+        {
+            userDAL?.AddMovieToWatchlist(userId, movieId);
+        }
+
+        public void AddToFavorites(int userId, int movieId)
+        {
+            userDAL?.AddMovieToFavorites(userId, movieId);
+        }
+
+        public UserSettings? TransformDTOToEntity(UserSettingsDTO? dto)
+        {
+            if (dto == null) return null;
+
+            return new UserSettings(dto.Role);
+        }
+
+        public UserSettingsDTO? TransformEntityToDTO(UserSettings? entity)
+        {
+            if (entity == null) return null;
+
+            return new UserSettingsDTO
+            {
+                Role = entity.Role
+            };
         }
     }
 }

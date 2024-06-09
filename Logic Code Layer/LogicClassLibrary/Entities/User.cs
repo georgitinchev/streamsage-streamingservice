@@ -12,11 +12,12 @@ namespace LogicClassLibrary.Entities
         public string? FirstName { get; private set; }
         public string? LastName { get; private set; }
         public string? ProfilePictureURL { get; private set; }
-        public string? Settings { get; private set; }
+        public UserSettings? Settings { get; private set; }
         public List<Movie>? FavoriteMovies { get; private set; }
         public List<Movie>? WatchList { get; private set; }
+        public List<int>? RecentlyWatchedMovieIds { get; private set; }
 
-        public User(int id, string username, string password, string? email, string? firstName, string? lastName, string? profilePicture, string? settings, List<Movie> favoriteMovies, List<Movie> watchList)
+        public User(int id, string username, string password, string? email, string? firstName, string? lastName, string? profilePicture, UserSettings? settings, List<Movie> favoriteMovies, List<Movie> watchList, List<int>? recentlyWatchedMovieIds)
         {
             Id = id;
             Username = username;
@@ -28,9 +29,10 @@ namespace LogicClassLibrary.Entities
             Settings = settings;
             FavoriteMovies = favoriteMovies;
             WatchList = watchList;
+            RecentlyWatchedMovieIds = recentlyWatchedMovieIds;
         }
 
-        public void Update(string username, string? email, string? firstName, string? lastName, string? profilePicture, string? settings, List<Movie> favoriteMovies, List<Movie> watchList)
+        public void Update(string username, string? email, string? firstName, string? lastName, string? profilePicture, UserSettings? settings, List<Movie> favoriteMovies, List<Movie> watchList, List<int>? recentlyWatched)
         {
             Username = username;
             Email = email;
@@ -40,6 +42,7 @@ namespace LogicClassLibrary.Entities
             Settings = settings;
             FavoriteMovies = favoriteMovies;
             WatchList = watchList;
+            RecentlyWatchedMovieIds = recentlyWatched;
         }
 
         public void SetPassword(string password)
