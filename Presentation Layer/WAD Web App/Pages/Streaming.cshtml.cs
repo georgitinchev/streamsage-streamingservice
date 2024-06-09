@@ -2,24 +2,23 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using LogicClassLibrary;
-using LogicClassLibrary.Entities; 
+using LogicClassLibrary.Entities;
+using DTOs;
 
 namespace StreamSageWAD.Pages
 {
     [Authorize]
     public class StreamingModel : PageModel
     {
-        private WebController webController;
-        public StreamingModel(WebController webController)
+        private IWebController webController;
+        public StreamingModel(IWebController webController)
         {
             this.webController = webController;
         }
-
-        public Movie? MovieDetails { get; private set; }
-
+        public MovieDTO? MovieDetails { get; private set; }
         public IActionResult OnGet(int movieId)
         {
-            MovieDetails = webController.backendService.GetMovie(movieId);
+            MovieDetails = webController.MovieService.GetMovie(movieId);
             if (MovieDetails == null)
             {
                 return NotFound();
