@@ -13,12 +13,18 @@ namespace DesktopApp
             if (currentForm != null)
             {
                 currentForm.Hide();
-                newForm.Location = currentForm.Location;
+                newForm.StartPosition = FormStartPosition.Manual;
+                newForm.Location = new Point(
+                    currentForm.Location.X + (currentForm.Width - currentForm.ClientSize.Width),
+                    currentForm.Location.Y + (currentForm.Height - currentForm.ClientSize.Height)
+                );
             }
             formStack.Push(newForm);
             newForm.Show();
             newForm.FormClosed += (s, args) => CloseForm();
         }
+
+
 
         private static void CloseForm()
         {
