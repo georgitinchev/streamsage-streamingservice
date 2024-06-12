@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DataAccessLibrary.Exception;
+using Microsoft.Data.SqlClient;
 using System.Data;
 
 
@@ -15,11 +16,15 @@ namespace DataAccessLibrary
             }
             catch (SqlException ex)
             {
-                throw new System.Exception("An error occurred while connecting to the database: " + ex.Message);
+                throw new DataAccessException(DataAccessException.GetDatabaseErrorMessage("extracting connection string from base dal"), ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("extracting connection string from base dal"), ex);
             }
             catch (System.Exception ex)
             {
-                throw new System.Exception("An error occurred: " + ex.Message);
+                throw new DataAccessException(DataAccessException.GetUnexpectedErrorMessage("extracting connection string from base dal"), ex);
             }
         }
     }
