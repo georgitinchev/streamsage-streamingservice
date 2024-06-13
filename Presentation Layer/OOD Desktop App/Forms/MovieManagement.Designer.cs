@@ -87,6 +87,9 @@
             createMovieTitleBox = new TextBox();
             categoryManagementTab = new TabPage();
             categoryMgmtGroup = new GroupBox();
+            removeDirectorBtn = new Button();
+            removeActorBtn = new Button();
+            removeGenreBtn = new Button();
             editCreateAcGenDirTabCtrl = new TabControl();
             createNewAcGenDirPage = new TabPage();
             addActorBtn = new Button();
@@ -108,9 +111,6 @@
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
-            selectDirNumeric = new NumericUpDown();
-            selectActNumeric = new NumericUpDown();
-            selectGenNumeric = new NumericUpDown();
             currentDirectorsLabel = new Label();
             currentDirectorsListbox = new ListBox();
             currentActorsListbox = new ListBox();
@@ -139,9 +139,6 @@
             editCreateAcGenDirTabCtrl.SuspendLayout();
             createNewAcGenDirPage.SuspendLayout();
             updateNewAcGenDirPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)selectDirNumeric).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)selectActNumeric).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)selectGenNumeric).BeginInit();
             ((System.ComponentModel.ISupportInitialize)moviesDashHomeBtn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).BeginInit();
             SuspendLayout();
@@ -181,6 +178,7 @@
             searchBtn.TabIndex = 6;
             searchBtn.Text = "Search 🔍";
             searchBtn.UseVisualStyleBackColor = true;
+            searchBtn.Click += searchBtn_Click;
             // 
             // movieDashTabCtrl
             // 
@@ -725,6 +723,9 @@
             // categoryMgmtGroup
             // 
             categoryMgmtGroup.BackColor = Color.WhiteSmoke;
+            categoryMgmtGroup.Controls.Add(removeDirectorBtn);
+            categoryMgmtGroup.Controls.Add(removeActorBtn);
+            categoryMgmtGroup.Controls.Add(removeGenreBtn);
             categoryMgmtGroup.Controls.Add(editCreateAcGenDirTabCtrl);
             categoryMgmtGroup.Controls.Add(currentDirectorsLabel);
             categoryMgmtGroup.Controls.Add(currentDirectorsListbox);
@@ -739,6 +740,42 @@
             categoryMgmtGroup.TabIndex = 0;
             categoryMgmtGroup.TabStop = false;
             categoryMgmtGroup.Text = "Category Mangement";
+            // 
+            // removeDirectorBtn
+            // 
+            removeDirectorBtn.BackColor = Color.MediumTurquoise;
+            removeDirectorBtn.Font = new Font("Rockwell", 15F, FontStyle.Bold);
+            removeDirectorBtn.Location = new Point(499, 684);
+            removeDirectorBtn.Name = "removeDirectorBtn";
+            removeDirectorBtn.Size = new Size(117, 58);
+            removeDirectorBtn.TabIndex = 21;
+            removeDirectorBtn.Text = "Remove Selected";
+            removeDirectorBtn.UseVisualStyleBackColor = false;
+            removeDirectorBtn.Click += removeDirectorBtn_Click;
+            // 
+            // removeActorBtn
+            // 
+            removeActorBtn.BackColor = Color.MediumTurquoise;
+            removeActorBtn.Font = new Font("Rockwell", 15F, FontStyle.Bold);
+            removeActorBtn.Location = new Point(499, 488);
+            removeActorBtn.Name = "removeActorBtn";
+            removeActorBtn.Size = new Size(117, 65);
+            removeActorBtn.TabIndex = 20;
+            removeActorBtn.Text = "Remove Selected";
+            removeActorBtn.UseVisualStyleBackColor = false;
+            removeActorBtn.Click += removeActorBtn_Click;
+            // 
+            // removeGenreBtn
+            // 
+            removeGenreBtn.BackColor = Color.MediumTurquoise;
+            removeGenreBtn.Font = new Font("Rockwell", 15F, FontStyle.Bold);
+            removeGenreBtn.Location = new Point(499, 281);
+            removeGenreBtn.Name = "removeGenreBtn";
+            removeGenreBtn.Size = new Size(117, 67);
+            removeGenreBtn.TabIndex = 19;
+            removeGenreBtn.Text = "Remove Selected";
+            removeGenreBtn.UseVisualStyleBackColor = false;
+            removeGenreBtn.Click += removeGenreBtn_Click;
             // 
             // editCreateAcGenDirTabCtrl
             // 
@@ -773,7 +810,7 @@
             // 
             addActorBtn.BackColor = Color.MediumTurquoise;
             addActorBtn.Font = new Font("Rockwell", 15F, FontStyle.Bold);
-            addActorBtn.Location = new Point(408, 296);
+            addActorBtn.Location = new Point(408, 293);
             addActorBtn.Name = "addActorBtn";
             addActorBtn.Size = new Size(182, 67);
             addActorBtn.TabIndex = 17;
@@ -785,7 +822,7 @@
             // 
             addDirectorBtn.BackColor = Color.MediumTurquoise;
             addDirectorBtn.Font = new Font("Rockwell", 15F, FontStyle.Bold);
-            addDirectorBtn.Location = new Point(408, 503);
+            addDirectorBtn.Location = new Point(408, 489);
             addDirectorBtn.Name = "addDirectorBtn";
             addDirectorBtn.Size = new Size(182, 67);
             addDirectorBtn.TabIndex = 18;
@@ -873,9 +910,6 @@
             updateNewAcGenDirPage.Controls.Add(label3);
             updateNewAcGenDirPage.Controls.Add(label2);
             updateNewAcGenDirPage.Controls.Add(label1);
-            updateNewAcGenDirPage.Controls.Add(selectDirNumeric);
-            updateNewAcGenDirPage.Controls.Add(selectActNumeric);
-            updateNewAcGenDirPage.Controls.Add(selectGenNumeric);
             updateNewAcGenDirPage.Location = new Point(4, 24);
             updateNewAcGenDirPage.Name = "updateNewAcGenDirPage";
             updateNewAcGenDirPage.Padding = new Padding(3);
@@ -947,7 +981,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(49, 417);
+            label3.Location = new Point(49, 470);
             label3.Name = "label3";
             label3.Size = new Size(186, 27);
             label3.TabIndex = 5;
@@ -956,7 +990,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(59, 227);
+            label2.Location = new Point(59, 274);
             label2.Name = "label2";
             label2.Size = new Size(154, 27);
             label2.TabIndex = 4;
@@ -965,38 +999,11 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(49, 23);
+            label1.Location = new Point(49, 76);
             label1.Name = "label1";
             label1.Size = new Size(164, 27);
             label1.TabIndex = 3;
             label1.Text = "Select Genre:";
-            // 
-            // selectDirNumeric
-            // 
-            selectDirNumeric.Font = new Font("Rockwell", 20F);
-            selectDirNumeric.Location = new Point(89, 464);
-            selectDirNumeric.Name = "selectDirNumeric";
-            selectDirNumeric.Size = new Size(87, 39);
-            selectDirNumeric.TabIndex = 2;
-            selectDirNumeric.TextAlign = HorizontalAlignment.Center;
-            // 
-            // selectActNumeric
-            // 
-            selectActNumeric.Font = new Font("Rockwell", 20F);
-            selectActNumeric.Location = new Point(89, 270);
-            selectActNumeric.Name = "selectActNumeric";
-            selectActNumeric.Size = new Size(87, 39);
-            selectActNumeric.TabIndex = 1;
-            selectActNumeric.TextAlign = HorizontalAlignment.Center;
-            // 
-            // selectGenNumeric
-            // 
-            selectGenNumeric.Font = new Font("Rockwell", 20F);
-            selectGenNumeric.Location = new Point(89, 70);
-            selectGenNumeric.Name = "selectGenNumeric";
-            selectGenNumeric.Size = new Size(87, 39);
-            selectGenNumeric.TabIndex = 0;
-            selectGenNumeric.TextAlign = HorizontalAlignment.Center;
             // 
             // currentDirectorsLabel
             // 
@@ -1016,6 +1023,7 @@
             currentDirectorsListbox.Name = "currentDirectorsListbox";
             currentDirectorsListbox.Size = new Size(444, 124);
             currentDirectorsListbox.TabIndex = 11;
+            currentDirectorsListbox.SelectedIndexChanged += currentDirectorsListbox_SelectedIndexChanged;
             // 
             // currentActorsListbox
             // 
@@ -1026,6 +1034,7 @@
             currentActorsListbox.Name = "currentActorsListbox";
             currentActorsListbox.Size = new Size(444, 124);
             currentActorsListbox.TabIndex = 10;
+            currentActorsListbox.SelectedIndexChanged += currentActorsListbox_SelectedIndexChanged;
             // 
             // currentActorsLabel
             // 
@@ -1054,6 +1063,7 @@
             currentGenresListbox.Name = "currentGenresListbox";
             currentGenresListbox.Size = new Size(444, 124);
             currentGenresListbox.TabIndex = 7;
+            currentGenresListbox.SelectedIndexChanged += currentGenresListbox_SelectedIndexChanged;
             // 
             // targetMovieLabel
             // 
@@ -1143,9 +1153,6 @@
             createNewAcGenDirPage.PerformLayout();
             updateNewAcGenDirPage.ResumeLayout(false);
             updateNewAcGenDirPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)selectDirNumeric).EndInit();
-            ((System.ComponentModel.ISupportInitialize)selectActNumeric).EndInit();
-            ((System.ComponentModel.ISupportInitialize)selectGenNumeric).EndInit();
             ((System.ComponentModel.ISupportInitialize)moviesDashHomeBtn).EndInit();
             ((System.ComponentModel.ISupportInitialize)errorProvider1).EndInit();
             ResumeLayout(false);
@@ -1233,9 +1240,6 @@
         private TabControl editCreateAcGenDirTabCtrl;
         private TabPage createNewAcGenDirPage;
         private TabPage updateNewAcGenDirPage;
-        private NumericUpDown selectGenNumeric;
-        private NumericUpDown selectDirNumeric;
-        private NumericUpDown selectActNumeric;
         private Label label1;
         private Label label3;
         private Label label2;
@@ -1245,5 +1249,8 @@
         private TextBox updateGenreText;
         private Button updateAcBtn;
         private Button updateDirBtn;
+        private Button removeGenreBtn;
+        private Button removeActorBtn;
+        private Button removeDirectorBtn;
     }
 }
