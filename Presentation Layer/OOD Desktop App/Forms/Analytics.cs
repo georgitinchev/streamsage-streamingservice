@@ -2,8 +2,8 @@
 {
     public partial class Analytics : Form
     {
-        public DesktopController desktopController { get; private set; }
-        public Analytics(DesktopController _desktopController)
+        public IDesktopController desktopController { get; private set; }
+        public Analytics(IDesktopController _desktopController)
         {
             InitializeComponent();
             this.desktopController = _desktopController;
