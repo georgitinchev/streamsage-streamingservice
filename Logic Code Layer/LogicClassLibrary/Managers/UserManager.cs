@@ -1,19 +1,24 @@
 ﻿using DataAccessLibrary;
+using DataAccessLibrary.Exception;
 using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Exceptions;
 using LogicClassLibrary.Helpers;
+using LogicClassLibrary.Interface.Helpers;
 using LogicClassLibrary.Interface.Manager;
 
 namespace LogicClassLibrary.Managers
 {
     public class UserManager : GeneralManager<UserDTO, User>, IUserManager
     {
+        private readonly IPasswordHelper _passwordHelper;
         public IUserDAL? userDAL { get; private set; }
         public IMovieManager movieManager { get; private set; }
         public List<User> users { get; private set; } = new List<User>();
 
-        public UserManager(IUserDAL userDAL, IMovieManager movieManager)
+        public UserManager(IUserDAL userDAL, IMovieManager movieManager, IPasswordHelper passwordHelper)
         {
+            _passwordHelper = passwordHelper;
             this.userDAL = userDAL;
             this.movieManager = movieManager;
             this.users = userDAL.ReadAllUsers().Select(u => TransformDTOToEntity(u)).ToList();
@@ -21,182 +26,353 @@ namespace LogicClassLibrary.Managers
 
         public override void Create(UserDTO userDTO)
         {
-            string passwordSalt = PasswordHelper.GenerateSalt();
-            string passwordHash = PasswordHelper.HashPassword(userDTO.PasswordHash, passwordSalt);
-            userDTO.PasswordHash = passwordHash;
-            userDTO.PasswordSalt = passwordSalt;
-            var user = TransformDTOToEntity(userDTO);
-            users.Add(user);
-            if (userDAL != null)
+            try
             {
-                userDAL.CreateUser(userDTO);
+                string passwordSalt = _passwordHelper.GenerateSalt();
+                string passwordHash = _passwordHelper.HashPassword(userDTO.PasswordHash, passwordSalt);
+                userDTO.PasswordHash = passwordHash;
+                userDTO.PasswordSalt = passwordSalt;
+                var user = TransformDTOToEntity(userDTO);
+                users.Add(user);
+                if (userDAL != null)
+                {
+                    userDAL.CreateUser(userDTO);
+                }
+            }
+            catch (DataAccessException e)
+            {
+                throw new CreateEntityError(e.Message);
             }
         }
 
         public override void Delete(int id)
         {
-            var user = users.Find(x => x.Id == id);
-            if (user != null)
+            try
             {
-                users.Remove(user);
-                userDAL.DeleteUser(id);
+                var user = users.Find(x => x.Id == id);
+                if (user != null)
+                {
+                    users.Remove(user);
+                    userDAL.DeleteUser(id);
+                }
+            }
+            catch (DataAccessException)
+            {
+                throw new DeleteEntityError();
             }
         }
 
         public override void Update(UserDTO dto)
         {
-            var user = users.Find(x => x.Id == dto.Id);
-            if (user != null)
+            try
             {
-                var favoriteMovies = dto.FavoriteMovies?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
-                var watchList = dto.WatchList?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
-                var recentlyWatched = dto.RecentlyWatchedMovieIds ?? new List<int>();
-                user.Update(dto.Username, dto.Email, dto.FirstName, dto.LastName, dto.ProfilePictureURL, TransformDTOToEntity(dto.Settings), favoriteMovies, watchList, recentlyWatched);
-                user.SetPasswordHashAndSalt(dto.PasswordHash ?? string.Empty, dto.PasswordSalt ?? string.Empty);
-                userDAL.UpdateUser(TransformEntityToDTO(user));
+                var user = users.Find(x => x.Id == dto.Id);
+                if (user != null)
+                {
+                    user.Update(dto.Username, dto.Email, dto.FirstName, dto.LastName, dto.ProfilePictureURL, TransformDTOToEntity(dto.Settings));
+                    userDAL.UpdateUserWithoutPassword(TransformEntityToDTO(user));
+                }
+            }
+            catch (DataAccessException e)
+            {
+                throw new UpdateEntityError(e.Message);
             }
         }
+
         public int GetTotalUsers()
         {
-            return userDAL.GetTotalUsers();
+            try
+            {
+                return userDAL.GetTotalUsers();
+            }
+            catch (DataAccessException e)
+            {
+                throw new GetTotalEntitiesError(e.Message);
+            }
         }
         public List<UserDTO> GetAllUsers()
         {
-            var userDTOs = userDAL.ReadAllUsers();
-            return userDTOs;
+            try
+            {
+                var userDTOs = userDAL.ReadAllUsers();
+                return userDTOs;
+            }
+            catch (DataAccessException e)
+            {
+                throw new GetAllEntitiesError(e.Message);
+            }
         }
 
         public override UserDTO Read(int id)
         {
-            var user = users.Find(x => x.Id == id);
-            return TransformEntityToDTO(user);
+            try
+            {
+                var user = users.Find(x => x.Id == id);
+                return TransformEntityToDTO(user);
+            }
+            catch (System.Exception e)
+            {
+                throw new ReadEntityError(e.Message);
+            }
         }
 
         public UserDTO Read(string username)
         {
-            var user = users.Find(x => x.Username == username);
-            return TransformEntityToDTO(user);
+            try
+            {
+                var user = users.Find(x => x.Username == username);
+                return TransformEntityToDTO(user);
+            }
+            catch (System.Exception e)
+            {
+                throw new ReadEntityError(e.Message);
+            }
         }
         public void AuthenticateUser(string username, string password)
         {
-            UserDTO userDto = userDAL.GetUserByUsername(username);
-            if (userDto == null)
+            try
             {
-                throw new System.Exception("User not found.");
-            }
+                UserDTO userDto = userDAL.GetUserByUsername(username);
+                if (userDto == null)
+                {
+                    throw new System.Exception("User not found.");
+                }
 
-            if (!PasswordHelper.VerifyPassword(password, userDto.PasswordHash, userDto.PasswordSalt))
+                if (!_passwordHelper.VerifyPassword(password, userDto.PasswordHash, userDto.PasswordSalt))
+                {
+                    throw new System.Exception("Invalid password.");
+                }
+            }
+            catch (DataAccessException e)
             {
-                throw new System.Exception("Invalid password.");
+                throw new AuthException(e.Message);
             }
         }
 
-        public void RegisterUser(string username, string email, string password, string firstName, string lastName, UserSettings settings)
+        public void RegisterUser(string username, string email, string password, string firstName, string lastName, UserSettingsDTO settingsDTO)
         {
-            if (users.Any(u => u.Username == username))
+            try
             {
-                throw new SystemException("Username already exists");
+                if (users.Any(u => u.Username == username))
+                {
+                    throw new SystemException("Username already exists");
+                }
+                var passwordSalt = _passwordHelper.GenerateSalt();
+                var passwordHash = _passwordHelper.HashPassword(password, passwordSalt);
+                var settings = TransformDTOToEntity(settingsDTO);
+                var user = new User(0, username, passwordHash, passwordSalt, email, firstName, lastName, new byte[0], settings, new List<Movie>(), new List<Movie>(), new List<int>());
+                users.Add(user);
+                var userDTO = TransformEntityToDTO(user);
+                var userId = userDAL.CreateUser(userDTO);
+                user.UpdateId(userId);
             }
-            var passwordSalt = PasswordHelper.GenerateSalt();
-            var passwordHash = PasswordHelper.HashPassword(password, passwordSalt);
-            var user = new User(0, username, string.Empty, email, firstName, lastName, string.Empty, settings, new List<Movie>(), new List<Movie>(), new List<int>());
-            user.SetPasswordHashAndSalt(passwordHash, passwordSalt);
-            users.Add(user);
-            userDAL.CreateUser(TransformEntityToDTO(user));
+            catch (DataAccessException e)
+            {
+                throw new RegistrationException(e.Message);
+            }
         }
+
 
         public void ChangePassword(string username, string newPasswordHash, string newPasswordSalt)
         {
-            UserDTO userDto = Read(username);
-            userDto.PasswordHash = newPasswordHash;
-            userDto.PasswordSalt = newPasswordSalt;
-            Update(userDto);
+            try
+            {
+                var userDTO = userDAL?.GetUserByUsername(username);
+                userDAL?.ChangePassword(userDTO.Id, newPasswordHash, newPasswordSalt);
+            }
+            catch (DataAccessException e)
+            {
+                throw new AuthException(e.Message);
+            }
         }
 
-        public List<User> GetUsersPage(int pageNumber, int pageSize)
+        public List<UserDTO> GetUsersPage(int pageNumber, int pageSize)
         {
-            var userDTOs = userDAL?.GetUsersPage(pageNumber, pageSize);
-            return userDTOs.Select(TransformDTOToEntity).ToList();
-        }
-
-        public override User? TransformDTOToEntity(UserDTO dto)
-        {
-            if (dto == null) return null;
-
-            var favoriteMovies = dto.FavoriteMovies?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
-            var watchList = dto.WatchList?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
-
-            var user = new User(
-                dto.Id,
-                dto.Username,
-                string.Empty, 
-                dto.Email,
-                dto.FirstName,
-                dto.LastName,
-                dto.ProfilePictureURL,
-                settings: TransformDTOToEntity(dto.Settings),
-                favoriteMovies ?? new List<Movie>(),
-                watchList ?? new List<Movie>(),
-                recentlyWatchedMovieIds: dto.RecentlyWatchedMovieIds ?? new List<int>()
-
-            );
-            user.SetPasswordHashAndSalt(dto.PasswordHash ?? string.Empty, dto.PasswordSalt ?? string.Empty);
-            return user;
-        }
-
-        public override UserDTO TransformEntityToDTO(User entity)
-        {
-            if (entity == null) return null;
-
-            var favoriteMovies = entity.FavoriteMovies?.Select(m => new MovieDTO(m.Id, m.Title ?? string.Empty, m.Year, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Actors ?? new List<string>(), m.Directors ?? new List<string>())).ToList();
-            var watchList = entity.WatchList?.Select(m => new MovieDTO(m.Id, m.Title ?? string.Empty, m.Year, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Actors ?? new List<string>(), m.Directors ?? new List<string>())).ToList();
-
-            return new UserDTO(
-                entity.Id,
-                entity.Username,
-                entity.Email,
-                entity.GetPasswordHash(),
-                entity.GetPasswordSalt(),
-                entity.FirstName,
-                entity.LastName,
-                entity.ProfilePictureURL,
-                settings: TransformEntityToDTO(entity.Settings),
-                favoriteMovies ?? new List<MovieDTO>(),
-                watchList ?? new List<MovieDTO>(),
-                recentlyWatchedMovieIds: entity.RecentlyWatchedMovieIds
-            );
+            try
+            {
+                var userDTOs = userDAL?.GetUsersPage(pageNumber, pageSize);
+                return userDTOs;
+            }
+            catch (DataAccessException e)
+            {
+                throw new PaginatorException(e.Message);
+            }
         }
 
         public void AddToRecentlyWatched(int userId, int movieId)
         {
-            userDAL?.AddMovieToRecentlyWatched(userId, movieId);
+            try
+            {
+                userDAL?.AddMovieToRecentlyWatched(userId, movieId);
+            }
+            catch (DataAccessException e)
+            {
+                throw new CreateEntityError(e.Message);
+            }
         }
 
         public void AddToWatchlist(int userId, int movieId)
         {
-            userDAL?.AddMovieToWatchlist(userId, movieId);
+            try
+            {
+                var userDTO = userDAL.GetUserById(userId);
+                if (userDTO != null && userDTO.WatchList != null && userDTO.WatchList.Count >= 20)
+                {
+                    throw new CreateEntityError("Watchlist cannot exceed 20 movies.");
+                }
+                userDAL?.AddMovieToWatchlist(userId, movieId);
+            }
+            catch (DataAccessException e)
+            {
+                throw new CreateEntityError(e.Message);
+            }
         }
 
         public void AddToFavorites(int userId, int movieId)
         {
-            userDAL?.AddMovieToFavorites(userId, movieId);
+            try
+            {
+                var userDTO = userDAL.GetUserById(userId);
+                if (userDTO != null && userDTO.FavoriteMovies != null && userDTO.FavoriteMovies.Count >= 20)
+                {
+                    throw new CreateEntityError("Favorites list cannot exceed 20 movies.");
+                }
+                userDAL?.AddMovieToFavorites(userId, movieId);
+            }
+            catch (DataAccessException e)
+            {
+                throw new CreateEntityError(e.Message);
+            }
+        }
+
+        public void RemoveFromWatchlist(int userId, int movieId)
+        {
+            try
+            {
+                userDAL?.RemoveMovieFromWatchlist(userId, movieId);
+            }
+            catch (DataAccessException)
+            {
+                throw new DeleteEntityError();
+            }
+        }
+        public void RemoveFromFavorites(int userId, int movieId)
+        {
+            try
+            {
+                userDAL?.RemoveMovieFromFavorites(userId, movieId);
+            }
+            catch (DataAccessException)
+            {
+                throw new DeleteEntityError();
+            }
+        }
+
+        public void UpdateProfilePicture(int userId, byte[] profilePicture)
+        {
+            try
+            {
+                var user = users.Find(x => x.Id == userId);
+                if (user != null)
+                {
+                    user.UpdateProfilePicture(profilePicture);
+                    userDAL?.UpdateUserWithoutPassword(TransformEntityToDTO(user));
+                }
+            } catch (DataAccessException e)
+            {
+                   throw new UpdateEntityError(e.Message);
+            }
+        }
+        public override User? TransformDTOToEntity(UserDTO dto)
+        {
+            try
+            {
+                if (dto == null) return null;
+
+                var favoriteMovies = dto.FavoriteMovies?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
+                var watchList = dto.WatchList?.Select(m => new Movie(m.Id, m.Title ?? string.Empty, m.ReleaseDate, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Directors ?? new List<string>(), m.Actors ?? new List<string>())).ToList();
+
+                var user = new User(
+                    dto.Id,
+                    dto.Username,
+                    dto.PasswordHash ?? string.Empty,
+                    dto.PasswordSalt ?? string.Empty,
+                    dto.Email,
+                    dto.FirstName,
+                    dto.LastName,
+                    dto.ProfilePictureURL,
+                    settings: TransformDTOToEntity(dto.Settings),
+                    favoriteMovies ?? new List<Movie>(),
+                    watchList ?? new List<Movie>(),
+                    recentlyWatchedMovieIds: dto.RecentlyWatchedMovieIds ?? new List<int>()
+                );
+
+                return user;
+            }
+            catch (System.Exception e)
+            {
+                throw new InvalidException(e.Message);
+            }
+        }
+
+
+        public override UserDTO? TransformEntityToDTO(User entity)
+        {
+            try
+            {
+                if (entity == null) return null;
+
+                var favoriteMovies = entity.FavoriteMovies?.Select(m => new MovieDTO(m.Id, m.Title ?? string.Empty, m.Year, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Actors ?? new List<string>(), m.Directors ?? new List<string>())).ToList();
+                var watchList = entity.WatchList?.Select(m => new MovieDTO(m.Id, m.Title ?? string.Empty, m.Year, m.Description ?? string.Empty, m.PosterImageURL ?? string.Empty, m.TrailerURL ?? string.Empty, m.RuntimeMinutes, m.AverageRating, m.Genres ?? new List<string>(), m.Actors ?? new List<string>(), m.Directors ?? new List<string>())).ToList();
+
+                return new UserDTO(
+                    entity.Id,
+                    entity.Username,
+                    entity.Email,
+                    entity.GetPasswordHash(),
+                    entity.GetPasswordSalt(),
+                    entity.FirstName,
+                    entity.LastName,
+                    entity.ProfilePictureURL,
+                    settings: TransformEntityToDTO(entity.Settings),
+                    favoriteMovies ?? new List<MovieDTO>(),
+                    watchList ?? new List<MovieDTO>(),
+                    recentlyWatchedMovieIds: entity.RecentlyWatchedMovieIds
+                );
+            }
+            catch (System.Exception e)
+            {
+                throw new InvalidException(e.Message);
+            }
         }
 
         public UserSettings? TransformDTOToEntity(UserSettingsDTO? dto)
         {
-            if (dto == null) return null;
-
-            return new UserSettings(dto.Role);
+            try
+            {
+                if (dto == null) return null;
+                return new UserSettings(dto.Role);
+            }
+            catch (System.Exception e)
+            {
+                throw new InvalidException(e.Message);
+            }
         }
 
         public UserSettingsDTO? TransformEntityToDTO(UserSettings? entity)
         {
-            if (entity == null) return null;
-
-            return new UserSettingsDTO
+            try
             {
-                Role = entity.Role
-            };
+                if (entity == null) return null;
+                return new UserSettingsDTO
+                {
+                    Role = entity.Role
+                };
+            }
+            catch (System.Exception e)
+            {
+                throw new InvalidException(e.Message);
+            }
         }
     }
 }
