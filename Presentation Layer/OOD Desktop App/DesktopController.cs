@@ -1,4 +1,5 @@
-﻿using DTOs;
+﻿using DesktopApp.Exception;
+using DTOs;
 using LogicClassLibrary.Interface.Manager;
 using LogicClassLibrary.Interface.Service;
 using System;
@@ -66,7 +67,7 @@ namespace DesktopApp
 
         public void RegisterUser(string username, string email, string password, string firstName, string lastName)
         {
-            var userSettings = new UserSettingsDTO(); 
+            var userSettings = new UserSettingsDTO();
             UserService?.Create(username, email, password, firstName, lastName, userSettings);
         }
 
@@ -157,6 +158,11 @@ namespace DesktopApp
         }
 
         // Interpretation Methods
+
+        public int GetTotalInterpretations()
+        {
+            return InterpretationService.GetTotalInterpretationsCount();
+        }
 
         public List<InterpretationDTO> GetAllInterpretations()
         {
