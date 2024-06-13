@@ -12,6 +12,13 @@
             <img src="~/img/sage-transparent.png" alt="StreamSage Logo" class="img-fluid" style="max-width: 400px;">
         </a>
     </div>
+    <!-- Green Positive Message -->
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-success" role="alert">
+            @Model.Message
+        </div>
+    }
 
     <form method="post">
         <div class="form-group">
@@ -29,13 +36,14 @@
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary" style="font-size: 1.75rem;padding: 15px 40px; margin-top:15px;">Login</button>
         </div>
-        <input type="hidden" asp-for="ReturnUrl" />
+        <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl" />
     </form>
 
     <div class="text-center mt-4">
         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" style="color: white">Need an account? Register</a>
     </div>
 
+    <!-- Error messages -->
     <div class="mt-4">
         @if (!ModelState.IsValid)
         {
