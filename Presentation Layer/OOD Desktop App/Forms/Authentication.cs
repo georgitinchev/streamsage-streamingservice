@@ -5,12 +5,12 @@ namespace DesktopApp.Forms
 {
     public partial class Authentication : Form
     {
-        private DesktopController _desktopController;
-        public Authentication(IUserService userService, IMovieService movieService, IReviewService reviewService, IInterpretationService interpretationService)
+        private IDesktopController _desktopController;
+        public Authentication(IDesktopController desktopController)
         {
             InitializeComponent();
             CustomizeButton(loginBtn);
-            _desktopController = new DesktopController(userService, movieService, reviewService, interpretationService);
+            this._desktopController = desktopController;
             this.AcceptButton = loginBtn;
         }
 
@@ -41,7 +41,7 @@ namespace DesktopApp.Forms
             }
             try
             {
-                _desktopController.loginUser(userNameLoginTextBox.Text, passwordLoginTextBox.Text);
+                _desktopController.LoginUser(userNameLoginTextBox.Text, passwordLoginTextBox.Text);
                 AdminDashboard adminDashboard = new AdminDashboard(_desktopController);
                 Program.SwitchToForm(adminDashboard);
             }
