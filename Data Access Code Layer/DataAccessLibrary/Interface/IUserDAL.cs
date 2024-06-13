@@ -6,10 +6,11 @@ namespace DataAccessLibrary
     {
         List<UserDTO> ReadAllUsers();
         List<UserDTO> GetUsersPage(int pageNumber, int pageSize);
-        void CreateUser(UserDTO user);
+        int CreateUser(UserDTO user);
         UserDTO? GetUserByUsername(string username);
         UserDTO? GetUserById(int userId);
         void UpdateUser(UserDTO user);
+        void UpdateUserWithoutPassword(UserDTO user);
         void DeleteUser(int userId);
         int GetTotalUsers();
         void ChangePassword(int userId, string newPasswordHash, string newPasswordSalt);
