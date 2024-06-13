@@ -39,7 +39,6 @@ namespace DesktopApp
         ReviewDTO GetReviewById(int id);
         void UpdateReview(ReviewDTO review);
         void DeleteReview(int id);
-        int GetTotalReviews();
 
         // Interpretation related methods
         List<InterpretationDTO> GetAllInterpretations();
@@ -49,7 +48,9 @@ namespace DesktopApp
 
         // Other methods
         int GetTotalUsers();
+        int GetTotalReviews();
         int GetTotalMovies();
+        int GetTotalInterpretations();
 
         // Pagination methods
         int GetPageSize();
