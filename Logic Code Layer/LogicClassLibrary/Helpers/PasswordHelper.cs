@@ -1,11 +1,12 @@
-﻿using System.Security.Cryptography;
+﻿using LogicClassLibrary.Interface.Helpers;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace LogicClassLibrary.Helpers
 {
-    public static class PasswordHelper
+    public class PasswordHelper : IPasswordHelper
     {
-        public static string GenerateSalt()
+        public  string GenerateSalt()
         {
             byte[] saltBytes = new byte[16];
             using (var rng = new RNGCryptoServiceProvider())
@@ -15,7 +16,7 @@ namespace LogicClassLibrary.Helpers
             return Convert.ToBase64String(saltBytes);
         }
 
-        public static string HashPassword(string password, string salt)
+        public string HashPassword(string password, string salt)
         {
             using (SHA256 sha256Hash = SHA256.Create())
             {
@@ -31,7 +32,7 @@ namespace LogicClassLibrary.Helpers
             }
         }
 
-        public static bool VerifyPassword(string password, string storedHash, string storedSalt)
+        public  bool VerifyPassword(string password, string storedHash, string storedSalt)
         {
             string hash = HashPassword(password, storedSalt);
             return hash == storedHash;
