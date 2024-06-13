@@ -1,8 +1,9 @@
-﻿using DataAccessLibrary;
-using DTOs;
-using LogicClassLibrary.Entities;
+﻿using DTOs;
+using LogicClassLibrary.Helpers;
 using LogicClassLibrary.Interface.Algorhitmic;
 using LogicClassLibrary.Interface.Manager;
+using System;
+using System.Collections.Generic;
 
 namespace LogicClassLibrary.Managers
 {
@@ -11,28 +12,46 @@ namespace LogicClassLibrary.Managers
         private IRecommendationStrategy recommendationStrategy;
         private IUserManager userManager;
         private IMovieManager movieManager;
-        public RecommendationManager(IRecommendationStrategy recommendationStrategy, IUserManager userManager, IMovieManager movieManager)
+        private RandomPageSelector randomPageSelector;
+
+        public RecommendationManager(IUserManager userManager, IMovieManager movieManager, RandomPageSelector randomPageSelector)
         {
-            this.recommendationStrategy = recommendationStrategy;
             this.userManager = userManager;
             this.movieManager = movieManager;
-        }
-        public List<MovieDTO> RecommendMoviesForUser(string username, int numRecommendations, RecommendationType type)
-        {
-            List<Movie> allMovies = movieManager.GetAllMovies();
-            List<MovieDTO> allMovieDTOs = allMovies.Select(movie => movieManager.TransformEntityToDTO(movie)).ToList();
-            return recommendationStrategy.RecommendMovies(username, allMovieDTOs, numRecommendations);
+            this.randomPageSelector = randomPageSelector;
         }
 
-        public void SetRecommendationStrategy(IRecommendationStrategy strategy)
+        public void SetStrategy(IRecommendationStrategy strategy)
         {
-            this.recommendationStrategy = strategy;
+            try
+            {
+                recommendationStrategy = strategy;
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to set recommendation strategy.", ex);
+            }
         }
 
-        public enum RecommendationType
+        public List<MovieDTO> RecommendMoviesForUser(string username, int numRecommendations)
         {
-            BehaviorBased,
-            ContentBased
+            try
+            {
+                if (recommendationStrategy == null)
+                {
+                    throw new InvalidOperationException("Recommendation strategy has not been set.");
+                }
+
+                int pageSize = 20; // Determine page size
+                List<MovieDTO> allMovieDTOs = randomPageSelector.SelectRandomPage(pageSize);
+
+                // Apply the strategy to recommend movies
+                return recommendationStrategy.RecommendMovies(username, allMovieDTOs, numRecommendations);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Failed to recommend movies for user.", ex);
+            }
         }
     }
 }
