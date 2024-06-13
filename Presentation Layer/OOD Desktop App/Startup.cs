@@ -6,6 +6,10 @@ using LogicClassLibrary.Interface.Service;
 using DataAccessLibrary;
 using LogicClassLibrary.Interface.Algorhitmic;
 using LogicClassLibrary.Algorithmic;
+using DTOs;
+using LogicClassLibrary.Helpers;
+using System;
+using LogicClassLibrary.Interface.Helpers;
 
 namespace DesktopApp
 {
@@ -20,7 +24,6 @@ namespace DesktopApp
             services.AddTransient<IMovieDAL, MovieDAL>();
             services.AddTransient<IReviewDAL, ReviewDAL>();
             services.AddTransient<IInterpretationDAL, InterpretationDAL>();
-       
 
             // Business Logic Layer
             services.AddTransient<IUserManager, UserManager>();
@@ -28,6 +31,7 @@ namespace DesktopApp
             services.AddTransient<IReviewManager, ReviewManager>();
             services.AddTransient<IInterpretationManager, InterpretationManager>();
 
+            // Service classes
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IMovieService, MovieService>();
             services.AddTransient<IReviewService, ReviewService>();
@@ -38,6 +42,12 @@ namespace DesktopApp
             services.AddTransient<IRecommendationService, RecommendationService>();
             services.AddTransient<IRecommendationStrategy, BehaviorBasedRecommendation>();
             services.AddTransient<IRecommendationStrategy, ContentBasedRecommendation>();
+
+            // Helpers
+            services.AddTransient<IPasswordHelper, PasswordHelper>(); 
+
+            // Controllers
+            services.AddScoped<IDesktopController, DesktopController>();
 
             // Forms
             services.AddTransient<DesktopApp.Forms.Authentication>();
