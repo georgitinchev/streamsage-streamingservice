@@ -12,7 +12,9 @@ namespace StreamSageWAD
         IRecommendationService RecommendationService { get; }
 
         UserDTO loginUser(string username, string password);
-        UserDTO registerUser(string username, string email, string password);
+        UserDTO registerUser(string username, string email, string password, string firstName, string lastName);
+        void changePassword(string username, string newPassword);
+        List<MovieDTO> GetMoviesByIds(List<int> movieIds);
+        string GetDefaultUser();
     }
-
 }
