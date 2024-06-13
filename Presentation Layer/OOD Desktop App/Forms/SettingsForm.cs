@@ -1,54 +1,39 @@
-﻿using LogicClassLibrary.Managers;
+﻿using DTOs;
+using LogicClassLibrary.Managers;
 using System.Data;
 
 namespace DesktopApp.Forms
 {
     public partial class SettingsForm : Form
     {
-        public DesktopController desktopController { get; private set; }
-        public SettingsForm(DesktopController _desktopController)
+        public IDesktopController desktopController { get; private set; }
+
+        public SettingsForm(IDesktopController _desktopController)
         {
             InitializeComponent();
             this.desktopController = _desktopController;
-            PopulateUserPicker();
-            UIStyler.MakeCheckBoxesMutuallyExclusive(selectBehaviorBasedCheckBox, selectContentBasedCheckBox);
-
+            itemsPerPageNumeric.Value = desktopController.GetPageSize();
         }
 
-        private async void DisplayRecommendations()
+        private void savePaginatorBtn_Click(object sender, EventArgs e)
         {
-            settingsDisplayRecommendationsListBox.Items.Clear();
-            if (settingsUserPicker.SelectedItem == null || (!selectBehaviorBasedCheckBox.Checked && !selectContentBasedCheckBox.Checked))
+            try
             {
-                return;
+                int newPageSize = (int)itemsPerPageNumeric.Value;
+                desktopController.UpdatePageSize(newPageSize);
+                settingsErrorLabel.ForeColor = Color.Green;
+                settingsErrorLabel.Text = "Page size updated successfully!";
             }
-            string username = settingsUserPicker.SelectedItem.ToString();
-            int numRecommendations = 5; // can be adjusted here
-            // determine type of recommend based on user selection
-            var type = selectBehaviorBasedCheckBox.Checked ?
-                RecommendationManager.RecommendationType.BehaviorBased :
-                RecommendationManager.RecommendationType.ContentBased;
-
-            //var recommendations = await desktopController.backendService?.recommendationManager?.RecommendMoviesForUser(username, numRecommendations, type);
-
-            //if (recommendations != null)
-            //{
-            //    foreach (var movie in recommendations)
-            //    {
-            //        settingsDisplayRecommendationsListBox.Items.Add(movie.Title);
-            //    }
-            //}
-        }
-
-        private void settingsTestAlgorithm_Click(object sender, EventArgs e)
-        {
-            DisplayRecommendations();
-        }
-
-        private void PopulateUserPicker()
-        {
-            //var userNames = desktopController.backendService?.GetAllUsers().Select(u => u.Username).ToList();
-            //UIStyler.PopulateComboBox(settingsUserPicker, userNames);
+            catch (System.Exception ex)
+            {
+                settingsErrorLabel.ForeColor = Color.Red;
+                settingsErrorLabel.Text = $"Failed to update page size: {ex.Message}";
+            }
+            finally
+            {
+                Task.Delay(3000).Wait();
+                settingsErrorLabel.Text = "";
+            }
         }
     }
 }
