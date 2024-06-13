@@ -1,5 +1,6 @@
 ﻿using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Exceptions;
 using LogicClassLibrary.Helpers;
 using LogicClassLibrary.Validation;
 using System;
@@ -21,7 +22,7 @@ namespace DesktopApp.Forms
             this.desktopController = _desktopController;
             InitializeReviewsGrid();
             LoadReviewsPage();
-            reviewsDashHomeBtn.Click += reviewsDashHomeBtn_Click; 
+            reviewsDashHomeBtn.Click += reviewsDashHomeBtn_Click;
             reviewsDataGrid.CellContentClick += reviewsDataGrid_CellContentClick;
         }
 
@@ -80,17 +81,25 @@ namespace DesktopApp.Forms
 
         private void LoadReviewsPage()
         {
-            var reviews = desktopController.ReviewService.GetReviewsPage(currentPage, desktopController.GetPageSize());
-            if (reviews.Count == 0 && currentPage > 1)
+            try
             {
-                currentPage--;
-                LoadReviewsPage();
-                return;
+                var reviews = desktopController.ReviewService.GetReviewsPage(currentPage, desktopController.GetPageSize());
+                if (reviews.Count == 0 && currentPage > 1)
+                {
+                    currentPage--;
+                    LoadReviewsPage();
+                    return;
+                }
+                reviewsDataGrid.DataSource = reviews;
+                totalReviewsLabel.Text = $"Total Reviews:\n{desktopController.ReviewService.GetTotalReviews()}";
+                reviewsDataGrid.Refresh();
             }
-            reviewsDataGrid.DataSource = reviews;
-            totalReviewsLabel.Text = $"Total Reviews: {desktopController.ReviewService.GetAllReviews().Count}";
-            reviewsDataGrid.Refresh();
+            catch (GetReviewsPageError ex)
+            {
+                reviewMgmtErrorLabel.Text = ex.Message;
+            }
         }
+
 
         private void LoadReviewDetails(ReviewDTO reviewDto)
         {
@@ -109,9 +118,9 @@ namespace DesktopApp.Forms
                 LoadReviewsPage();
                 reviewMgmtErrorLabel.Text = "Review deleted successfully!";
             }
-            catch (System.Exception ex)
+            catch (DeleteReviewError ex)
             {
-                reviewMgmtErrorLabel.Text = $"An error occurred while deleting the review: {ex.Message}";
+                reviewMgmtErrorLabel.Text = ex.Message;
             }
             finally
             {
@@ -128,10 +137,18 @@ namespace DesktopApp.Forms
             {
                 throw new DesktopApp.Exception.InvalidReviewException("Invalid review data.");
             }
-            desktopController.ReviewService.UpdateReview(review);
-            await DisplayErrorAsync(reviewMgmtErrorLabel, "Review updated successfully!");
-            LoadReviewsPage();
+            try
+            {
+                desktopController.ReviewService.UpdateReview(review);
+                await DisplayErrorAsync(reviewMgmtErrorLabel, "Review updated successfully!");
+                LoadReviewsPage();
+            }
+            catch (UpdateReviewError ex)
+            {
+                reviewMgmtErrorLabel.Text = ex.Message;
+            }
         }
+
 
         private async void createReviewBtn_Click(object sender, EventArgs e)
         {
@@ -160,10 +177,18 @@ namespace DesktopApp.Forms
                 throw new DesktopApp.Exception.InvalidReviewException("Invalid review data.");
             }
 
-            desktopController.ReviewService.AddReview(review);
-            await DisplayErrorAsync(reviewMgmtErrorLabel, "Review created successfully!");
-            LoadReviewsPage();
+            try
+            {
+                desktopController.ReviewService.AddReview(review);
+                await DisplayErrorAsync(reviewMgmtErrorLabel, "Review created successfully!");
+                LoadReviewsPage();
+            }
+            catch (CreateReviewError ex)
+            {
+                reviewMgmtErrorLabel.Text = ex.Message;
+            }
         }
+
 
 
         private void addReviewBtn_Click(object sender, EventArgs e)
@@ -173,7 +198,7 @@ namespace DesktopApp.Forms
 
         private void reviewsDashHomeBtn_Click(object sender, EventArgs e)
         {
-            reviewTabCtrl.SelectedIndex = 0; 
+            reviewTabCtrl.SelectedIndex = 0;
         }
 
         private void previousPageBtnReviews_Click(object sender, EventArgs e)
