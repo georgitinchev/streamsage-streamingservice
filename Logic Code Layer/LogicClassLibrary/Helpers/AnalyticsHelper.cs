@@ -1,49 +1,42 @@
 ﻿using DTOs;
-using LogicClassLibrary.Interface.Service;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LogicClassLibrary.Helpers
 {
     public static class AnalyticsHelper
     {
-        public static double CalculateAverageRating(IMovieService movieService, int movieId)
+        public static List<MovieDTO> GetTopRatedMovies(List<MovieDTO> allMovies)
         {
-            // Implementation...
-            throw new NotImplementedException();
+            return allMovies
+                .Where(m => m.AverageRating.HasValue)
+                .OrderByDescending(m => m.AverageRating)
+                .Take(10)
+                .ToList();
         }
 
-        public static List<MovieDTO> GetTopRatedMovies(IMovieService movieService)
+        public static List<MovieDTO> GetLongestRunningMovies(List<MovieDTO> allMovies)
         {
-            // Implementation...
-            throw new NotImplementedException();
+            return allMovies
+                .OrderByDescending(m => m.RuntimeMinutes)
+                .Take(10)
+                .ToList();
         }
 
-        public static List<UserDTO> GetMostActiveUsers(IUserService userService)
+        public static List<MovieDTO> GetMostRecentMovies(List<MovieDTO> allMovies)
         {
-            // Implementation...
-            throw new NotImplementedException();
+            return allMovies
+                .OrderByDescending(m => m.ReleaseDate)
+                .Take(10)
+                .ToList();
         }
 
-        public static List<MovieDTO> GetMostReviewedMovies(IMovieService movieService)
+        public static List<UserDTO> GetMostRecentUsers(List<UserDTO> allUsers)
         {
-            // Implementation...
-            throw new NotImplementedException();
-        }
-
-        public static Dictionary<DateTime, int> GetUserActivityOverTime(IUserService userService, int userId)
-        {
-            // Implementation...
-            throw new NotImplementedException();
-        }
-
-        public static Dictionary<DateTime, int> GetMoviePopularityOverTime(IMovieService movieService, int movieId)
-        {
-            // Implementation...
-            throw new NotImplementedException();
+            return allUsers
+                .OrderByDescending(u => u.Id)
+                .Take(10)
+                .ToList();
         }
     }
 }

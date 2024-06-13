@@ -167,5 +167,22 @@ namespace DesktopApp
                 checkedListBox.Enabled = false; 
             }
         }
+
+        public static void PopulateListViewOrPlaceholder(ListView checkedListBox, IEnumerable<string> selectedItems, string placeholder)
+        {
+            checkedListBox.Items.Clear();
+            if (selectedItems.Any())
+            {
+                foreach (var item in selectedItems)
+                {
+                    checkedListBox.Items.Add(item);
+                }
+            }
+            else
+            {
+                checkedListBox.Items.Add(placeholder);
+                checkedListBox.Enabled = false;
+            }
+        }
     }
 }
