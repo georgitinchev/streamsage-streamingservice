@@ -1,10 +1,10 @@
 ﻿USE [master]
 GO
-/****** Object:  Database [dbi524441_streamsage]    Script Date: 6/2/2024 11:30:11 AM ******/
+/****** Object:  Database [dbi524441_streamsage]    Script Date: 6/9/2024 6:33:14 PM ******/
 CREATE DATABASE [dbi524441_streamsage]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'dbi524441_streamsage', FILENAME = N'D:\SQL\Data\dbi524441_streamsage.mdf' , SIZE = 8192KB , MAXSIZE = 1048576KB , FILEGROWTH = 2048KB )
+( NAME = N'dbi524441_streamsage', FILENAME = N'D:\SQL\Data\dbi524441_streamsage.mdf' , SIZE = 20480KB , MAXSIZE = 1048576KB , FILEGROWTH = 2048KB )
  LOG ON 
 ( NAME = N'dbi524441_streamsage_log', FILENAME = N'D:\SQL\Log\dbi524441_streamsage_log.ldf' , SIZE = 8192KB , MAXSIZE = 262144KB , FILEGROWTH = 10%)
  WITH CATALOG_COLLATION = DATABASE_DEFAULT
@@ -82,49 +82,61 @@ ALTER DATABASE [dbi524441_streamsage] SET QUERY_STORE = OFF
 GO
 USE [dbi524441_streamsage]
 GO
-/****** Object:  Table [dbo].[Actor]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[Actor]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Actor](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](max) NULL,
+	[Name] [nvarchar](255) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UC_Actor_Name] UNIQUE NONCLUSTERED 
+(
+	[Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Director]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[Director]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Director](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](max) NULL,
+	[Name] [nvarchar](255) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UC_Director_Name] UNIQUE NONCLUSTERED 
+(
+	[Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Genre]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[Genre]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Genre](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Name] [nvarchar](max) NULL,
+	[Name] [nvarchar](255) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UC_Genre_Name] UNIQUE NONCLUSTERED 
+(
+	[Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Interpretation]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[Interpretation]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -141,14 +153,14 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Movie]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[Movie]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[Movie](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Title] [nvarchar](max) NOT NULL,
+	[Title] [nvarchar](255) NULL,
 	[ReleaseDate] [datetime] NOT NULL,
 	[Description] [nvarchar](max) NOT NULL,
 	[PosterImageURL] [nvarchar](max) NULL,
@@ -158,10 +170,14 @@ CREATE TABLE [dbo].[Movie](
  CONSTRAINT [PK__Movie__3214EC27DA9257DD] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UC_Movie_Title] UNIQUE NONCLUSTERED 
+(
+	[Title] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MovieActor]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[MovieActor]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -176,7 +192,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MovieDirector]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[MovieDirector]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -191,7 +207,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[MovieGenre]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[MovieGenre]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -206,7 +222,24 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Review]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[RecentlyWatched]    Script Date: 6/9/2024 6:33:15 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RecentlyWatched](
+	[UserID] [int] NOT NULL,
+	[MovieID] [int] NOT NULL,
+	[WatchedDate] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[UserID] ASC,
+	[MovieID] ASC,
+	[WatchedDate] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Review]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -215,16 +248,17 @@ CREATE TABLE [dbo].[Review](
 	[ReviewID] [int] IDENTITY(1,1) NOT NULL,
 	[MovieID] [int] NULL,
 	[UserID] [int] NULL,
+	[Title] [nvarchar](250) NULL,
 	[Content] [nvarchar](max) NULL,
 	[Rating] [int] NULL,
 	[ReviewDate] [datetime] NULL,
-PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK__Review__74BC79AE26F12E9F] PRIMARY KEY CLUSTERED 
 (
 	[ReviewID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[User]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -232,7 +266,7 @@ GO
 CREATE TABLE [dbo].[User](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Username] [nvarchar](max) NOT NULL,
-	[Email] [nvarchar](max) NULL,
+	[Email] [nvarchar](255) NULL,
 	[PasswordHash] [nvarchar](max) NOT NULL,
 	[FirstName] [nvarchar](max) NULL,
 	[LastName] [nvarchar](max) NULL,
@@ -242,10 +276,14 @@ CREATE TABLE [dbo].[User](
  CONSTRAINT [PK__User__3214EC277CF6DFFC] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UC_User_Email] UNIQUE NONCLUSTERED 
+(
+	[Email] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[UserFavorite]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[UserFavorite]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -260,7 +298,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Watchlist]    Script Date: 6/2/2024 11:30:12 AM ******/
+/****** Object:  Table [dbo].[Watchlist]    Script Date: 6/9/2024 6:33:15 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -312,6 +350,18 @@ REFERENCES [dbo].[Genre] ([ID])
 GO
 ALTER TABLE [dbo].[MovieGenre]  WITH CHECK ADD FOREIGN KEY([MovieID])
 REFERENCES [dbo].[Movie] ([ID])
+GO
+ALTER TABLE [dbo].[RecentlyWatched]  WITH CHECK ADD  CONSTRAINT [FK_RecentlyWatched_Movie] FOREIGN KEY([MovieID])
+REFERENCES [dbo].[Movie] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[RecentlyWatched] CHECK CONSTRAINT [FK_RecentlyWatched_Movie]
+GO
+ALTER TABLE [dbo].[RecentlyWatched]  WITH CHECK ADD  CONSTRAINT [FK_RecentlyWatched_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[RecentlyWatched] CHECK CONSTRAINT [FK_RecentlyWatched_User]
 GO
 ALTER TABLE [dbo].[Review]  WITH CHECK ADD  CONSTRAINT [FK__Review__MovieID__3D5E1FD2] FOREIGN KEY([MovieID])
 REFERENCES [dbo].[Movie] ([ID])
