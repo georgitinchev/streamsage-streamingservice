@@ -1,19 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using StreamSageWAD.Models;
-using System.Collections.Generic;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using StreamSageWAD.Models;
+using DTOs;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace StreamSageWAD.Pages
 {
     public class LoginModel : PageModel
     {
-        public WebController webController { get; private set; }
+        public IWebController webController { get; private set; }
         public string? ReturnUrl { get; set; } = null;
+        [BindNever]
+        public string? Message { get; set; } = "";
 
-        public LoginModel(WebController webController)
+        public LoginModel(IWebController webController)
         {
             this.webController = webController;
         }
@@ -21,53 +26,49 @@ namespace StreamSageWAD.Pages
         [BindProperty]
         public LoginDTO loginDTO { get; set; }
 
-        public void OnGet(string ReturnUrl)
+        public void OnGet(string ReturnUrl, string message = "")
         {
-            this.ReturnUrl = ReturnUrl ?? Url.Content("/Index");
+            this.ReturnUrl = string.IsNullOrEmpty(ReturnUrl) ? "/Index" : ReturnUrl;
+            this.Message = message ?? "";
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string ReturnUrl = null)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
+            ReturnUrl = string.IsNullOrEmpty(ReturnUrl) ? Url.Content("~/Index") : ReturnUrl;
 
             try
             {
-                bool isAuthenticated = webController.loginUser(loginDTO.Username, loginDTO.Password);
-
-                if (isAuthenticated)
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, loginDTO.Username),
-                    };
-
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var authProperties = new AuthenticationProperties
-                    {
-                        IsPersistent = loginDTO.IsRememberMe,
-                    };
-                    if (loginDTO.IsRememberMe)
-                    {
-                        authProperties.ExpiresUtc = DateTimeOffset.UtcNow.AddHours(24);
-                    }
-
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-                    return LocalRedirect(ReturnUrl);
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return Page();
-                }
+                var user = webController.loginUser(loginDTO.Username, loginDTO.Password);
+                await SignInUser(user, loginDTO.IsRememberMe);
+                return LocalRedirect(ReturnUrl);
             }
-            catch (Exception e)
+            catch (StreamSageWAD.Exception.LoginFailedException)
             {
-                ModelState.AddModelError(string.Empty, $"An unexpected error occurred. {e.Message}. Please try again later.");
-                return Page();
+                ModelState.AddModelError(string.Empty, "Invalid username or password. Please try again.");
             }
+            catch (System.Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+            }
+            return Page();
+        }
+
+        private async Task SignInUser(UserDTO user, bool isPersistent)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Settings.Role)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties { IsPersistent = isPersistent };
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
         }
     }
 }
