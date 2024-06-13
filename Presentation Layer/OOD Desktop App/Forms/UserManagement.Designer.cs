@@ -35,6 +35,8 @@
             usernameLabel = new Label();
             userOperationsTabCtrl = new TabControl();
             userManagementPage = new TabPage();
+            previousPageBtn = new Button();
+            nextPageBtn = new Button();
             createUserNavigationBtn = new Button();
             totalUsersLabel = new Label();
             filterBox = new ComboBox();
@@ -46,7 +48,7 @@
             errorLabel = new Label();
             createUserBtn = new Button();
             createUserBox = new GroupBox();
-            settingsTextBox = new TextBox();
+            createSettingsTextBox = new TextBox();
             settingsLabel = new Label();
             lastNameLabel = new Label();
             userLastNameTextBox = new TextBox();
@@ -58,8 +60,8 @@
             userPfpPictureBox = new PictureBox();
             updateErrorLabel = new Label();
             updateUserGroupBox = new GroupBox();
-            updateProfilePictureBox = new TextBox();
-            updateProfilePictureLabel = new Label();
+            updateSettingsTextBox = new TextBox();
+            updateSettingsLabel = new Label();
             updateIsAdminCheck = new CheckBox();
             updateLastNameBox = new TextBox();
             updateLastNameLabel = new Label();
@@ -74,6 +76,7 @@
             backToHomeBtn = new Button();
             openFileDialog1 = new OpenFileDialog();
             generalErrorLabel = new Label();
+            createIsAdminCheckBox = new CheckBox();
             userOperationsTabCtrl.SuspendLayout();
             userManagementPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)userManagementDataGrid).BeginInit();
@@ -87,8 +90,8 @@
             // usernameTextBox
             // 
             usernameTextBox.Font = new Font("Rockwell", 25F);
-            usernameTextBox.Location = new Point(32, 124);
-            usernameTextBox.Margin = new Padding(2, 2, 2, 2);
+            usernameTextBox.Location = new Point(32, 101);
+            usernameTextBox.Margin = new Padding(2);
             usernameTextBox.Name = "usernameTextBox";
             usernameTextBox.Size = new Size(489, 47);
             usernameTextBox.TabIndex = 0;
@@ -96,8 +99,8 @@
             // userEmailTextBox
             // 
             userEmailTextBox.Font = new Font("Rockwell", 25F);
-            userEmailTextBox.Location = new Point(32, 245);
-            userEmailTextBox.Margin = new Padding(2, 2, 2, 2);
+            userEmailTextBox.Location = new Point(32, 208);
+            userEmailTextBox.Margin = new Padding(2);
             userEmailTextBox.Name = "userEmailTextBox";
             userEmailTextBox.Size = new Size(489, 47);
             userEmailTextBox.TabIndex = 1;
@@ -105,8 +108,8 @@
             // userPasswordTextBox
             // 
             userPasswordTextBox.Font = new Font("Rockwell", 25F);
-            userPasswordTextBox.Location = new Point(32, 374);
-            userPasswordTextBox.Margin = new Padding(2, 2, 2, 2);
+            userPasswordTextBox.Location = new Point(32, 320);
+            userPasswordTextBox.Margin = new Padding(2);
             userPasswordTextBox.Name = "userPasswordTextBox";
             userPasswordTextBox.Size = new Size(489, 47);
             userPasswordTextBox.TabIndex = 2;
@@ -114,8 +117,8 @@
             // userFirstNameTextBox
             // 
             userFirstNameTextBox.Font = new Font("Rockwell", 25F);
-            userFirstNameTextBox.Location = new Point(32, 496);
-            userFirstNameTextBox.Margin = new Padding(2, 2, 2, 2);
+            userFirstNameTextBox.Location = new Point(32, 425);
+            userFirstNameTextBox.Margin = new Padding(2);
             userFirstNameTextBox.Name = "userFirstNameTextBox";
             userFirstNameTextBox.Size = new Size(489, 47);
             userFirstNameTextBox.TabIndex = 3;
@@ -123,7 +126,7 @@
             // usernameLabel
             // 
             usernameLabel.Font = new Font("Rockwell", 25F);
-            usernameLabel.Location = new Point(129, 62);
+            usernameLabel.Location = new Point(129, 39);
             usernameLabel.Margin = new Padding(2, 0, 2, 0);
             usernameLabel.Name = "usernameLabel";
             usernameLabel.Size = new Size(288, 60);
@@ -140,16 +143,18 @@
             userOperationsTabCtrl.Font = new Font("Rockwell", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             userOperationsTabCtrl.ItemSize = new Size(0, 1);
             userOperationsTabCtrl.Location = new Point(8, 44);
-            userOperationsTabCtrl.Margin = new Padding(2, 2, 2, 2);
+            userOperationsTabCtrl.Margin = new Padding(2);
             userOperationsTabCtrl.Name = "userOperationsTabCtrl";
             userOperationsTabCtrl.SelectedIndex = 0;
-            userOperationsTabCtrl.Size = new Size(1885, 980);
+            userOperationsTabCtrl.Size = new Size(1885, 978);
             userOperationsTabCtrl.SizeMode = TabSizeMode.Fixed;
             userOperationsTabCtrl.TabIndex = 5;
             // 
             // userManagementPage
             // 
             userManagementPage.BackColor = Color.FromArgb(192, 255, 255);
+            userManagementPage.Controls.Add(previousPageBtn);
+            userManagementPage.Controls.Add(nextPageBtn);
             userManagementPage.Controls.Add(createUserNavigationBtn);
             userManagementPage.Controls.Add(totalUsersLabel);
             userManagementPage.Controls.Add(filterBox);
@@ -158,12 +163,34 @@
             userManagementPage.Controls.Add(totalUsersLabelIcon);
             userManagementPage.Controls.Add(userManagementDataGrid);
             userManagementPage.Location = new Point(4, 5);
-            userManagementPage.Margin = new Padding(2, 2, 2, 2);
+            userManagementPage.Margin = new Padding(2);
             userManagementPage.Name = "userManagementPage";
-            userManagementPage.Padding = new Padding(2, 2, 2, 2);
-            userManagementPage.Size = new Size(1877, 971);
+            userManagementPage.Padding = new Padding(2);
+            userManagementPage.Size = new Size(1877, 969);
             userManagementPage.TabIndex = 1;
             userManagementPage.Text = "User Management";
+            // 
+            // previousPageBtn
+            // 
+            previousPageBtn.BackColor = Color.FromArgb(0, 192, 192);
+            previousPageBtn.Location = new Point(5, 935);
+            previousPageBtn.Margin = new Padding(3, 2, 3, 2);
+            previousPageBtn.Name = "previousPageBtn";
+            previousPageBtn.Size = new Size(188, 30);
+            previousPageBtn.TabIndex = 10;
+            previousPageBtn.Text = "◀️ Previous Page";
+            previousPageBtn.UseVisualStyleBackColor = false;
+            // 
+            // nextPageBtn
+            // 
+            nextPageBtn.BackColor = Color.FromArgb(0, 192, 192);
+            nextPageBtn.Location = new Point(1684, 935);
+            nextPageBtn.Margin = new Padding(3, 2, 3, 2);
+            nextPageBtn.Name = "nextPageBtn";
+            nextPageBtn.Size = new Size(188, 30);
+            nextPageBtn.TabIndex = 9;
+            nextPageBtn.Text = "Next Page ▶️";
+            nextPageBtn.UseVisualStyleBackColor = false;
             // 
             // createUserNavigationBtn
             // 
@@ -229,10 +256,10 @@
             userManagementDataGrid.BackgroundColor = SystemColors.ButtonHighlight;
             userManagementDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             userManagementDataGrid.Location = new Point(4, 61);
-            userManagementDataGrid.Margin = new Padding(2, 2, 2, 2);
+            userManagementDataGrid.Margin = new Padding(2);
             userManagementDataGrid.Name = "userManagementDataGrid";
             userManagementDataGrid.RowHeadersWidth = 62;
-            userManagementDataGrid.Size = new Size(1869, 931);
+            userManagementDataGrid.Size = new Size(1869, 870);
             userManagementDataGrid.TabIndex = 0;
             // 
             // userCreationPage
@@ -242,10 +269,10 @@
             userCreationPage.Controls.Add(createUserBtn);
             userCreationPage.Controls.Add(createUserBox);
             userCreationPage.Location = new Point(4, 5);
-            userCreationPage.Margin = new Padding(2, 2, 2, 2);
+            userCreationPage.Margin = new Padding(2);
             userCreationPage.Name = "userCreationPage";
-            userCreationPage.Padding = new Padding(2, 2, 2, 2);
-            userCreationPage.Size = new Size(1877, 971);
+            userCreationPage.Padding = new Padding(2);
+            userCreationPage.Size = new Size(1877, 969);
             userCreationPage.TabIndex = 0;
             userCreationPage.Text = "Creation";
             // 
@@ -265,7 +292,7 @@
             createUserBtn.BackColor = Color.FromArgb(0, 192, 192);
             createUserBtn.Font = new Font("Rockwell", 40F, FontStyle.Bold, GraphicsUnit.Point, 0);
             createUserBtn.Location = new Point(1278, 374);
-            createUserBtn.Margin = new Padding(2, 2, 2, 2);
+            createUserBtn.Margin = new Padding(2);
             createUserBtn.Name = "createUserBtn";
             createUserBtn.Size = new Size(435, 128);
             createUserBtn.TabIndex = 11;
@@ -275,7 +302,8 @@
             // 
             // createUserBox
             // 
-            createUserBox.Controls.Add(settingsTextBox);
+            createUserBox.Controls.Add(createIsAdminCheckBox);
+            createUserBox.Controls.Add(createSettingsTextBox);
             createUserBox.Controls.Add(settingsLabel);
             createUserBox.Controls.Add(usernameLabel);
             createUserBox.Controls.Add(userPasswordTextBox);
@@ -295,30 +323,30 @@
             createUserBox.TabStop = false;
             createUserBox.Text = "Create User";
             // 
-            // settingsTextBox
+            // createSettingsTextBox
             // 
-            settingsTextBox.Font = new Font("Rockwell", 25F);
-            settingsTextBox.Location = new Point(32, 761);
-            settingsTextBox.Margin = new Padding(2, 2, 2, 2);
-            settingsTextBox.Name = "settingsTextBox";
-            settingsTextBox.Size = new Size(489, 47);
-            settingsTextBox.TabIndex = 12;
+            createSettingsTextBox.Font = new Font("Rockwell", 25F);
+            createSettingsTextBox.Location = new Point(32, 656);
+            createSettingsTextBox.Margin = new Padding(2);
+            createSettingsTextBox.Name = "createSettingsTextBox";
+            createSettingsTextBox.Size = new Size(489, 47);
+            createSettingsTextBox.TabIndex = 12;
             // 
             // settingsLabel
             // 
             settingsLabel.Font = new Font("Rockwell", 25F);
-            settingsLabel.Location = new Point(129, 692);
+            settingsLabel.Location = new Point(129, 607);
             settingsLabel.Margin = new Padding(2, 0, 2, 0);
             settingsLabel.Name = "settingsLabel";
             settingsLabel.Size = new Size(288, 47);
             settingsLabel.TabIndex = 11;
-            settingsLabel.Text = "Profile Picture:";
+            settingsLabel.Text = "Settings:";
             settingsLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lastNameLabel
             // 
             lastNameLabel.Font = new Font("Rockwell", 25F);
-            lastNameLabel.Location = new Point(129, 556);
+            lastNameLabel.Location = new Point(129, 484);
             lastNameLabel.Margin = new Padding(2, 0, 2, 0);
             lastNameLabel.Name = "lastNameLabel";
             lastNameLabel.Size = new Size(288, 47);
@@ -329,8 +357,8 @@
             // userLastNameTextBox
             // 
             userLastNameTextBox.Font = new Font("Rockwell", 25F);
-            userLastNameTextBox.Location = new Point(32, 616);
-            userLastNameTextBox.Margin = new Padding(2, 2, 2, 2);
+            userLastNameTextBox.Location = new Point(32, 544);
+            userLastNameTextBox.Margin = new Padding(2);
             userLastNameTextBox.Name = "userLastNameTextBox";
             userLastNameTextBox.Size = new Size(489, 47);
             userLastNameTextBox.TabIndex = 9;
@@ -338,7 +366,7 @@
             // firstNameLabel
             // 
             firstNameLabel.Font = new Font("Rockwell", 25F);
-            firstNameLabel.Location = new Point(129, 434);
+            firstNameLabel.Location = new Point(129, 376);
             firstNameLabel.Margin = new Padding(2, 0, 2, 0);
             firstNameLabel.Name = "firstNameLabel";
             firstNameLabel.Size = new Size(288, 47);
@@ -349,7 +377,7 @@
             // passwordLabel
             // 
             passwordLabel.Font = new Font("Rockwell", 25F);
-            passwordLabel.Location = new Point(129, 294);
+            passwordLabel.Location = new Point(129, 257);
             passwordLabel.Margin = new Padding(2, 0, 2, 0);
             passwordLabel.Name = "passwordLabel";
             passwordLabel.Size = new Size(288, 61);
@@ -360,7 +388,7 @@
             // emailLabel
             // 
             emailLabel.Font = new Font("Rockwell", 25F);
-            emailLabel.Location = new Point(129, 173);
+            emailLabel.Location = new Point(129, 150);
             emailLabel.Margin = new Padding(2, 0, 2, 0);
             emailLabel.Name = "emailLabel";
             emailLabel.Size = new Size(288, 56);
@@ -377,8 +405,8 @@
             updateUserPage.Controls.Add(updateUserGroupBox);
             updateUserPage.Location = new Point(4, 5);
             updateUserPage.Name = "updateUserPage";
-            updateUserPage.Padding = new Padding(3, 3, 3, 3);
-            updateUserPage.Size = new Size(1877, 971);
+            updateUserPage.Padding = new Padding(3);
+            updateUserPage.Size = new Size(1877, 969);
             updateUserPage.TabIndex = 2;
             updateUserPage.Text = "Update";
             // 
@@ -387,7 +415,7 @@
             updateUserBtn.BackColor = Color.FromArgb(0, 192, 192);
             updateUserBtn.Font = new Font("Rockwell", 40F, FontStyle.Bold, GraphicsUnit.Point, 0);
             updateUserBtn.Location = new Point(1375, 402);
-            updateUserBtn.Margin = new Padding(2, 2, 2, 2);
+            updateUserBtn.Margin = new Padding(2);
             updateUserBtn.Name = "updateUserBtn";
             updateUserBtn.Size = new Size(389, 104);
             updateUserBtn.TabIndex = 12;
@@ -415,8 +443,8 @@
             // 
             // updateUserGroupBox
             // 
-            updateUserGroupBox.Controls.Add(updateProfilePictureBox);
-            updateUserGroupBox.Controls.Add(updateProfilePictureLabel);
+            updateUserGroupBox.Controls.Add(updateSettingsTextBox);
+            updateUserGroupBox.Controls.Add(updateSettingsLabel);
             updateUserGroupBox.Controls.Add(updateIsAdminCheck);
             updateUserGroupBox.Controls.Add(updateLastNameBox);
             updateUserGroupBox.Controls.Add(updateLastNameLabel);
@@ -438,24 +466,24 @@
             updateUserGroupBox.TabStop = false;
             updateUserGroupBox.Text = "Update User";
             // 
-            // updateProfilePictureBox
+            // updateSettingsTextBox
             // 
-            updateProfilePictureBox.Font = new Font("Rockwell", 25F);
-            updateProfilePictureBox.Location = new Point(38, 663);
-            updateProfilePictureBox.Margin = new Padding(3, 2, 3, 2);
-            updateProfilePictureBox.Name = "updateProfilePictureBox";
-            updateProfilePictureBox.Size = new Size(560, 47);
-            updateProfilePictureBox.TabIndex = 12;
+            updateSettingsTextBox.Font = new Font("Rockwell", 25F);
+            updateSettingsTextBox.Location = new Point(38, 663);
+            updateSettingsTextBox.Margin = new Padding(3, 2, 3, 2);
+            updateSettingsTextBox.Name = "updateSettingsTextBox";
+            updateSettingsTextBox.Size = new Size(560, 47);
+            updateSettingsTextBox.TabIndex = 12;
             // 
-            // updateProfilePictureLabel
+            // updateSettingsLabel
             // 
-            updateProfilePictureLabel.AutoSize = true;
-            updateProfilePictureLabel.Font = new Font("Rockwell", 25F);
-            updateProfilePictureLabel.Location = new Point(178, 613);
-            updateProfilePictureLabel.Name = "updateProfilePictureLabel";
-            updateProfilePictureLabel.Size = new Size(246, 38);
-            updateProfilePictureLabel.TabIndex = 11;
-            updateProfilePictureLabel.Text = "Profile Picture:";
+            updateSettingsLabel.AutoSize = true;
+            updateSettingsLabel.Font = new Font("Rockwell", 25F);
+            updateSettingsLabel.Location = new Point(216, 613);
+            updateSettingsLabel.Name = "updateSettingsLabel";
+            updateSettingsLabel.Size = new Size(150, 38);
+            updateSettingsLabel.TabIndex = 11;
+            updateSettingsLabel.Text = "Settings:";
             // 
             // updateIsAdminCheck
             // 
@@ -593,6 +621,19 @@
             generalErrorLabel.TabIndex = 15;
             generalErrorLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // createIsAdminCheckBox
+            // 
+            createIsAdminCheckBox.BackColor = Color.FromArgb(1, 255, 255);
+            createIsAdminCheckBox.Font = new Font("Rockwell", 25F);
+            createIsAdminCheckBox.Location = new Point(32, 772);
+            createIsAdminCheckBox.Margin = new Padding(3, 2, 3, 2);
+            createIsAdminCheckBox.Name = "createIsAdminCheckBox";
+            createIsAdminCheckBox.Size = new Size(489, 38);
+            createIsAdminCheckBox.TabIndex = 13;
+            createIsAdminCheckBox.Text = "Administrator";
+            createIsAdminCheckBox.TextAlign = ContentAlignment.MiddleCenter;
+            createIsAdminCheckBox.UseVisualStyleBackColor = false;
+            // 
             // UserManagement
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -664,9 +705,12 @@
         private OpenFileDialog openFileDialog1;
         private Button updateUserBtn;
         private Label generalErrorLabel;
-        private TextBox settingsTextBox;
+        private TextBox createSettingsTextBox;
         private Label settingsLabel;
-        private TextBox updateProfilePictureBox;
-        private Label updateProfilePictureLabel;
+        private TextBox updateSettingsTextBox;
+        private Label updateSettingsLabel;
+        private Button previousPageBtn;
+        private Button nextPageBtn;
+        private CheckBox createIsAdminCheckBox;
     }
 }

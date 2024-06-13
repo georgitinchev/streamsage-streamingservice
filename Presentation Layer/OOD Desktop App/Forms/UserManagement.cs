@@ -1,18 +1,22 @@
 ﻿using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Exceptions;
 using LogicClassLibrary.Helpers;
 using LogicClassLibrary.NewFolder;
 using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic.ApplicationServices;
 
 namespace DesktopApp.Forms
 {
     public partial class UserManagement : Form
     {
-        private readonly DesktopController _desktopController;
+        private readonly IDesktopController _desktopController;
         private int currentUserId;
-        public UserManagement(DesktopController desktopController)
+        private int currentPage = 1;
+        public UserManagement(IDesktopController desktopController)
         {
             InitializeComponent();
+            AttachPageHandlers();
             this._desktopController = desktopController;
             userManagementDataGrid.CellContentClick += userManagementDataGrid_CellContentClick;
             InitializeDataGridView();
@@ -26,7 +30,9 @@ namespace DesktopApp.Forms
             string password = userPasswordTextBox.Text;
             string firstName = userFirstNameTextBox.Text;
             string lastName = userLastNameTextBox.Text;
-            string settings = settingsTextBox.Text;
+            string settingsText = createSettingsTextBox.Text;
+            bool isAdmin = createIsAdminCheckBox.Checked;
+            UserSettingsDTO settingsDTO = new UserSettingsDTO { Role = isAdmin ? "Admin" : "User" };
             string errorMessage = UserValidation.ValidateCreateInput(username, email, password, firstName, lastName);
             if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -38,15 +44,20 @@ namespace DesktopApp.Forms
             }
             try
             {
-               _desktopController.userService?.Create(username, email, password, firstName, lastName, settings);
+                _desktopController.UserService?.Create(username, email, password, firstName, lastName, settingsDTO);
                 errorLabel.ForeColor = Color.Green;
                 errorLabel.Text = "User created successfully!";
                 ClearInputFields();
             }
-            catch (System.Exception ex)
+            catch (UserServiceException ex)
             {
                 errorLabel.ForeColor = Color.Red;
                 errorLabel.Text = ex.Message;
+            }
+            catch (System.Exception ex)
+            {
+                errorLabel.ForeColor = Color.Red;
+                errorLabel.Text = "An error occurred while creating the user.";
             }
             finally
             {
@@ -59,12 +70,13 @@ namespace DesktopApp.Forms
         private async void updateUserBtn_Click(object sender, EventArgs e)
         {
             // Gather data from the form
+            string role = updateIsAdminCheck.Checked ? "Admin" : "User";
             string username = updateUsernameBox.Text;
             string email = updateEmailBox.Text;
             string password = updatePasswordBox.Text;
             string firstName = updateFirstNameBox.Text;
             string lastName = updateLastNameBox.Text;
-            string settings = settingsTextBox.Text;
+            UserSettingsDTO settingsDTO = new UserSettingsDTO { Role = role };
 
             // Validate the input
             string errorMessage = UserValidation.ValidateUpdateInput(username, email, password, firstName, lastName);
@@ -78,30 +90,28 @@ namespace DesktopApp.Forms
 
             try
             {
-                // Update the user
-                _desktopController.userService.Update(currentUserId, username, email, firstName, lastName, settings);
-                _desktopController.userService.ChangePassword(username, password);
-
-                // Refresh the user list
+                _desktopController.UserService.Update(currentUserId, username, email, firstName, lastName, settingsDTO);
+                _desktopController.UserService.ChangePassword(username, password);
                 RefreshUsers();
                 updateErrorLabel.ForeColor = Color.Green;
                 updateErrorLabel.Text = "User updated successfully!";
             }
-            catch (SqlException ex)
+            catch (UserServiceException ex)
             {
                 updateErrorLabel.ForeColor = Color.Red;
-                updateErrorLabel.Text = "Database error: " + ex.Message;
+                updateErrorLabel.Text = ex.Message;
             }
             catch (System.Exception ex)
             {
                 updateErrorLabel.ForeColor = Color.Red;
-                updateErrorLabel.Text = "An error occurred: " + ex.Message;
+                updateErrorLabel.Text = "An error occurred while updating the user.";
             }
             finally
             {
                 await Task.Delay(5000);
                 updateErrorLabel.Text = "";
             }
+
         }
 
         private void backToHomeBtn_Click(object sender, EventArgs e)
@@ -132,7 +142,7 @@ namespace DesktopApp.Forms
 
         private void RefreshUsers()
         {
-            List<UserDTO> users = _desktopController.displayUserPage();
+            List<UserDTO> users = _desktopController.GetUserPage(currentPage, _desktopController.GetPageSize());
             userManagementDataGrid.DataSource = null;
             userManagementDataGrid.DataSource = users;
             totalUsersLabel.Text = $"Total Users: {users.Count}";
@@ -141,6 +151,7 @@ namespace DesktopApp.Forms
 
         private async void userManagementDataGrid_CellContentClick(object? sender, DataGridViewCellEventArgs e)
         {
+            if (sender == null) return;
             var senderGrid = (DataGridView)sender;
             if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
             {
@@ -153,6 +164,8 @@ namespace DesktopApp.Forms
                     updateEmailBox.Text = user.Email;
                     updateFirstNameBox.Text = user.FirstName;
                     updateLastNameBox.Text = user.LastName;
+                    updateIsAdminCheck.Checked = user.Settings?.Role == "Admin";
+                    UpdateUserSettings(user);
                 }
                 else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
                 {
@@ -161,14 +174,19 @@ namespace DesktopApp.Forms
                     {
                         try
                         {
-                            _desktopController.userService?.Delete(user.Id);
+                            _desktopController.UserService?.Delete(user.Id);
                             generalErrorLabel.ForeColor = Color.DarkGreen;
                             generalErrorLabel.Text = "User deleted successfully!";
+                        }
+                        catch (UserServiceException ex)
+                        {
+                            generalErrorLabel.ForeColor = Color.Red;
+                            generalErrorLabel.Text = ex.Message;
                         }
                         catch (System.Exception ex)
                         {
                             generalErrorLabel.ForeColor = Color.Red;
-                            generalErrorLabel.Text = ex.Message;
+                            generalErrorLabel.Text = "An error occurred while deleting the user.";
                         }
                         finally
                         {
@@ -181,7 +199,6 @@ namespace DesktopApp.Forms
                 }
             }
         }
-
         private void ClearInputFields()
         {
             usernameTextBox.Text = "";
@@ -189,6 +206,41 @@ namespace DesktopApp.Forms
             userPasswordTextBox.Text = "";
             userFirstNameTextBox.Text = "";
             userLastNameTextBox.Text = "";
+        }
+
+        private void UpdateUserSettings(UserDTO user)
+        {
+            if (user.Settings != null)
+            {
+                updateSettingsTextBox.Text = $"Role: {user.Settings.Role}, Theme: {user.Settings.Theme}";
+            }
+            else
+            {
+                updateSettingsTextBox.Text = "";
+            }
+        }
+
+        private void AttachPageHandlers()
+        {
+            previousPageBtn.Click += (sender, e) =>
+            {
+                if (currentPage > 1)
+                {
+                    currentPage--;
+                    RefreshUsers();
+                }
+            };
+            nextPageBtn.Click += (sender, e) =>
+            {
+                int totalUsers = _desktopController.GetTotalUsers();
+                int pageSize = _desktopController.GetPageSize();
+                int totalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
+                if (currentPage < totalPages)
+                {
+                    currentPage++;
+                    RefreshUsers();
+                }
+            };
         }
     }
 }
