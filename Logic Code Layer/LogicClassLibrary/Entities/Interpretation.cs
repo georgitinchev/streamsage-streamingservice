@@ -5,6 +5,7 @@
         public int UserId { get; private set; }
         public int MovieId { get; private set; }
         public string InterpretationText { get; private set; }
+        public DateTime InterpretationDate { get; private set; }
 
         public Interpretation(int userId, int movieId, string interpretationText)
         {
