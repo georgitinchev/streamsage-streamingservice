@@ -21,6 +21,16 @@ namespace DesktopApp
                 }
             }
         }
+        public static void PopulateGenresComboBox(ComboBox comboBox, IEnumerable<string> genres, string allGenresText = "All Genres")
+        {
+            comboBox.Items.Clear();
+            comboBox.Items.Add(allGenresText); 
+            foreach (var genre in genres)
+            {
+                comboBox.Items.Add(genre);
+            }
+            comboBox.SelectedIndex = 0; 
+        }
         public static void StyleDataGridView(DataGridView dataGridView)
         {
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
