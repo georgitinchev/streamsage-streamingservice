@@ -2,13 +2,13 @@
 {
     public class ReviewDTO
     {
-        public int Id { get; private set; }
-        public int UserId { get; private set; }
-        public int MovieId { get; private set; }
-        public string? Title { get; private set; }
-        public string? Content { get; private set; }
-        public int Rating { get; private set; }
-        public DateTime ReviewDate { get; private set; }
+        public int Id { get;  set; }
+        public int UserId { get;  set; }
+        public int MovieId { get; set; }
+        public string? Title { get;  set; }
+        public string? Content { get; set; }
+        public int Rating { get; set; }
+        public DateTime ReviewDate { get; set; }
 
         public ReviewDTO(int id, int userId, int movieId, string title, string content, int rating, DateTime reviewDate)
         {

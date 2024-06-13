@@ -2,17 +2,17 @@
 {
     public class MovieDTO
     {
-        public int Id { get; private set; }
-        public string? Title { get; private set; }
-        public DateTime ReleaseDate { get; private set; }
-        public string? Description { get; private set; }
-        public string? PosterImageURL { get; private set; }
-        public string? TrailerURL { get; private set; }
-        public int RuntimeMinutes { get; private set; }
-        public decimal? AverageRating { get; private set; } = null;
-        public List<string>? Genres { get; private set; }
-        public List<string>? Actors { get; private set; }
-        public List<string>? Directors { get; private set; }
+        public int Id { get; set; }
+        public string? Title { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public string? Description { get; set; }
+        public string? PosterImageURL { get; set; }
+        public string? TrailerURL { get; set; }
+        public int RuntimeMinutes { get; set; }
+        public decimal? AverageRating { get; set; }
+        public List<string>? Genres { get; set; }
+        public List<string>? Actors { get; set; }
+        public List<string>? Directors { get; set; }
 
         public MovieDTO(int id, string title, DateTime releaseDate, string description, string posterImageURL, string trailerURL, int runtimeMinutes, decimal? averageRating, List<string> genres, List<string> actors, List<string> directors)
         {
@@ -27,21 +27,6 @@
             Genres = genres;
             Actors = actors;
             Directors = directors;
-        }
-
-        public void AddGenre(string genre)
-        {
-            Genres?.Add(genre);
-        }
-
-        public void AddActor(string actor)
-        {
-            Actors?.Add(actor);
-        }
-
-        public void AddDirector(string director)
-        {
-            Directors?.Add(director);
         }
     }
 }
