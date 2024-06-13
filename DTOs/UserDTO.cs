@@ -9,14 +9,14 @@
         public string? PasswordSalt { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public string? ProfilePictureURL { get; set; }
+        public byte[]? ProfilePictureURL { get; set; }
         public UserSettingsDTO? Settings { get; set; }
         public List<MovieDTO>? FavoriteMovies { get; set; }
         public List<MovieDTO>? WatchList { get; set; }
         public List<int>? RecentlyWatchedMovieIds { get; set; }
 
         // main constructor
-        public UserDTO(int id, string username, string email, string passwordHash, string passwordSalt, string firstName, string lastName, string profilePictureURL, UserSettingsDTO settings, List<MovieDTO> favoriteMovies, List<MovieDTO> watchList, List<int>? recentlyWatchedMovieIds)
+        public UserDTO(int id, string username, string email, string passwordHash, string passwordSalt, string firstName, string lastName, byte[] profilePictureURL, UserSettingsDTO settings, List<MovieDTO> favoriteMovies, List<MovieDTO> watchList, List<int>? recentlyWatchedMovieIds)
         {
             Id = id;
             Username = username;
