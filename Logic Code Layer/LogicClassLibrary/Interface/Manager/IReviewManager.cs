@@ -10,6 +10,7 @@ namespace LogicClassLibrary.Interface.Manager
         ReviewDTO Read(int id);
         void Update(ReviewDTO review);
         void Delete(int id);
+        List<ReviewDTO> GetReviewsByMovieId(int movieId);
         List<ReviewDTO> GetReviewsPage(int pageNumber, int pageSize);
         int GetTotalReviews();
     }
