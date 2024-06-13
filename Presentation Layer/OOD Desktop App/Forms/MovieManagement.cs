@@ -1,75 +1,92 @@
 ﻿using DTOs;
 using LogicClassLibrary.Entities;
+using LogicClassLibrary.Exceptions;
+using LogicClassLibrary.Helpers;
 using LogicClassLibrary.Validation;
+
 
 namespace DesktopApp.Forms
 {
     public partial class MovieDashboard : Form
     {
-        private DesktopController desktopController;
+        private readonly IDesktopController desktopController;
         private int currentMovieId;
-        public MovieDashboard(DesktopController _desktopController)
+        private int currentPage = 1;
+        public MovieDashboard(IDesktopController _desktopController)
         {
             InitializeComponent();
             this.desktopController = _desktopController;
-            //moviesDataGrid.CellContentClick += moviesDataGrid_CellContentClick;
+            moviesDataGrid.CellContentClick += moviesDataGrid_CellContentClick;
             InitializeMoviesGrid();
-            //PopulateGenreCheckListBoxes();
-            RefreshMovies();
+            PopulateGenreCheckListBoxes();
+            LoadMoviesPage();
         }
 
-        //private async void moviesDataGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        //{
-        //    var senderGrid = (DataGridView)sender;
-        //    if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn && e.RowIndex >= 0)
-        //    {
-        //        Movie movie = (Movie)senderGrid.Rows[e.RowIndex].DataBoundItem;
-        //        MovieDTO movieDto = new MovieDTO
-        //        {
-        //            Id = movie.Id,
-        //            Title = movie.Title,
-        //            ReleaseDate = movie.Year,
-        //            Description = movie.Description,
-        //            PosterImageURL = movie.PosterImageURL,
-        //            TrailerURL = movie.TrailerURL,
-        //            RuntimeMinutes = movie.RuntimeMinutes,
-        //            Genres = movie.Genres
-        //        };
-        //        if (senderGrid.Columns[e.ColumnIndex].Name == "Edit")
-        //        {
-        //            movieDashTabCtrl.SelectedIndex = 1;
-        //            currentMovieId = movieDto.Id;
-        //            movieTitleBox.Text = movieDto.Title;
-        //            movieYearPicker.Value = movieDto.ReleaseDate;
-        //            descriptionTextBox.Text = movieDto.Description;
-        //            posterUrlTextBox.Text = movieDto.PosterImageURL;
-        //            trailerUrlTextBox.Text = movieDto.TrailerURL;
-        //            runTimeTextBox.Text = movieDto.RuntimeMinutes.ToString();
-        //            SetSelectedMovieGenres(movieDto);
-        //            UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
-        //        }
-        //        else if (senderGrid.Columns[e.ColumnIndex].Name == "Delete")
-        //        {
-        //            try
-        //            {
-        //                //desktopController.backendService?.DeleteMovie(movieDto.Id);
-        //                RefreshMovies();
-        //                movieMgmtErrorLabel.Text = "Movie deleted successfully!";
-        //            }
-        //            catch (System.Exception ex)
-        //            {
-        //                movieMgmtErrorLabel.Text = ex.Message;
-        //            }
-        //            finally
-        //            {
-        //                await Task.Delay(3000);
-        //                movieMgmtErrorLabel.Text = "";
-        //                senderGrid.CurrentCell = null;
-        //            }
-        //        }
-        //        senderGrid.CurrentCell = null;
-        //    }
-        //}
+        private async void moviesDataGrid_CellContentClick(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            var senderGrid = (DataGridView)sender;
+            MovieDTO movie = (MovieDTO)senderGrid.Rows[e.RowIndex].DataBoundItem;
+
+            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn buttonColumn)
+            {
+
+                if (buttonColumn.Name == "Edit")
+                {
+                    movieDashTabCtrl.SelectedIndex = 1;
+                    currentMovieId = movie.Id;
+                    LoadMovieDetails(movie);
+                }
+                else if (buttonColumn.Name == "Delete")
+                {
+                    await DeleteMovieAsync(movie.Id);
+                }
+            }
+            senderGrid.CurrentCell = null;
+        }
+
+        private void LoadMovieDetails(MovieDTO movieDto)
+        {
+            movieTitleBox.Text = movieDto.Title;
+            movieYearPicker.Value = movieDto.ReleaseDate.Date;
+            descriptionTextBox.Text = movieDto.Description;
+            posterUrlTextBox.Text = movieDto.PosterImageURL;
+            trailerUrlTextBox.Text = movieDto.TrailerURL;
+            runTimeTextBox.Text = movieDto.RuntimeMinutes.ToString();
+            updateAverageRatingTextBox.Text = movieDto.AverageRating?.ToString() ?? "N/A";
+            SetSelectedMovieGenres(movieDto);
+            UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
+        }
+
+        private void RefreshMovieGenAcDirDetails()
+        {
+            var movie = desktopController.MovieService.GetMovie(currentMovieId);
+            UIStyler.PopulateListOrPlaceholder(currentGenresListbox, movie.Genres, "No genres found");
+            UIStyler.PopulateListOrPlaceholder(currentActorsListbox, movie.Actors, "No actors found");
+            UIStyler.PopulateListOrPlaceholder(currentDirectorsListbox, movie.Directors, "No directors found");
+        }
+
+
+        private async Task DeleteMovieAsync(int movieId)
+        {
+            try
+            {
+                desktopController.MovieService.DeleteMovie(movieId);
+                LoadMoviesPage();
+                movieMgmtErrorLabel.Text = "Movie deleted successfully!";
+            }
+            catch (DeleteEntityError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            finally
+            {
+                await Task.Delay(3000);
+                movieMgmtErrorLabel.Text = "";
+            }
+        }
+
 
         private void InitializeMoviesGrid()
         {
@@ -82,64 +99,71 @@ namespace DesktopApp.Forms
             UIStyler.StyleDataGridView(moviesDataGrid);
             UIStyler.AddButtonColumn(moviesDataGrid, "Edit", "Edit");
             UIStyler.AddButtonColumn(moviesDataGrid, "Delete", "Delete");
+            previousPageBtnMovie.Click += (sender, e) => { currentPage--; LoadMoviesPage(); };
+            nextPageBtnMovie.Click += (sender, e) => { currentPage++; LoadMoviesPage(); };
         }
 
-        private void RefreshMovies()
+        private void LoadMoviesPage()
         {
-            //List<Movie> movies = desktopController.displayMoviePage();
-            moviesDataGrid.DataSource = null;
-            //moviesDataGrid.DataSource = movies;
-            //totalMoviesLabel.Text = $"Total Movies: {movies.Count}";
-            moviesDataGrid.Refresh();
+            try
+            {
+                var movies = desktopController.MovieService.GetMoviesPage(currentPage, desktopController.GetPageSize());
+                if (movies.Count == 0 && currentPage > 1)
+                {
+                    currentPage--;
+                    LoadMoviesPage();
+                    return;
+                }
+                moviesDataGrid.DataSource = movies;
+                totalMoviesLabel.Text = $"Total Movies: {desktopController.MovieService.GetTotalMovies()}";
+                moviesDataGrid.Refresh();
+            }
+            catch (PaginatorException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
         }
+
 
         private async void updateMovieBtn_Click(object sender, EventArgs e)
         {
-            string validationError = MovieValidation.ValidateCreateMovieFields(
-                movieTitleBox.Text,
-                movieYearPicker.Value,
-                descriptionTextBox.Text,
-                posterUrlTextBox.Text,
-                trailerUrlTextBox.Text,
-                int.TryParse(runTimeTextBox.Text, out int runtime) ? runtime : 0
-            );
-
+            var validationError = ValidateMovieFields(movieTitleBox.Text, movieYearPicker.Value.Date, descriptionTextBox.Text, posterUrlTextBox.Text, trailerUrlTextBox.Text, runTimeTextBox.Text, out int runtime);
             if (!string.IsNullOrEmpty(validationError))
             {
-                updateStatusLabel.Text = validationError;
-                await Task.Delay(3000);
-                updateStatusLabel.Text = "";
+                await DisplayErrorAsync(updateStatusLabel, validationError);
                 return;
             }
-
-            //MovieDTO movieDto = new MovieDTO
-            //{
-            //    Id = currentMovieId,
-            //    Title = movieTitleBox.Text,
-            //    ReleaseDate = movieYearPicker.Value,
-            //    Description = descriptionTextBox.Text,
-            //    PosterImageURL = posterUrlTextBox.Text,
-            //    TrailerURL = trailerUrlTextBox.Text,
-            //    RuntimeMinutes = runtime,
-            //    Genres = GetSelectedGenres(updateMovieCheckListBox)
-            //};
-
+            var averageRatingError = MovieValidation.ValidateAverageRating(averageRatingTextBox.Text, out decimal averageRating);
+            if (!string.IsNullOrEmpty(averageRatingError))
+            {
+                await DisplayErrorAsync(updateStatusLabel, averageRatingError);
+                return;
+            }
             try
             {
-                //desktopController.backendService?.UpdateMovie(movieDto);
-                updateStatusLabel.Text = "Update successful!";
-                RefreshMovies();
-                //UIStyler.LoadImageIntoPictureBox(movieDto.PosterImageURL, updateMoviePictureBox);
+                desktopController.MovieService.UpdateMovie(currentMovieId, movieTitleBox.Text, movieYearPicker.Value, descriptionTextBox.Text, posterUrlTextBox.Text, trailerUrlTextBox.Text, runtime, decimal.Parse(averageRatingTextBox.Text), GetSelectedGenres(updateMovieCheckListBox), new List<string>(), new List<string>());
+                await DisplayErrorAsync(updateStatusLabel, "Movie updated successfully!");
+                LoadMoviesPage();
+                UIStyler.LoadImageIntoPictureBox(posterUrlTextBox.Text, updateMoviePictureBox);
             }
-            catch (System.Exception ex)
+            catch (UpdateEntityError ex)
             {
-                updateStatusLabel.Text = ex.Message;
+                await DisplayErrorAsync(updateStatusLabel, ex.Message);
             }
-            finally
-            {
-                await Task.Delay(3000);
-                updateStatusLabel.Text = "";
-            }
+        }
+
+
+        private static async Task DisplayErrorAsync(Label label, string message)
+        {
+            label.Text = message;
+            await Task.Delay(3000);
+            label.Text = "";
+        }
+
+        private static string ValidateMovieFields(string title, DateTime releaseDate, string description, string posterUrl, string trailerUrl, string runtimeText, out int runtime)
+        {
+            runtime = int.TryParse(runtimeText, out int parsedRuntime) ? parsedRuntime : 0;
+            return MovieValidation.ValidateCreateMovieFields(title, releaseDate, description, posterUrl, trailerUrl, runtime);
         }
 
         private void movieDashTabCtrl_SelectedIndexChanged(object sender, EventArgs e)
@@ -159,49 +183,28 @@ namespace DesktopApp.Forms
 
         private async void createMovieBtn_Click(object sender, EventArgs e)
         {
-            string validationError = MovieValidation.ValidateCreateMovieFields(
-                createMovieTitleBox.Text,
-                createMovieDatePicker.Value,
-                createMovieDescriptionBox.Text,
-                createMoviePosterBox.Text,
-                createMovieUrlBox.Text,
-                int.TryParse(createMovieRunTimeBox.Text, out int runtime) ? runtime : 0
-            );
-
+            var validationError = ValidateMovieFields(createMovieTitleBox.Text, createMovieDatePicker.Value, createMovieDescriptionBox.Text, createMoviePosterBox.Text, createMovieUrlBox.Text, createMovieRunTimeBox.Text, out int runtime);
             if (!string.IsNullOrEmpty(validationError))
             {
-                createMovieErrorLabel.Text = validationError;
-                await Task.Delay(3000);
-                createMovieErrorLabel.Text = "";
+                await DisplayErrorAsync(createMovieErrorLabel, validationError);
                 return;
             }
-
-            //MovieDTO newMovie = new MovieDTO
-            //{
-            //    Title = createMovieTitleBox.Text,
-            //    ReleaseDate = createMovieDatePicker.Value,
-            //    Description = createMovieDescriptionBox.Text,
-            //    PosterImageURL = createMoviePosterBox.Text,
-            //    TrailerURL = createMovieUrlBox.Text,
-            //    RuntimeMinutes = runtime,
-            //    Genres = GetSelectedGenres(createMovieGenresCheckList)
-            //};
-
+            var averageRatingError = MovieValidation.ValidateAverageRating(averageRatingTextBox.Text, out decimal averageRating);
+            if (!string.IsNullOrEmpty(averageRatingError))
+            {
+                await DisplayErrorAsync(createMovieErrorLabel, averageRatingError);
+                return;
+            }
             try
             {
-                //desktopController.backendService?.AddMovie(newMovie);
-                createMovieErrorLabel.Text = "Movie created successfully!";
+                desktopController.MovieService.AddMovie(createMovieTitleBox.Text, createMovieDatePicker.Value, createMovieDescriptionBox.Text, createMoviePosterBox.Text, createMovieUrlBox.Text, runtime, averageRating, GetSelectedGenres(createMovieGenresCheckList), new List<string>(), new List<string>());
+                await DisplayErrorAsync(createMovieErrorLabel, "Movie created successfully!");
                 ClearCreateMovieFields();
-                RefreshMovies();
+                LoadMoviesPage();
             }
-            catch (System.Exception ex)
+            catch (CreateEntityError ex)
             {
-                createMovieErrorLabel.Text = $"Failed to create movie: {ex.Message}";
-            }
-            finally
-            {
-                await Task.Delay(3000);
-                createMovieErrorLabel.Text = "";
+                await DisplayErrorAsync(createMovieErrorLabel, ex.Message);
             }
         }
 
@@ -216,15 +219,14 @@ namespace DesktopApp.Forms
             UIStyler.UncheckAllItemsInCheckListBox(createMovieGenresCheckList);
         }
 
-        // 3 Methods for checkListBox ops
-        //private void PopulateGenreCheckListBoxes()
-        //{
-        //    var genres = desktopController.backendService?.GetAllGenres();
-        //    UIStyler.PopulateCheckListBox(createMovieGenresCheckList, genres);
-        //    UIStyler.PopulateCheckListBox(updateMovieCheckListBox, genres);
-        //}
+        private void PopulateGenreCheckListBoxes()
+        {
+            var genres = desktopController.MovieService?.GetAllGenres();
+            UIStyler.PopulateCheckListBox(createMovieGenresCheckList, genres);
+            UIStyler.PopulateCheckListBox(updateMovieCheckListBox, genres);
+        }
 
-        private List<string> GetSelectedGenres(CheckedListBox box)
+        private static List<string> GetSelectedGenres(CheckedListBox box)
         {
             return UIStyler.GetSelectedItemsFromCheckListBox(box);
         }
@@ -233,6 +235,114 @@ namespace DesktopApp.Forms
         {
             if (movieDto.Genres == null) return;
             UIStyler.SetSelectedItemsInCheckListBox(updateMovieCheckListBox, movieDto.Genres);
+        }
+
+        private void addDirGenAc_Click(object sender, EventArgs e)
+        {
+            // Switch to tab number 3
+            movieDashTabCtrl.SelectedIndex = 3;
+            // Update the target movie label with the current movie's title
+            var movie = desktopController.MovieService.GetMovie(currentMovieId);
+            targetMovieLabel.Text = $"Target Movie: {movie.Title}";
+            // Populate or display placeholders for genres, actors and directors in boxes
+            UIStyler.PopulateListOrPlaceholder(currentGenresListbox, movie.Genres ?? Enumerable.Empty<string>(), "No genres found");
+            UIStyler.PopulateListOrPlaceholder(currentActorsListbox, movie.Actors ?? Enumerable.Empty<string>(), "No actors found");
+            UIStyler.PopulateListOrPlaceholder(currentDirectorsListbox, movie.Directors ?? Enumerable.Empty<string>(), "No directors found");
+        }
+
+        private async void addNewGenreButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                desktopController.MovieService.AddGenreToMovie(currentMovieId, addNewGenreTextbox.Text);
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Genre added successfully!");
+                RefreshMovieGenAcDirDetails();
+                addNewGenreTextbox.Text = "";
+            }
+            catch (ArgumentException ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+            catch (UpdateEntityError ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            } 
+            catch (GetMovieError ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+        }
+
+        private async void addActorBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                desktopController.MovieService.AddGenreToMovie(currentMovieId, addNewActorTextbox.Text);
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Actor added successfully!");
+                RefreshMovieGenAcDirDetails();
+                addNewActorTextbox.Text = "";
+            }
+            catch (ArgumentException ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+            catch (UpdateEntityError ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+            catch (GetMovieError ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+        }
+        private async void addDirectorBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                desktopController.MovieService.AddGenreToMovie(currentMovieId, addNewDirectorTextbox.Text);
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Director added successfully!");
+                RefreshMovieGenAcDirDetails();
+                addNewDirectorTextbox.Text = "";
+            }
+            catch (ArgumentException ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+            catch (UpdateEntityError ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+            catch (GetMovieError ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+        }
+
+        private void updateGenBtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void updateAcBtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void updateDirBtn_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
