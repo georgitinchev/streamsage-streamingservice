@@ -1,19 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using StreamSageWAD.Models;
-using System.Collections.Generic;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using DTOs;
+using StreamSageWAD.Models;
 
 namespace StreamSageWAD.Pages
 {
     public class RegisterModel : PageModel
     {
-        public WebController webController { get; private set; }
+        public IWebController webController { get; private set; }
         public string ReturnUrl { get; set; } = null;
 
-        public RegisterModel(WebController webController)
+        public RegisterModel(IWebController webController)
         {
             this.webController = webController;
         }
@@ -23,46 +25,43 @@ namespace StreamSageWAD.Pages
 
         public void OnGet(string ReturnUrl)
         {
-            this.ReturnUrl = ReturnUrl ?? Url.Content("~/");
+            this.ReturnUrl = string.IsNullOrEmpty(ReturnUrl) ? "/Index" : ReturnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string ReturnUrl = null)
         {
             if (!ModelState.IsValid)
             {
                 return Page();
             }
-            if (registerDTO.Password != registerDTO.RepeatPassword)
-            {
-                ModelState.AddModelError(string.Empty, "Passwords do not match.");
-                return Page();
-            }
+            ReturnUrl = string.IsNullOrEmpty(ReturnUrl) ? Url.Content("~/Index") : ReturnUrl;
+
             try
             {
-                bool userExists = webController.loginUser(registerDTO.Email, registerDTO.Password);
-                if (!userExists)
-                {
-                    webController.registerUser(registerDTO.Username, registerDTO.Password, registerDTO.Email, registerDTO.FirstName, registerDTO.LastName);
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, registerDTO.Email),
-                        new Claim(ClaimTypes.NameIdentifier, registerDTO.Username)
-                    };
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                    return LocalRedirect(ReturnUrl ?? Url.Content("~/"));
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "User already exists.");
-                    return Page();
-                }
+                var user = webController.registerUser(registerDTO.Username, registerDTO.Email, registerDTO.Password, registerDTO.FirstName, registerDTO.LastName);
+                await SignInUser(user);
+                return LocalRedirect(ReturnUrl ?? "/");
             }
-            catch (Exception e)
+            catch (StreamSageWAD.Exception.RegistrationFailedException)
             {
-                ModelState.AddModelError(string.Empty, $"An unexpected error occurred during registration. {e.Message} .Please try again later.");
-                return Page();
+                ModelState.AddModelError(string.Empty, "Registration failed. Please try again.");
             }
+            catch (System.Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+            }
+            return Page();
+        }
+
+        private async Task SignInUser(UserDTO user)
+        {
+            var claims = new List<Claim>
+        {
+        new Claim(ClaimTypes.Name, user.Username),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+        };
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
         }
     }
 }

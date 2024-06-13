@@ -15,33 +15,25 @@
 
     <form method="post">
         <div class="form-group">
-            <label for="registerEmail" style="font-size: 1.5rem;">Email address</label>
+            <label for="registerUsername" style="font-size: 1.5rem;">Username</label>
+            <input type="text" class="form-control" id="registerUsername" asp-for="registerDTO.Username" placeholder="Enter username" style="font-size: 1.5rem;">
+        </div>
+        <div class="form-group">
+            <label for="registerEmail" style="font-size: 1.5rem;">Email</label>
             <input type="email" class="form-control" id="registerEmail" asp-for="registerDTO.Email" placeholder="Enter email" style="font-size: 1.5rem;">
         </div>
         <div class="form-group">
             <label for="registerPassword" style="font-size: 1.5rem;">Password</label>
-            <input type="password" class="form-control" id="registerPassword" asp-for="registerDTO.Password" placeholder="Password" style="font-size: 1.5rem;">
+            <input type="password" class="form-control" id="registerPassword" asp-for="registerDTO.Password" placeholder="Enter password" style="font-size: 1.5rem;">
         </div>
         <div class="form-group">
-            <label for="repeatPassword" style="font-size: 1.5rem;">Repeat Password</label>
-            <input type="password" class="form-control" id="repeatPassword" asp-for="registerDTO.RepeatPassword" placeholder="Repeat Password" style="font-size: 1.5rem;">
-        </div>
-        <div class="form-group">
-            <label for="registerUsername" style="font-size: 1.5rem;">Username</label>
-            <input type="text" class="form-control" id="registerUsername" asp-for="registerDTO.Username" placeholder="Username" style="font-size: 1.5rem;">
-        </div>
-        <div class="form-group">
-            <label for="registerFirstName" style="font-size: 1.5rem;">First Name</label>
-            <input type="text" class="form-control" id="registerFirstName" asp-for="registerDTO.FirstName" placeholder="First Name" style="font-size: 1.5rem;">
-        </div>
-        <div class="form-group">
-            <label for="registerLastName" style="font-size: 1.5rem;">Last Name</label>
-            <input type="text" class="form-control" id="registerLastName" asp-for="registerDTO.LastName" placeholder="Last Name" style="font-size: 1.5rem;">
+            <label for="registerConfirmPassword" style="font-size: 1.5rem;">Confirm Password</label>
+            <input type="password" class="form-control" id="registerConfirmPassword" asp-for="registerDTO.RepeatPassword" placeholder="Confirm password" style="font-size: 1.5rem;">
         </div>
         <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary" style="font-size: 1.75rem; padding: 15px 40px; margin-top: 15px;">Register</button>
+            <button type="submit" class="btn btn-primary" style="font-size: 1.75rem;padding: 15px 40px; margin-top:15px;">Register</button>
         </div>
-        <input type="hidden" asp-for="ReturnUrl" />
+        <input type="hidden" asp-for="ReturnUrl" value="@Model.ReturnUrl ?? Url.Content(" ~ /")" />
     </form>
 
     <div class="text-center mt-4">
