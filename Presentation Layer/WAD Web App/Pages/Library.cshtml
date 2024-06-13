@@ -22,7 +22,7 @@
             {
                 <div class="col-sm-3 mb-4">
                     <div class="card">
-                        <a href="/Streaming?movieId=@movie.Id">
+                        <a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
                             <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
                             <div class="card-body">
                                 <h5 class="card-title">@movie.Title</h5>
@@ -54,7 +54,7 @@
             {
                 <div class="col-sm-3 mb-4">
                     <div class="card">
-                        <a href="/Streaming?movieId=@movie.Id">
+                        <a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
                             <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
                             <div class="card-body">
                                 <h5 class="card-title">@movie.Title</h5>
@@ -86,7 +86,7 @@
             {
                 <div class="col-sm-3 mb-4">
                     <div class="card">
-                        <a href="/Streaming?movieId=@movie.Id">
+                        <a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
                             <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
                             <div class="card-body">
                                 <h5 class="card-title">@movie.Title</h5>
@@ -107,6 +107,35 @@
             <p>No usage-based movies to display.</p>
         }
     </div>
-
+    <hr style="border-top: 3px solid #7692FF;">
+    <h2>Continue Watching</h2>
+    <div class="row">
+        @if (Model.ContinueWatching != null && Model.ContinueWatching.Any())
+        {
+            foreach (var movie in Model.ContinueWatching)
+            {
+                <div class="col-sm-3 mb-4">
+                    <div class="card">
+                        <a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
+                            <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+                            <div class="card-body">
+                                <h5 class="card-title">@movie.Title</h5>
+                            </div>
+                            @if (movie.AverageRating.HasValue)
+                            {
+                                <span class="rating-star">
+                                    <i class="fas fa-star"></i> @movie.AverageRating.Value
+                                </span>
+                            }
+                        </a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>No movies in your continue watching list.</p>
+        }
+    </div>
     <hr style="border-top: 3px solid #7692FF; margin-bottom: 100px;">
 </div>
