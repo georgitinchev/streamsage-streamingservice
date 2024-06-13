@@ -20,7 +20,7 @@ namespace DesktopApp.Forms
             this._desktopController = desktopController;
             userManagementDataGrid.CellContentClick += userManagementDataGrid_CellContentClick;
             InitializeDataGridView();
-            RefreshUsers();
+            InitializeSearchParameters();
         }
 
         private async void createUserBtn_Click(object sender, EventArgs e)
@@ -140,9 +140,24 @@ namespace DesktopApp.Forms
             RefreshUsers();
         }
 
-        private void RefreshUsers()
+        private void RefreshUsers(string searchQuery = "", string? searchBy = null)
         {
-            List<UserDTO> users = _desktopController.GetUserPage(currentPage, _desktopController.GetPageSize());
+            List<UserDTO> users;
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                if (string.IsNullOrEmpty(searchBy))
+                {
+                    users = _desktopController.UserService.SearchUsers(searchQuery, null);
+                }
+                else
+                {
+                    users = _desktopController.UserService.SearchUsers(searchQuery, searchBy);
+                }
+            }
+            else
+            {
+                users = _desktopController.GetUserPage(currentPage, _desktopController.GetPageSize());
+            }
             userManagementDataGrid.DataSource = null;
             userManagementDataGrid.DataSource = users;
             totalUsersLabel.Text = $"Total Users: {users.Count}";
@@ -219,6 +234,11 @@ namespace DesktopApp.Forms
                 updateSettingsTextBox.Text = "";
             }
         }
+        private void InitializeSearchParameters()
+        {
+            List<string> searchParameters = new List<string> { "Username", "Email", "FirstName", "LastName" };
+            UIStyler.PopulateComboBox(filterBox, searchParameters);
+        }
 
         private void AttachPageHandlers()
         {
@@ -241,6 +261,17 @@ namespace DesktopApp.Forms
                     RefreshUsers();
                 }
             };
+        }
+
+        private void searchBtn_Click(object sender, EventArgs e)
+        {
+            string searchQuery = searchTextBox.Text;
+            string searchBy = filterBox.SelectedItem?.ToString() ?? "";
+            if (string.IsNullOrWhiteSpace(searchBy))
+            {
+                searchBy = null;
+            }
+            RefreshUsers(searchQuery, searchBy);
         }
     }
 }
