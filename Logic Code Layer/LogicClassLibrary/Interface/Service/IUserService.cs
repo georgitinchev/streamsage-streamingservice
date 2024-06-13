@@ -11,6 +11,8 @@ namespace LogicClassLibrary.Interface.Service
         void Create(string username, string email, string password, string firstName, string lastName, UserSettingsDTO settings);
         void ChangePassword(string username, string newPassword);
         void AuthenticateUser(string username, string password);
+        List<UserDTO> SearchUsers(string searchQuery, string searchParameter);
+        
         List<UserDTO> GetAllUsers();
         List<UserDTO> GetUsersPage(int pageNumber, int pageSize);
         int GetTotalUsers();

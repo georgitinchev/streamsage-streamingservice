@@ -53,7 +53,7 @@ namespace DataAccessLibrary
                                     description: reader.IsDBNull(3) ? null : reader.GetString(3),
                                     posterImageURL: reader.IsDBNull(4) ? null : reader.GetString(4),
                                     trailerURL: reader.IsDBNull(5) ? null : reader.GetString(5),
-                                    runtimeMinutes: reader.IsDBNull(6) ? 0 : reader.GetInt32(6), 
+                                    runtimeMinutes: reader.IsDBNull(6) ? 0 : reader.GetInt32(6),
                                     averageRating: reader.IsDBNull(7) ? null : reader.GetDecimal(7),
                                     genres: reader.IsDBNull(8) ? new List<string>() : new List<string> { reader.GetString(8) },
                                     directors: new List<string>(),
@@ -151,6 +151,91 @@ namespace DataAccessLibrary
                 throw new DataAccessException($"An unexpected error occurred while updating the movie with ID {movie.Id}.", ex);
             }
         }
+        // Method to search for a movie with proper try catches
+        public List<MovieDTO> SearchMovies(string title, string genre)
+        {
+            List<MovieDTO> movies = new List<MovieDTO>();
+            try
+            {
+                using (SqlConnection connection = CreateConnection())
+                {
+                    connection.Open();
+                    string sqlQuery = @"
+                SELECT 
+                    m.ID, m.Title, m.ReleaseDate, m.Description, m.PosterImageURL, m.TrailerURL, 
+                    m.RuntimeMinutes, m.AverageRating, 
+                    g.Name AS GenreName,
+                    d.Name AS DirectorName,
+                    a.Name AS ActorName
+                FROM Movie m
+                LEFT JOIN MovieGenre mg ON m.ID = mg.MovieID
+                LEFT JOIN Genre g ON mg.GenreID = g.ID
+                LEFT JOIN MovieDirector md ON m.ID = md.MovieID
+                LEFT JOIN Director d ON md.DirectorID = d.ID
+                LEFT JOIN MovieActor ma ON m.ID = ma.MovieID
+                LEFT JOIN Actor a ON ma.ActorID = a.ID
+                WHERE m.Title LIKE @Title";
+
+                    if (!string.IsNullOrWhiteSpace(genre))
+                    {
+                        sqlQuery += " AND g.Name = @Genre";
+                    }
+
+                    using (SqlCommand command = new SqlCommand(sqlQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Title", $"%{title}%");
+
+                        if (!string.IsNullOrWhiteSpace(genre))
+                        {
+                            command.Parameters.AddWithValue("@Genre", genre);
+                        }
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            var movieMap = new Dictionary<int, MovieDTO>();
+                            while (reader.Read())
+                            {
+                                int movieId = reader.GetInt32(0);
+                                MovieDTO movie;
+                                if (!movieMap.TryGetValue(movieId, out movie))
+                                {
+                                    movie = new MovieDTO(
+                                        id: movieId,
+                                        title: reader.GetString(1),
+                                        releaseDate: reader.GetDateTime(2),
+                                        description: reader.IsDBNull(3) ? null : reader.GetString(3),
+                                        posterImageURL: reader.IsDBNull(4) ? null : reader.GetString(4),
+                                        trailerURL: reader.IsDBNull(5) ? null : reader.GetString(5),
+                                        runtimeMinutes: reader.GetInt32(6),
+                                        averageRating: reader.IsDBNull(7) ? null : (decimal?)reader.GetDecimal(7),
+                                        genres: new List<string>(),
+                                        directors: new List<string>(),
+                                        actors: new List<string>()
+                                    );
+                                    movies.Add(movie);
+                                    movieMap.Add(movieId, movie);
+                                }
+                                if (!reader.IsDBNull(8) && !movie.Genres.Contains(reader.GetString(8)))
+                                    movie.Genres.Add(reader.GetString(8));
+                                if (!reader.IsDBNull(9) && !movie.Directors.Contains(reader.GetString(9)))
+                                    movie.Directors.Add(reader.GetString(9));
+                                if (!reader.IsDBNull(10) && !movie.Actors.Contains(reader.GetString(10)))
+                                    movie.Actors.Add(reader.GetString(10));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DataAccessException($"A database error occurred while searching for movies with title '{title}' and genre '{genre}'.", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new DataAccessException($"An unexpected error occurred while searching for movies with title '{title}' and genre '{genre}'.", ex);
+            }
+            return movies;
+        }
 
         // Method to delete a movie
         public void DeleteMovie(int movieId)
@@ -190,7 +275,7 @@ namespace DataAccessLibrary
 
                             transaction.Commit();
                         }
-                        catch(SqlException ex)
+                        catch (SqlException ex)
                         {
                             transaction.Rollback();
                             throw new DataAccessException($"Error deleting movie with ID {movieId}: {ex.Message}", ex);
@@ -296,7 +381,7 @@ namespace DataAccessLibrary
                         command.ExecuteNonQuery();
                     }
                 }
-            } 
+            }
             catch (DataAccessException ex)
             {
                 throw new DataAccessException("Error inserting genres for movie: " + ex.Message, ex);
@@ -325,7 +410,7 @@ namespace DataAccessLibrary
                     command.Parameters.AddWithValue("@MovieID", movieId);
                     command.ExecuteNonQuery();
                 }
-            } 
+            }
             catch (DataAccessException ex)
             {
                 throw new DataAccessException("Error deleting genres for movie: " + ex.Message, ex);
@@ -341,40 +426,6 @@ namespace DataAccessLibrary
             catch (System.Exception ex)
             {
                 throw new DataAccessException("An unexpected error occurred while deleting genres for movie.", ex);
-            }
-        }
-
-        // Method to query genre ID by name with transaction support
-        private int GetGenreIdByName(string genreName, SqlConnection connection, SqlTransaction transaction)
-        {
-            try
-            {
-                string query = "SELECT ID FROM Genre WHERE Name = @GenreName";
-                using (var command = new SqlCommand(query, connection, transaction))
-                {
-                    command.Parameters.AddWithValue("@GenreName", genreName);
-                    var result = command.ExecuteScalar();
-                    if (result != null)
-                    {
-                        return (int)result;
-                    }
-                    else
-                    {
-                        throw new System.Exception($"Genre not found: {genreName}");
-                    }
-                }
-            }
-            catch (SqlException ex)
-            {
-                throw new DataAccessException("A database error occurred while getting genre ID by name.", ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new DataAccessException("An error occurred while getting genre ID by name. The operation is not valid due to the current state of the object.", ex);
-            }
-            catch (System.Exception ex)
-            {
-                throw new DataAccessException("An unexpected error occurred while getting genre ID by name.", ex);
             }
         }
 
@@ -398,7 +449,7 @@ namespace DataAccessLibrary
                     }
                 }
                 return genres;
-            } 
+            }
             catch (SqlException ex)
             {
                 throw new DataAccessException("A database error occurred while reading all genres.", ex);
@@ -528,7 +579,7 @@ namespace DataAccessLibrary
                                 var movie = movies.Find(m => m.Id == movieId);
                                 if (movie != null)
                                 {
-                                    movie.Genres.Add(genre);
+                                    movie?.Genres?.Add(genre);
                                 }
                             }
                         }
@@ -546,7 +597,7 @@ namespace DataAccessLibrary
                                 var movie = movies.Find(m => m.Id == movieId);
                                 if (movie != null)
                                 {
-                                    movie.Directors.Add(director);
+                                    movie?.Directors?.Add(director);
                                 }
                             }
                         }
@@ -563,13 +614,13 @@ namespace DataAccessLibrary
                                 var movie = movies.Find(m => m.Id == movieId);
                                 if (movie != null)
                                 {
-                                    movie.Actors.Add(actor);
+                                    movie?.Actors?.Add(actor);
                                 }
                             }
                         }
                     }
                 }
-            } 
+            }
             catch (SqlException ex)
             {
                 throw new DataAccessException("A database error occurred while fetching related data for movies.", ex);
@@ -703,7 +754,7 @@ namespace DataAccessLibrary
                         return (int)command.ExecuteScalar();
                     }
                 }
-            } 
+            }
             catch (SqlException ex)
             {
                 throw new DataAccessException("A database error occurred while getting the total number of movies.", ex);
@@ -718,12 +769,49 @@ namespace DataAccessLibrary
             }
         }
 
+        // Method to query genre ID by name with transaction support
+        private int GetGenreIdByName(string genreName, SqlConnection connection, SqlTransaction transaction)
+        {
+            try
+            {
+                string query = "SELECT ID FROM Genre WHERE Name = @GenreName";
+                using (var command = new SqlCommand(query, connection, transaction))
+                {
+                    command.Parameters.AddWithValue("@GenreName", genreName);
+                    var result = command.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DataAccessException("A database error occurred while getting genre ID by name.", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessException("An error occurred while getting genre ID by name. The operation is not valid due to the current state of the object.", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new DataAccessException("An unexpected error occurred while getting genre ID by name.", ex);
+            }
+        }
+
+
+
+
         // Method to add a genre to a movie
         public void AddGenreToMovie(int movieId, string genreName)
         {
             try
             {
-                int genreId = InsertGenreAndGetId(genreName); 
+                int genreId = InsertGenreAndGetId(genreName);
                 using (var connection = CreateConnection())
                 using (var command = new SqlCommand("INSERT INTO MovieGenre (MovieID, GenreID) VALUES (@MovieID, @GenreID)", connection))
                 {
@@ -749,15 +837,26 @@ namespace DataAccessLibrary
 
         private int InsertGenreAndGetId(string genreName)
         {
-            int genreId;
             using (var connection = CreateConnection())
-            using (var command = new SqlCommand("INSERT INTO Genre (Name) VALUES (@Name); SELECT SCOPE_IDENTITY();", connection))
             {
-                command.Parameters.AddWithValue("@Name", genreName);
                 connection.Open();
-                genreId = Convert.ToInt32(command.ExecuteScalar());
+                // Check if the genre already exists
+                using (var checkCommand = new SqlCommand("SELECT Id FROM Genre WHERE Name = @Name", connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@Name", genreName);
+                    var result = checkCommand.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return Convert.ToInt32(result); // Return existing genre ID
+                    }
+                }
+                // Insert new genre and return its ID
+                using (var insertCommand = new SqlCommand("INSERT INTO Genre (Name) VALUES (@Name); SELECT SCOPE_IDENTITY();", connection))
+                {
+                    insertCommand.Parameters.AddWithValue("@Name", genreName);
+                    return Convert.ToInt32(insertCommand.ExecuteScalar());
+                }
             }
-            return genreId;
         }
 
 
@@ -768,7 +867,7 @@ namespace DataAccessLibrary
         {
             try
             {
-                int actorId = InsertActorAndGetId(actorName); 
+                int actorId = InsertActorAndGetId(actorName);
                 using (var connection = CreateConnection())
                 using (var command = new SqlCommand("INSERT INTO MovieActor (MovieID, ActorID) VALUES (@MovieID, @ActorID)", connection))
                 {
@@ -794,15 +893,24 @@ namespace DataAccessLibrary
 
         private int InsertActorAndGetId(string actorName)
         {
-            int actorId;
             using (var connection = CreateConnection())
-            using (var command = new SqlCommand("INSERT INTO Actor (Name) VALUES (@Name); SELECT SCOPE_IDENTITY();", connection))
             {
-                command.Parameters.AddWithValue("@Name", actorName);
                 connection.Open();
-                actorId = Convert.ToInt32(command.ExecuteScalar());
+                using (var checkCommand = new SqlCommand("SELECT Id FROM Actor WHERE Name = @Name", connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@Name", actorName);
+                    var result = checkCommand.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                }
+                using (var insertCommand = new SqlCommand("INSERT INTO Actor (Name) VALUES (@Name); SELECT SCOPE_IDENTITY();", connection))
+                {
+                    insertCommand.Parameters.AddWithValue("@Name", actorName);
+                    return Convert.ToInt32(insertCommand.ExecuteScalar());
+                }
             }
-            return actorId;
         }
 
         // Method to add a director to a movie
@@ -810,7 +918,7 @@ namespace DataAccessLibrary
         {
             try
             {
-                int directorId = InsertDirectorAndGetId(directorName); 
+                int directorId = InsertDirectorAndGetId(directorName);
                 using (var connection = CreateConnection())
                 using (var command = new SqlCommand("INSERT INTO MovieDirector (MovieID, DirectorID) VALUES (@MovieID, @DirectorID)", connection))
                 {
@@ -836,15 +944,412 @@ namespace DataAccessLibrary
 
         private int InsertDirectorAndGetId(string directorName)
         {
-            int directorId;
             using (var connection = CreateConnection())
-            using (var command = new SqlCommand("INSERT INTO Director (Name) VALUES (@Name); SELECT SCOPE_IDENTITY();", connection))
             {
-                command.Parameters.AddWithValue("@Name", directorName);
                 connection.Open();
-                directorId = Convert.ToInt32(command.ExecuteScalar());
+                // Check if the director already exists
+                using (var checkCommand = new SqlCommand("SELECT Id FROM Director WHERE Name = @Name", connection))
+                {
+                    checkCommand.Parameters.AddWithValue("@Name", directorName);
+                    var result = checkCommand.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return Convert.ToInt32(result); // Return existing director ID
+                    }
+                }
+                // Insert new director and return its ID
+                using (var insertCommand = new SqlCommand("INSERT INTO Director (Name) VALUES (@Name); SELECT SCOPE_IDENTITY();", connection))
+                {
+                    insertCommand.Parameters.AddWithValue("@Name", directorName);
+                    return Convert.ToInt32(insertCommand.ExecuteScalar());
+                }
             }
-            return directorId;
+        }
+        // update genre for a movie that takes 3 parameters
+        public void UpdateGenreForMovie(int movieId, string oldGenreName, string newGenreName)
+        {
+            using (var connection = CreateConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        // Get old genre ID
+                        var oldGenreId = GetGenreIdByName(oldGenreName, connection, transaction);
+                        if (oldGenreId == -1)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage($"Genre '{oldGenreName}' does not exist."));
+                        }
+
+                        // Check if the movie is associated with the old genre
+                        var checkCommand = new SqlCommand("SELECT COUNT(*) FROM MovieGenre WHERE MovieID = @movieId AND GenreID = @oldGenreId", connection, transaction);
+                        checkCommand.Parameters.AddWithValue("@movieId", movieId);
+                        checkCommand.Parameters.AddWithValue("@oldGenreId", oldGenreId);
+                        var associationExists = (int)checkCommand.ExecuteScalar() > 0;
+
+                        if (!associationExists)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("No association was found. Ensure the movie is associated with the old genre."));
+                        }
+
+                        // Get or insert new genre ID
+                        var newGenreId = GetGenreIdByName(newGenreName, connection, transaction);
+                        if (newGenreId == -1)
+                        {
+                            // Insert new genre and get its ID
+                            var insertCommand = new SqlCommand("INSERT INTO Genre (Name) VALUES (@newGenreName); SELECT SCOPE_IDENTITY();", connection, transaction);
+                            insertCommand.Parameters.AddWithValue("@newGenreName", newGenreName);
+                            newGenreId = Convert.ToInt32(insertCommand.ExecuteScalar());
+                        }
+
+                        // Update movie-genre association
+                        var updateCommand = new SqlCommand("UPDATE MovieGenre SET GenreID = @newGenreId WHERE MovieID = @movieId AND GenreID = @oldGenreId", connection, transaction);
+                        updateCommand.Parameters.AddWithValue("@newGenreId", newGenreId);
+                        updateCommand.Parameters.AddWithValue("@movieId", movieId);
+                        updateCommand.Parameters.AddWithValue("@oldGenreId", oldGenreId);
+                        var rowsAffected = updateCommand.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("No association was updated. Ensure the movie is associated with the old genre."));
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new DataAccessException(DataAccessException.GetDatabaseErrorMessage("updating movie genre"), ex);
+                }
+                catch (System.Exception ex) when (!(ex is DataAccessException))
+                {
+                    throw new DataAccessException(DataAccessException.GetUnexpectedErrorMessage("updating movie genre"), ex);
+                }
+            }
+        }
+
+        public void UpdateActorForMovie(int movieId, string oldActor, string newActor)
+        {
+            using (var connection = CreateConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        // Get old actor ID
+                        var oldActorId = GetActorIdByName(oldActor, connection, transaction);
+                        if (oldActorId == -1)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage($"Actor '{oldActor}' does not exist."));
+                        }
+
+                        // Check if the movie is associated with the old actor
+                        var checkCommand = new SqlCommand("SELECT COUNT(*) FROM MovieActor WHERE MovieID = @movieId AND ActorID = @oldActorId", connection, transaction);
+                        checkCommand.Parameters.AddWithValue("@movieId", movieId);
+                        checkCommand.Parameters.AddWithValue("@oldActorId", oldActorId);
+                        var associationExists = (int)checkCommand.ExecuteScalar() > 0;
+
+                        if (!associationExists)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("No association was found. Ensure the movie is associated with the old actor."));
+                        }
+
+                        // Get or insert new actor ID
+                        var newActorId = GetActorIdByName(newActor, connection, transaction);
+                        if (newActorId == -1)
+                        {
+                            // Insert new actor and get its ID
+                            var insertCommand = new SqlCommand("INSERT INTO Actor (Name) VALUES (@newActor); SELECT SCOPE_IDENTITY();", connection, transaction);
+                            insertCommand.Parameters.AddWithValue("@newActor", newActor);
+                            newActorId = Convert.ToInt32(insertCommand.ExecuteScalar());
+                        }
+
+                        // Update movie-actor association
+                        var updateCommand = new SqlCommand("UPDATE MovieActor SET ActorID = @newActorId WHERE MovieID = @movieId AND ActorID = @oldActorId", connection, transaction);
+                        updateCommand.Parameters.AddWithValue("@newActorId", newActorId);
+                        updateCommand.Parameters.AddWithValue("@movieId", movieId);
+                        updateCommand.Parameters.AddWithValue("@oldActorId", oldActorId);
+                        var rowsAffected = updateCommand.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("No association was updated. Ensure the movie is associated with the old actor."));
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new DataAccessException(DataAccessException.GetDatabaseErrorMessage("updating movie actor"), ex);
+                }
+                catch (System.Exception ex) when (!(ex is DataAccessException))
+                {
+                    throw new DataAccessException(DataAccessException.GetUnexpectedErrorMessage("updating movie actor"), ex);
+                }
+            }
+        }
+
+
+        public void UpdateDirectorForMovie(int movieId, string oldDirector, string newDirector)
+        {
+            using (var connection = CreateConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        // Get old director ID
+                        var oldDirectorId = GetDirectorIdByName(oldDirector, connection, transaction);
+                        if (oldDirectorId == -1)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage($"Director '{oldDirector}' does not exist."));
+                        }
+
+                        // Check if the movie is associated with the old director
+                        var checkCommand = new SqlCommand("SELECT COUNT(*) FROM MovieDirector WHERE MovieID = @movieId AND DirectorID = @oldDirectorId", connection, transaction);
+                        checkCommand.Parameters.AddWithValue("@movieId", movieId);
+                        checkCommand.Parameters.AddWithValue("@oldDirectorId", oldDirectorId);
+                        var associationExists = (int)checkCommand.ExecuteScalar() > 0;
+
+                        if (!associationExists)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("No association was found. Ensure the movie is associated with the old director."));
+                        }
+
+                        // Get or insert new director ID
+                        var newDirectorId = GetDirectorIdByName(newDirector, connection, transaction);
+                        if (newDirectorId == -1)
+                        {
+                            // Insert new director and get its ID
+                            var insertCommand = new SqlCommand("INSERT INTO Director (Name) VALUES (@newDirector); SELECT SCOPE_IDENTITY();", connection, transaction);
+                            insertCommand.Parameters.AddWithValue("@newDirector", newDirector);
+                            newDirectorId = Convert.ToInt32(insertCommand.ExecuteScalar());
+                        }
+
+                        // Update movie-director association
+                        var updateCommand = new SqlCommand("UPDATE MovieDirector SET DirectorID = @newDirectorId WHERE MovieID = @movieId AND DirectorID = @oldDirectorId", connection, transaction);
+                        updateCommand.Parameters.AddWithValue("@newDirectorId", newDirectorId);
+                        updateCommand.Parameters.AddWithValue("@movieId", movieId);
+                        updateCommand.Parameters.AddWithValue("@oldDirectorId", oldDirectorId);
+                        var rowsAffected = updateCommand.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("No association was updated. Ensure the movie is associated with the old director."));
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new DataAccessException(DataAccessException.GetDatabaseErrorMessage("updating movie director"), ex);
+                }
+                catch (System.Exception ex) when (!(ex is DataAccessException))
+                {
+                    throw new DataAccessException(DataAccessException.GetUnexpectedErrorMessage("updating movie director"), ex);
+                }
+            }
+        }
+
+
+        public void RemoveGenreFromMovie(int movieId, string genreName)
+        {
+            using (SqlConnection connection = CreateConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (SqlTransaction transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            int genreId = GetGenreIdByName(genreName, connection, transaction);
+                            if (genreId == -1)
+                            {
+                                throw new DataAccessException("Genre not found.");
+                            }
+
+                            string deleteQuery = "DELETE FROM MovieGenre WHERE MovieId = @MovieId AND GenreId = @GenreId";
+                            using (SqlCommand command = new SqlCommand(deleteQuery, connection, transaction))
+                            {
+                                command.Parameters.AddWithValue("@MovieId", movieId);
+                                command.Parameters.AddWithValue("@GenreId", genreId);
+                                int rowsAffected = command.ExecuteNonQuery();
+                                if (rowsAffected == 0)
+                                {
+                                    throw new DataAccessException("No genre association found to remove.");
+                                }
+                            }
+                            transaction.Commit();
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new DataAccessException("An error occurred while removing the genre from the movie.", ex);
+                }
+                catch (System.Exception ex)
+                {
+                    throw new DataAccessException("An unexpected error occurred while removing the genre from the movie.", ex);
+                }
+            }
+        }
+
+
+
+        public void RemoveActorFromMovie(int movieId, string actorName)
+        {
+            using (var connection = CreateConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        var actorId = GetActorIdByName(actorName, connection, transaction);
+                        if (actorId == -1)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage($"Actor '{actorName}' does not exist."));
+                        }
+
+                        var deleteCommand = new SqlCommand("DELETE FROM MovieActor WHERE MovieID = @movieId AND ActorID = @actorId", connection, transaction);
+                        deleteCommand.Parameters.AddWithValue("@movieId", movieId);
+                        deleteCommand.Parameters.AddWithValue("@actorId", actorId);
+                        var rowsAffected = deleteCommand.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("No association was deleted. Ensure the movie is associated with the actor."));
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new DataAccessException(DataAccessException.GetDatabaseErrorMessage("removing actor from movie"), ex);
+                }
+                catch (System.Exception ex) when (!(ex is DataAccessException))
+                {
+                    throw new DataAccessException(DataAccessException.GetUnexpectedErrorMessage("removing actor from movie"), ex);
+                }
+            }
+        }
+
+        public void RemoveDirectorFromMovie(int movieId, string directorName)
+        {
+            using (var connection = CreateConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        var directorId = GetDirectorIdByName(directorName, connection, transaction);
+                        if (directorId == -1)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage($"Director '{directorName}' does not exist."));
+                        }
+
+                        var deleteCommand = new SqlCommand("DELETE FROM MovieDirector WHERE MovieID = @movieId AND DirectorID = @directorId", connection, transaction);
+                        deleteCommand.Parameters.AddWithValue("@movieId", movieId);
+                        deleteCommand.Parameters.AddWithValue("@directorId", directorId);
+                        var rowsAffected = deleteCommand.ExecuteNonQuery();
+
+                        if (rowsAffected == 0)
+                        {
+                            throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("No association was deleted. Ensure the movie is associated with the director."));
+                        }
+
+                        transaction.Commit();
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new DataAccessException(DataAccessException.GetDatabaseErrorMessage("removing director from movie"), ex);
+                }
+                catch (System.Exception ex) when (!(ex is DataAccessException))
+                {
+                    throw new DataAccessException(DataAccessException.GetUnexpectedErrorMessage("removing director from movie"), ex);
+                }
+            }
+        }
+
+        private int GetActorIdByName(string actorName, SqlConnection connection, SqlTransaction transaction)
+        {
+            try
+            {
+                string query = "SELECT ID FROM Actor WHERE Name = @ActorName";
+                using (var command = new SqlCommand(query, connection, transaction))
+                {
+                    command.Parameters.AddWithValue("@ActorName", actorName);
+                    var result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return Convert.ToInt32(result);
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DataAccessException("A database error occurred while getting actor ID by name.", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessException("An error occurred while getting actor ID by name. The operation is not valid due to the current state of the object.", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new DataAccessException("An unexpected error occurred while getting actor ID by name.", ex);
+            }
+        }
+
+
+        private int GetDirectorIdByName(string directorName, SqlConnection connection, SqlTransaction transaction)
+        {
+            try
+            {
+                string query = "SELECT ID FROM Director WHERE Name = @DirectorName";
+                using (var command = new SqlCommand(query, connection, transaction))
+                {
+                    command.Parameters.AddWithValue("@DirectorName", directorName);
+                    var result = command.ExecuteScalar();
+                    if (result != null)
+                    {
+                        return Convert.ToInt32(result); // Casting to handle possible decimal result from database
+                    }
+                    else
+                    {
+                        return -1; // Director not found
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DataAccessException("A database error occurred while getting director ID by name.", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessException("An error occurred while getting director ID by name. The operation is not valid due to the current state of the object.", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new DataAccessException("An unexpected error occurred while getting director ID by name.", ex);
+            }
         }
     }
 }
