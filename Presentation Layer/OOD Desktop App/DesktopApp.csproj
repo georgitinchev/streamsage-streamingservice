@@ -19,6 +19,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,6 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\DTOs\DTOs.csproj" />
 		<ProjectReference Include="..\..\Logic Code Layer\LogicClassLibrary\LogicClassLibrary.csproj" />
 	</ItemGroup>
 
