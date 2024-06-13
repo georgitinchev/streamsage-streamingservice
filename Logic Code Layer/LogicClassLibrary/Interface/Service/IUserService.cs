@@ -17,5 +17,8 @@ namespace LogicClassLibrary.Interface.Service
         void AddToRecentlyWatched(int userId, int movieId);
         void AddToWatchlist(int userId, int movieId);
         void AddToFavorites(int userId, int movieId);
+        void RemoveFromWatchlist(int userId, int movieId);
+        void RemoveFromFavorites(int userId, int movieId);
+        void UpdateProfilePicture(int userId, byte[] profilePicture);
     }
 }
