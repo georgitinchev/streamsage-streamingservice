@@ -1,4 +1,102 @@
 ﻿@page
 @model StreamSageWAD.Pages.ProfileModel
 @{
+    ViewData["Title"] = "Profile";
 }
+
+<div class="container mt-5">
+    <!-- Display any error messages -->
+    @if (TempData["ErrorMessage"] != null) 
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="display-4 text-center">Recently Watched</h2>
+            <div class="row">
+                @if (Model.RecentlyWatchedMovies.Any())
+                {
+                    foreach (var movie in Model.RecentlyWatchedMovies)
+                    {
+                        <div class="col-md-3 mb-4">
+                            <a href="@Url.Page("Streaming", new { movieId = movie.Id })">
+                                <div class="card h-100">
+                                    <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@movie.Title</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="h1">No recently watched movies.</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="display-4 text-center">Watchlist</h2>
+            <div class="row">
+                @if (Model.Watchlist.Any())
+                {
+                    foreach (var movie in Model.Watchlist)
+                    {
+                        <div class="col-md-3 mb-4">
+                            <a href="@Url.Page("Streaming", new { movieId = movie.Id })">
+                                <div class="card h-100">
+                                    <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@movie.Title</h5>
+                                    </div>
+                                    <form method="post" asp-page-handler="RemoveFromWatchlist" asp-route-movieId="@movie.Id">
+                                        <button type="submit" class="remove-button btn btn-danger">Remove</button>
+                                    </form>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="h1">No movies in watchlist.</p>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="display-4 text-center">Favorites</h2>
+            <div class="row">
+                @if (Model.Favorites.Any())
+                {
+                    foreach (var movie in Model.Favorites)
+                    {
+                        <div class="col-md-3 mb-4">
+                            <a href="@Url.Page("Streaming", new { movieId = movie.Id })">
+                                <div class="card h-100">
+                                    <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@movie.Title</h5>
+                                    </div>
+                                    <form method="post" asp-page-handler="RemoveFromFavorites" asp-route-movieId="@movie.Id">
+                                        <button type="submit" class="remove-button btn btn-danger">Remove</button>
+                                    </form>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p class="h1">No favorite movies.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
