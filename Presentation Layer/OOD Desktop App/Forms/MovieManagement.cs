@@ -19,6 +19,7 @@ namespace DesktopApp.Forms
             moviesDataGrid.CellContentClick += moviesDataGrid_CellContentClick;
             InitializeMoviesGrid();
             PopulateGenreCheckListBoxes();
+            PopulateFilterBarMovies();
             LoadMoviesPage();
         }
 
@@ -224,6 +225,7 @@ namespace DesktopApp.Forms
             var genres = desktopController.MovieService?.GetAllGenres();
             UIStyler.PopulateCheckListBox(createMovieGenresCheckList, genres);
             UIStyler.PopulateCheckListBox(updateMovieCheckListBox, genres);
+            UIStyler.PopulateComboBox(filterBarMovies, genres);
         }
 
         private static List<string> GetSelectedGenres(CheckedListBox box)
@@ -236,6 +238,8 @@ namespace DesktopApp.Forms
             if (movieDto.Genres == null) return;
             UIStyler.SetSelectedItemsInCheckListBox(updateMovieCheckListBox, movieDto.Genres);
         }
+
+        // Everything below is Genre, Actor and Director management RELATED !
 
         private void addDirGenAc_Click(object sender, EventArgs e)
         {
@@ -270,7 +274,7 @@ namespace DesktopApp.Forms
             catch (NotFoundException ex)
             {
                 await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
-            } 
+            }
             catch (GetMovieError ex)
             {
                 await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
@@ -281,7 +285,7 @@ namespace DesktopApp.Forms
         {
             try
             {
-                desktopController.MovieService.AddGenreToMovie(currentMovieId, addNewActorTextbox.Text);
+                desktopController.MovieService.AddActorToMovie(currentMovieId, addNewActorTextbox.Text);
                 await DisplayErrorAsync(movieMgmtErrorLabel, "Actor added successfully!");
                 RefreshMovieGenAcDirDetails();
                 addNewActorTextbox.Text = "";
@@ -307,7 +311,7 @@ namespace DesktopApp.Forms
         {
             try
             {
-                desktopController.MovieService.AddGenreToMovie(currentMovieId, addNewDirectorTextbox.Text);
+                desktopController.MovieService.AddDirectorToMovie(currentMovieId, addNewDirectorTextbox.Text);
                 await DisplayErrorAsync(movieMgmtErrorLabel, "Director added successfully!");
                 RefreshMovieGenAcDirDetails();
                 addNewDirectorTextbox.Text = "";
@@ -330,19 +334,216 @@ namespace DesktopApp.Forms
             }
         }
 
-        private void updateGenBtn_Click(object sender, EventArgs e)
+        private async void updateGenBtn_Click(object sender, EventArgs e)
         {
+            try
+            {
 
+                desktopController.MovieService.UpdateGenreForMovie(currentMovieId, currentGenresListbox?.SelectedItem?.ToString(), updateGenreText.Text);
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Genre updated successfully!");
+                RefreshMovieGenAcDirDetails();
+            }
+            catch (UpdateEntityError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (NotFoundException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (GetMovieError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
         }
 
-        private void updateAcBtn_Click(object sender, EventArgs e)
+        private async void updateAcBtn_Click(object sender, EventArgs e)
         {
-
+            try
+            {
+                desktopController.MovieService.UpdateActorForMovie(currentMovieId, currentActorsListbox?.SelectedItem?.ToString(), updateActorText.Text);
+                RefreshMovieGenAcDirDetails();
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Actor updated successfully!");
+            }
+            catch (UpdateEntityError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (NotFoundException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (GetMovieError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
         }
 
-        private void updateDirBtn_Click(object sender, EventArgs e)
+        private async void updateDirBtn_Click(object sender, EventArgs e)
         {
+            try
+            {
+                desktopController.MovieService.UpdateDirectorForMovie(currentMovieId, currentDirectorsListbox?.SelectedItem?.ToString(), updateDirectorText.Text);
+                RefreshMovieGenAcDirDetails();
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Director updated successfully!");
+            }
+            catch (UpdateEntityError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (NotFoundException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (GetMovieError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+        }
 
+        private async void removeGenreBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                desktopController.MovieService.RemoveGenreFromMovie(currentMovieId, currentGenresListbox?.SelectedItem?.ToString());
+                RefreshMovieGenAcDirDetails();
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Genre removed successfully!");
+            }
+            catch (UpdateEntityError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (NotFoundException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (GetMovieError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+        }
+
+        private async void removeActorBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                desktopController.MovieService.RemoveActorFromMovie(currentMovieId, currentActorsListbox?.SelectedItem?.ToString());
+                RefreshMovieGenAcDirDetails();
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Actor removed successfully!");
+            }
+            catch (UpdateEntityError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (NotFoundException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (GetMovieError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+        }
+
+        private async void removeDirectorBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                desktopController.MovieService.RemoveDirectorFromMovie(currentMovieId, currentDirectorsListbox?.SelectedItem?.ToString());
+                RefreshMovieGenAcDirDetails();
+                await DisplayErrorAsync(movieMgmtErrorLabel, "Director removed successfully!");
+            }
+            catch (UpdateEntityError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (NotFoundException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+            catch (GetMovieError ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+        }
+
+        private void currentGenresListbox_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            updateGenreText.Text = currentGenresListbox?.SelectedItem?.ToString();
+        }
+
+        private void currentActorsListbox_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            updateActorText.Text = currentActorsListbox?.SelectedItem?.ToString();
+        }
+
+        private void currentDirectorsListbox_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            updateDirectorText.Text = currentDirectorsListbox?.SelectedItem?.ToString();
+        }
+
+        private void PopulateFilterBarMovies()
+        {
+            try
+            {
+                var genres = desktopController.MovieService.GetAllGenres();
+                UIStyler.PopulateGenresComboBox(filterBarMovies, genres);
+            }
+            catch (NotFoundException ex)
+            {
+                movieMgmtErrorLabel.Text = ex.Message;
+            }
+        }
+
+        private async void SearchMovies()
+        {
+            try
+            {
+                string searchText = searchBarMovies.Text;
+                string selectedGenre = filterBarMovies.SelectedItem?.ToString();
+                if (selectedGenre == "All Genres") selectedGenre = null;
+                if (string.IsNullOrWhiteSpace(searchText) && (selectedGenre == "All Genres" || string.IsNullOrWhiteSpace(selectedGenre)))
+                {
+                  await DisplayErrorAsync(movieMgmtErrorLabel, "Please enter a search term or select a genre to search by.");
+                    return;
+                }
+                var searchResults = desktopController.MovieService.SearchMovies(searchText, selectedGenre);
+                moviesDataGrid.DataSource = searchResults;
+                moviesDataGrid.Refresh();
+            }
+            catch (SearchCriteriaError ex)
+            {
+                await DisplayErrorAsync(movieMgmtErrorLabel, ex.Message);
+            }
+        }
+
+        private void searchBtn_Click(object sender, EventArgs e)
+        {
+            SearchMovies();
         }
     }
 }
