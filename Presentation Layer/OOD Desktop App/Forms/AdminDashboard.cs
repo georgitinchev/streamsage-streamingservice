@@ -58,7 +58,7 @@ namespace DesktopApp
             totalUsersLabel.Text = $"Total Users:\n{_desktopController.GetTotalUsers()}";
             totalMoviesLabel.Text = $"Total Movies:\n{_desktopController.GetTotalMovies()}";
             totalReviewsLabel.Text = $"Total Reviews:\n{_desktopController.GetTotalReviews()}";
-            // totalInterpretationsLabel.Text = $"Total Interpretations: {_desktopController.GetTotalInterpretations()}";
+            totalInterpretationsLabel.Text = $"Total Interpretations:\n{_desktopController.GetTotalInterpretations()}";
         }
 
 
