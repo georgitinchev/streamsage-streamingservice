@@ -48,6 +48,7 @@
             errorLabel = new Label();
             createUserBtn = new Button();
             createUserBox = new GroupBox();
+            createIsAdminCheckBox = new CheckBox();
             createSettingsTextBox = new TextBox();
             settingsLabel = new Label();
             lastNameLabel = new Label();
@@ -76,7 +77,6 @@
             backToHomeBtn = new Button();
             openFileDialog1 = new OpenFileDialog();
             generalErrorLabel = new Label();
-            createIsAdminCheckBox = new CheckBox();
             userOperationsTabCtrl.SuspendLayout();
             userManagementPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)userManagementDataGrid).BeginInit();
@@ -231,6 +231,7 @@
             searchBtn.TabIndex = 5;
             searchBtn.Text = "🔍 Search ";
             searchBtn.UseVisualStyleBackColor = true;
+            searchBtn.Click += searchBtn_Click;
             // 
             // searchTextBox
             // 
@@ -322,6 +323,19 @@
             createUserBox.TabIndex = 13;
             createUserBox.TabStop = false;
             createUserBox.Text = "Create User";
+            // 
+            // createIsAdminCheckBox
+            // 
+            createIsAdminCheckBox.BackColor = Color.FromArgb(1, 255, 255);
+            createIsAdminCheckBox.Font = new Font("Rockwell", 25F);
+            createIsAdminCheckBox.Location = new Point(32, 772);
+            createIsAdminCheckBox.Margin = new Padding(3, 2, 3, 2);
+            createIsAdminCheckBox.Name = "createIsAdminCheckBox";
+            createIsAdminCheckBox.Size = new Size(489, 38);
+            createIsAdminCheckBox.TabIndex = 13;
+            createIsAdminCheckBox.Text = "Administrator";
+            createIsAdminCheckBox.TextAlign = ContentAlignment.MiddleCenter;
+            createIsAdminCheckBox.UseVisualStyleBackColor = false;
             // 
             // createSettingsTextBox
             // 
@@ -620,19 +634,6 @@
             generalErrorLabel.Size = new Size(1320, 31);
             generalErrorLabel.TabIndex = 15;
             generalErrorLabel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // createIsAdminCheckBox
-            // 
-            createIsAdminCheckBox.BackColor = Color.FromArgb(1, 255, 255);
-            createIsAdminCheckBox.Font = new Font("Rockwell", 25F);
-            createIsAdminCheckBox.Location = new Point(32, 772);
-            createIsAdminCheckBox.Margin = new Padding(3, 2, 3, 2);
-            createIsAdminCheckBox.Name = "createIsAdminCheckBox";
-            createIsAdminCheckBox.Size = new Size(489, 38);
-            createIsAdminCheckBox.TabIndex = 13;
-            createIsAdminCheckBox.Text = "Administrator";
-            createIsAdminCheckBox.TextAlign = ContentAlignment.MiddleCenter;
-            createIsAdminCheckBox.UseVisualStyleBackColor = false;
             // 
             // UserManagement
             // 
