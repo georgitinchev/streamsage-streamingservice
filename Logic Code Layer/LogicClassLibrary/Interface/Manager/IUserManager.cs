@@ -7,7 +7,7 @@ namespace LogicClassLibrary.Interface.Manager
     {
         List<User> users { get; }
         void AuthenticateUser(string username, string password);
-        void RegisterUser(string username, string email, string password, string firstName, string lastName, UserSettings userSettings);
+        void RegisterUser(string username, string email, string password, string firstName, string lastName, UserSettingsDTO userSettings);
         void ChangePassword(string username, string newPasswordHash, string newPasswordSalt);
         void Create(UserDTO userDTO);
         UserDTO Read(int id);
@@ -16,12 +16,14 @@ namespace LogicClassLibrary.Interface.Manager
         void Delete(int id);
         int GetTotalUsers();
         List<UserDTO> GetAllUsers();
-        List<User> GetUsersPage(int pageNumber, int pageSize);
+        List<UserDTO> GetUsersPage(int pageNumber, int pageSize);
         void AddToRecentlyWatched(int userId, int movieId);
         void AddToWatchlist(int userId, int movieId);
         void AddToFavorites(int userId, int movieId);
-        UserDTO TransformEntityToDTO(User user);
-        UserSettings? TransformDTOToEntity(UserSettingsDTO? dto);
-
+        void RemoveFromWatchlist(int userId, int movieId);
+        void RemoveFromFavorites(int userId, int movieId);
+		void UpdateProfilePicture(int userId, byte[] profilePicture);
+		UserSettings? TransformDTOToEntity(UserSettingsDTO? dto);
+        UserSettingsDTO? TransformEntityToDTO(UserSettings? entity);
     }
 }
