@@ -40,6 +40,19 @@ namespace LogicClassLibrary.Service_Classes
             }
         }
 
+        public List<MovieDTO> SearchMovies(string title, string genre)
+        {
+            try
+            {
+                var movies = movieManager.SearchMovies(title, genre);
+                return movies.Select(movieManager.TransformEntityToDTO).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new SearchCriteriaError("Error while searching movies with criteria.", ex);
+            }
+        }
+
         public List<MovieDTO> GetMoviesPage(int pageNumber, int pageSize)
         {
             try
@@ -217,6 +230,150 @@ namespace LogicClassLibrary.Service_Classes
             catch (GetMovieError)
             {
                 throw new GetMovieError("Director already exists for this movie.");
+            }
+        }
+        // method to update genre for movie
+        public void UpdateGenreForMovie(int movieId, string oldGenreName, string newGenreName)
+        {
+            var validationError = MovieAdditionalsValidation.ValidateGenreName(newGenreName);
+            if (!string.IsNullOrEmpty(validationError))
+            {
+                throw new ArgumentException(validationError);
+            }
+            try
+            {
+                movieManager.UpdateGenreForMovie(movieId, oldGenreName, newGenreName);
+            }
+            catch (UpdateMovieError)
+            {
+                throw new UpdateEntityError($"Error updating genre '{oldGenreName}' to '{newGenreName}' for movie with ID: {movieId}.");
+            }
+            catch (NotFoundException)
+            {
+                throw new NotFoundException(movieId);
+            }
+            catch (GetMovieError)
+            {
+                throw new GetMovieError("Genre already exists for this movie.");
+            }
+        }
+
+        // method to update actor for movie
+
+        public void UpdateActorForMovie(int movieId, string oldActorName, string newActorName)
+        {
+            var validationError = MovieAdditionalsValidation.ValidateActorName(newActorName);
+            if (!string.IsNullOrEmpty(validationError))
+            {
+                throw new ArgumentException(validationError);
+            }
+            try
+            {
+                movieManager.UpdateActorForMovie(movieId, oldActorName, newActorName);
+            }
+            catch (UpdateMovieError)
+            {
+                throw new UpdateEntityError($"Error updating actor '{oldActorName}' to '{newActorName}' for movie with ID: {movieId}.");
+            }
+            catch (NotFoundException)
+            {
+                throw new NotFoundException(movieId);
+            }
+            catch (GetMovieError)
+            {
+                throw new GetMovieError("Actor already exists for this movie.");
+            }
+        }
+
+        // method to update director for movie
+
+        public void UpdateDirectorForMovie(int movieId, string oldDirectorName, string newDirectorName)
+        {
+            var validationError = MovieAdditionalsValidation.ValidateDirectorName(newDirectorName);
+            if (!string.IsNullOrEmpty(validationError))
+            {
+                throw new ArgumentException(validationError);
+            }
+            try
+            {
+                movieManager.UpdateDirectorForMovie(movieId, oldDirectorName, newDirectorName);
+            }
+            catch (UpdateMovieError)
+            {
+                throw new UpdateEntityError($"Error updating director '{oldDirectorName}' to '{newDirectorName}' for movie with ID: {movieId}.");
+            }
+            catch (NotFoundException)
+            {
+                throw new NotFoundException(movieId);
+            }
+            catch (GetMovieError)
+            {
+                throw new GetMovieError("Director already exists for this movie.");
+            }
+        }
+
+        // remove genre from movie
+        public void RemoveGenreFromMovie(int movieId, string genreName)
+        {
+            try
+            {
+                movieManager.RemoveGenreFromMovie(movieId, genreName);
+            }
+            catch (UpdateMovieError)
+            {
+                throw new UpdateEntityError($"Error removing genre '{genreName}' from movie with ID: {movieId}.");
+            }
+            catch (NotFoundException)
+            {
+                throw new NotFoundException(movieId);
+            }
+            catch (GetMovieError)
+            {
+                throw new GetMovieError("Genre does not exist for this movie.");
+            }
+        }
+
+        // remove actor from movie
+
+        public void RemoveActorFromMovie(int movieId, string actorName)
+        {
+            try
+            {
+                movieManager.RemoveActorFromMovie(movieId, actorName);
+            }
+            catch (UpdateMovieError)
+            {
+                throw new UpdateEntityError($"Error removing actor '{actorName}' from movie with ID: {movieId}.");
+            }
+            catch (NotFoundException)
+            {
+                throw new NotFoundException(movieId);
+            }
+            catch (GetMovieError)
+            {
+                throw new GetMovieError("Actor does not exist for this movie.");
+            }
+        }
+
+        // remove director from movie
+
+        public void RemoveDirectorFromMovie(int movieId, string directorName)
+        {
+            try
+            {
+                movieManager.RemoveDirectorFromMovie(movieId, directorName);
+            }
+            catch (UpdateMovieError)
+            {
+                throw new UpdateEntityError($"Error removing director '{directorName}' from movie with ID: {movieId}.");
+            }
+            catch (NotFoundException)
+            {
+                throw new NotFoundException(movieId);
+            }
+            catch (GetMovieError)
+            {
+                throw new GetMovieError("Director does not exist for this movie.");
             }
         }
     }

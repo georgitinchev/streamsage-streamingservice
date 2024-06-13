@@ -60,6 +60,21 @@ namespace LogicClassLibrary.Managers
             }
         }
 
+        public List<Movie> SearchMovies(string title, string genre)
+        {
+            try
+            {
+                var movieDTOs = movieDAL.SearchMovies(title, genre);
+                var movies = movieDTOs.Select(dto => TransformDTOToEntity(dto)).ToList();
+                return movies;
+            }
+            catch (Exception ex)
+            {
+                throw new SearchCriteriaError("An error occurred while searching for movies.", ex);
+            }
+        }
+
+
         public int GetTotalMovies()
         {
             try
@@ -267,6 +282,164 @@ namespace LogicClassLibrary.Managers
             catch (DataAccessException)
             {
                 throw new UpdateMovieError("Error adding director to movie.");
+            }
+        }
+
+        // update genre
+        public void UpdateGenreForMovie(int movieId, string oldGenre, string newGenre)
+        {
+            try
+            {
+                if (!MovieExists(movieId))
+                {
+                    throw new NotFoundException(movieId);
+                }
+
+                var movie = Read(movieId);
+
+                if (movie == null || !movie.Genres.Any(genre => genre.Trim().Equals(oldGenre.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new GetMovieError("Genre does not exist for this movie.");
+                }
+
+                if (movie.Genres.Any(genre => genre.Trim().Equals(newGenre.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new GetMovieError("Genre already exists for this movie.");
+                }
+
+                movieDAL.UpdateGenreForMovie(movieId, oldGenre, newGenre);
+            }
+            catch (DataAccessException ex)
+            {
+                throw new UpdateMovieError("Error updating genre.", ex);
+            }
+        }
+
+        // update actor
+        public void UpdateActorForMovie(int movieId, string oldActor, string newActor)
+        {
+            try
+            {
+                if (!MovieExists(movieId))
+                {
+                    throw new NotFoundException(movieId);
+                }
+
+                var movie = Read(movieId);
+
+                if (movie == null || !movie.Actors.Any(actor => actor.Trim().Equals(oldActor.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new GetMovieError("Actor does not exist for this movie.");
+                }
+
+                if (movie.Actors.Any(actor => actor.Trim().Equals(newActor.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new GetMovieError("Actor already exists for this movie.");
+                }
+
+                movieDAL.UpdateActorForMovie(movieId, oldActor, newActor);
+            }
+            catch (DataAccessException ex)
+            {
+                throw new UpdateMovieError("Error updating actor.", ex);
+            }
+        }
+
+
+        // update director
+        public void UpdateDirectorForMovie(int movieId, string oldDirector, string newDirector)
+        {
+            try
+            {
+                if (!MovieExists(movieId))
+                {
+                    throw new NotFoundException(movieId);
+                }
+
+                var movie = Read(movieId);
+
+                if (movie == null || !movie.Directors.Any(director => director.Trim().Equals(oldDirector.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new GetMovieError("Director does not exist for this movie.");
+                }
+
+                if (movie.Directors.Any(director => director.Trim().Equals(newDirector.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new GetMovieError("Director already exists for this movie.");
+                }
+
+                movieDAL.UpdateDirectorForMovie(movieId, oldDirector, newDirector);
+            }
+            catch (DataAccessException ex)
+            {
+                throw new UpdateMovieError("Error updating director.", ex);
+            }
+        }
+
+
+        // delete genre
+        public void RemoveGenreFromMovie(int movieId, string genre)
+        {
+            try
+            {
+                if (!MovieExists(movieId))
+                {
+                    throw new NotFoundException(movieId);
+                }
+                var movie = Read(movieId);
+                if (movie != null && !movie.Genres.Contains(genre))
+                {
+                    throw new GetMovieError("Genre does not exist for this movie.");
+                }
+                movieDAL.RemoveGenreFromMovie(movieId, genre);
+            }
+            catch (DataAccessException)
+            {
+                throw new UpdateMovieError("Error deleting genre.");
+            }
+        }
+
+        // delete actor
+        public void RemoveActorFromMovie(int movieId, string actor)
+        {
+            try
+            {
+                if (!MovieExists(movieId))
+                {
+                    throw new NotFoundException(movieId);
+                }
+                var movie = Read(movieId);
+                if (movie != null && !movie.Actors.Contains(actor))
+                {
+                    throw new GetMovieError("Actor does not exist for this movie.");
+                }
+                movieDAL.RemoveActorFromMovie(movieId, actor);
+            }
+            catch (DataAccessException)
+            {
+                throw new UpdateMovieError("Error deleting actor.");
+            }
+        }
+
+        // delete director
+        public void RemoveDirectorFromMovie(int movieId, string director)
+        {
+            try
+            {
+                if (!MovieExists(movieId))
+                {
+                    throw new NotFoundException(movieId);
+                }
+                var movie = Read(movieId);
+                if (movie != null && !movie.Directors.Contains(director))
+                {
+                    throw new GetMovieError("Director does not exist for this movie.");
+                }
+                movieDAL.RemoveDirectorFromMovie(movieId, director);
+            }
+            catch (DataAccessException)
+            {
+                throw new UpdateMovieError("Error deleting director.");
             }
         }
 

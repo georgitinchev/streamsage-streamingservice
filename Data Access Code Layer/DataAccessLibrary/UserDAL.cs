@@ -13,6 +13,111 @@ namespace DataAccessLibrary
         {
         }
 
+        public List<UserDTO> SearchUsersAcrossAllFields(string searchQuery)
+        {
+            var users = new List<UserDTO>();
+            string sql = @"SELECT ID, Username, Email, FirstName, LastName, PasswordHash, PasswordSalt, ProfilePictureURL, Settings 
+                   FROM [User] 
+                   WHERE Username LIKE @searchQuery 
+                   OR Email LIKE @searchQuery 
+                   OR FirstName LIKE @searchQuery 
+                   OR LastName LIKE @searchQuery";
+
+            try
+            {
+                using (var connection = CreateConnection())
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@searchQuery", $"%{searchQuery}%");
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            UserDTO user = new UserDTO(
+                                id: (int)reader["ID"],
+                                username: reader["Username"] as string,
+                                email: reader["Email"] as string,
+                                passwordHash: reader["PasswordHash"] as string,
+                                passwordSalt: reader["PasswordSalt"] as string,
+                                firstName: reader["FirstName"] as string,
+                                lastName: reader["LastName"] as string,
+                                profilePictureURL: reader["ProfilePictureURL"] as byte[],
+                                settings: reader["Settings"] == DBNull.Value ? null : JsonConvert.DeserializeObject<UserSettingsDTO>(reader["Settings"] as string),
+                                favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist"),
+                                recentlyWatchedMovieIds: GetRecentlyWatchedMoviesForUser((int)reader["ID"])
+                            );
+                            users.Add(user);
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DataAccessException("An error occurred when searching for users across all fields.", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new DataAccessException("An unexpected error occurred while searching for users across all fields.", ex);
+            }
+            return users;
+        }
+
+        public List<UserDTO> SearchUsers(string searchQuery, string searchBy)
+        {
+            var users = new List<UserDTO>();
+            var validSearchByFields = new List<string> { "Username", "Email", "FirstName", "LastName" };
+            if (!validSearchByFields.Contains(searchBy))
+            {
+                throw new ArgumentException("Invalid search field.");
+            }
+
+            string sql = $"SELECT ID, Username, Email, FirstName, LastName, PasswordHash, PasswordSalt, ProfilePictureURL, Settings " +
+                         $"FROM [User] " +
+                         $"WHERE {searchBy} LIKE @searchQuery";
+
+            try
+            {
+                using (var connection = CreateConnection())
+                using (var command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.AddWithValue("@searchQuery", $"%{searchQuery}%");
+                    connection.Open();
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            UserDTO user = new UserDTO(
+                                id: (int)reader["ID"],
+                                username: reader["Username"] as string,
+                                email: reader["Email"] as string,
+                                passwordHash: reader["PasswordHash"] as string,
+                                passwordSalt: reader["PasswordSalt"] as string,
+                                firstName: reader["FirstName"] as string,
+                                lastName: reader["LastName"] as string,
+                                profilePictureURL: reader["ProfilePictureURL"] == DBNull.Value ? null : (byte[])reader["ProfilePictureURL"],
+                                settings: reader["Settings"] == DBNull.Value ? null : JsonConvert.DeserializeObject<UserSettingsDTO>(reader["Settings"] as string),
+                                favoriteMovies: GetMoviesForUser((int)reader["ID"], "UserFavorite"),
+                                watchList: GetMoviesForUser((int)reader["ID"], "Watchlist"),
+                                recentlyWatchedMovieIds: GetRecentlyWatchedMoviesForUser((int)reader["ID"])
+                            );
+                            users.Add(user);
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DataAccessException("An error occurred when searching for users.", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new DataAccessException("An unexpected error occurred while searching for users.", ex);
+            }
+            return users;
+        }
+
         public List<UserDTO> ReadAllUsers()
         {
             try

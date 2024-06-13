@@ -31,6 +31,17 @@ namespace LogicClassLibrary.Service_Classes
                 throw new UserAuthenticationException("Failed to authenticate user.", ex);
             }
         }
+        public List<UserDTO> SearchUsers(string searchQuery, string searchBy)
+        {
+            try
+            {
+                return userManager.SearchUsers(searchQuery, searchBy);
+            }
+            catch(SearchCriteriaError ex)
+            {
+                throw new UserServiceException("Failed to search users.", ex);
+            }
+        }
 
         public void ChangePassword(string username, string newPassword)
         {

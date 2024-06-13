@@ -45,6 +45,29 @@ namespace LogicClassLibrary.Managers
             }
         }
 
+        public List<UserDTO> SearchUsers(string searchQuery, string searchBy)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(searchBy))
+                {
+                    return userDAL?.SearchUsersAcrossAllFields(searchQuery);
+                }
+                else
+                {
+                return userDAL?.SearchUsers(searchQuery, searchBy) ?? new List<UserDTO>();
+                }
+            }
+            catch (DataAccessException ex)
+            {
+                throw new SearchCriteriaError("Failed to search users.", ex);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new SearchCriteriaError("Invalid search criteria.", ex);
+            }
+        }
+
         public override void Delete(int id)
         {
             try

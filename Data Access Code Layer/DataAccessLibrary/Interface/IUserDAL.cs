@@ -9,6 +9,8 @@ namespace DataAccessLibrary
         int CreateUser(UserDTO user);
         UserDTO? GetUserByUsername(string username);
         UserDTO? GetUserById(int userId);
+        List<UserDTO> SearchUsers(string searchQuery, string searchParameter);
+        List<UserDTO> SearchUsersAcrossAllFields(string searchQuery);
         void UpdateUser(UserDTO user);
         void UpdateUserWithoutPassword(UserDTO user);
         void DeleteUser(int userId);

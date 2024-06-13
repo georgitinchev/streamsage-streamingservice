@@ -15,6 +15,7 @@ namespace LogicClassLibrary.Interface.Manager
         void Update(UserDTO dto);
         void Delete(int id);
         int GetTotalUsers();
+        List<UserDTO> SearchUsers(string searchQuery, string searchParameter);
         List<UserDTO> GetAllUsers();
         List<UserDTO> GetUsersPage(int pageNumber, int pageSize);
         void AddToRecentlyWatched(int userId, int movieId);
