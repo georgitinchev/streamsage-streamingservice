@@ -39,6 +39,25 @@ namespace LogicClassLibrary.Validation
             string pattern = @"^(http|https):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(/\S*)?$";
             return Regex.IsMatch(url, pattern, RegexOptions.IgnoreCase);
         }
+
+        public static string ValidateAverageRating(string averageRatingText, out decimal averageRating)
+        {
+            averageRating = 0;
+            if (string.IsNullOrWhiteSpace(averageRatingText))
+            {
+                return "Average rating is required.";
+            }
+            if (!decimal.TryParse(averageRatingText, out averageRating))
+            {
+                return "Average rating must be a valid decimal number.";
+            }
+            if (averageRating < 0 || averageRating > 10)
+            {
+                return "Average rating must be between 0 and 10.";
+            }
+            return string.Empty;
+        }
+
     }
 }
 
