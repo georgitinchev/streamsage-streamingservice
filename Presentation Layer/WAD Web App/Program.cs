@@ -1,8 +1,37 @@
+using DataAccessLibrary;
+using LogicClassLibrary.Algorithmic;
+using LogicClassLibrary.Helpers;
+using LogicClassLibrary.Interface.Algorhitmic;
+using LogicClassLibrary.Interface.Helpers;
+using LogicClassLibrary.Interface.Manager;
+using LogicClassLibrary.Interface.Service;
+using LogicClassLibrary.Managers;
+using LogicClassLibrary.Service_Classes;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using StreamSageWAD;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
-builder.Services.AddScoped<WebController>();
+builder.Services.AddScoped<IWebController, WebController>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IInterpretationService, InterpretationService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+builder.Services.AddScoped<IMovieManager, MovieManager>();
+builder.Services.AddScoped<IUserManager, UserManager>();
+builder.Services.AddScoped<IReviewManager, ReviewManager>();
+builder.Services.AddScoped<IInterpretationManager, InterpretationManager>();
+builder.Services.AddScoped<IRecommendationManager, RecommendationManager>();
+builder.Services.AddScoped<BehaviorBasedRecommendation>();
+builder.Services.AddScoped<ContentBasedRecommendation>();
+builder.Services.AddScoped<IPasswordHelper, PasswordHelper>(); 
+builder.Services.AddScoped<IMovieDAL, MovieDAL>();
+builder.Services.AddScoped<IUserDAL, UserDAL>();
+builder.Services.AddScoped<IReviewDAL, ReviewDAL>();
+builder.Services.AddScoped<IInterpretationDAL, InterpretationDAL>();
+builder.Services.AddScoped<RandomPageSelector>();
+
+
 builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
