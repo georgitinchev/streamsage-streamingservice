@@ -1,14 +1,18 @@
-﻿using DataAccessLibrary.Exception;
-using Microsoft.Data.SqlClient;
-using System.Data;
-
+﻿using Microsoft.Data.SqlClient;
+using DataAccessLibrary.Exception;
 
 namespace DataAccessLibrary
 {
     public abstract class BaseDAL
     {
-        protected const string ConnectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id=dbi524441_streamsage;Password=e9999619;TrustServerCertificate=true";
-        protected SqlConnection CreateConnection()
+        protected readonly string ConnectionString;
+
+        protected BaseDAL(string connectionString)
+        {
+            ConnectionString = connectionString;
+        }
+
+        public SqlConnection CreateConnection()
         {
             try
             {
@@ -16,17 +20,16 @@ namespace DataAccessLibrary
             }
             catch (SqlException ex)
             {
-                throw new DataAccessException(DataAccessException.GetDatabaseErrorMessage("extracting connection string from base dal"), ex);
+                throw new DataAccessException(DataAccessException.GetDatabaseErrorMessage("creating connection"), ex);
             }
             catch (InvalidOperationException ex)
             {
-                throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("extracting connection string from base dal"), ex);
+                throw new DataAccessException(DataAccessException.GetInvalidOperationErrorMessage("creating connection"), ex);
             }
             catch (System.Exception ex)
             {
-                throw new DataAccessException(DataAccessException.GetUnexpectedErrorMessage("extracting connection string from base dal"), ex);
+                throw new DataAccessException(DataAccessException.GetUnexpectedErrorMessage("creating connection"), ex);
             }
         }
     }
 }
-

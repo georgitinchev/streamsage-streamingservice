@@ -15,15 +15,17 @@ namespace DesktopApp
 {
     public class Startup
     {
+        private readonly string _connectionString = "Server=mssqlstud.fhict.local;Database=dbi524441_streamsage;User Id = dbi524441_streamsage; Password=e9999619;TrustServerCertificate=true";
         public IServiceProvider ConfigureServices()
         {
+
             var services = new ServiceCollection();
 
             // DAL Classes
-            services.AddTransient<IUserDAL, UserDAL>();
-            services.AddTransient<IMovieDAL, MovieDAL>();
-            services.AddTransient<IReviewDAL, ReviewDAL>();
-            services.AddTransient<IInterpretationDAL, InterpretationDAL>();
+            services.AddTransient<IUserDAL>(provider => new UserDAL(_connectionString));
+            services.AddTransient<IMovieDAL>(provider => new MovieDAL(_connectionString));
+            services.AddTransient<IReviewDAL>(provider => new ReviewDAL(_connectionString));
+            services.AddTransient<IInterpretationDAL>(provider => new InterpretationDAL(_connectionString));
 
             // Business Logic Layer
             services.AddTransient<IUserManager, UserManager>();

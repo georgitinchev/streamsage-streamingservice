@@ -32,8 +32,20 @@ namespace LogicClassLibrary.Managers
                 throw new PaginatorException(ex.Message, ex);
             }
         }
+		public List<Movie> GetTopRatedMovies(int limit)
+		{
+            try
+            {
+				var movieDTOs = movieDAL.GetTopRatedMovies(limit);
+				return movieDTOs.Select(TransformDTOToEntity).ToList();
+			}
+			catch (Exception ex)
+            {
+				throw new GetAllEntitiesError(ex.Message, ex);
+			}
+		}
 
-        public void PopulateMovies()
+		public void PopulateMovies()
         {
             try
             {

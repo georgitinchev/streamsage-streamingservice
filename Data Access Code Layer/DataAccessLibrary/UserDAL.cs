@@ -9,7 +9,7 @@ namespace DataAccessLibrary
 {
     public class UserDAL : BaseDAL, IUserDAL
     {
-        public UserDAL() : base()
+        public UserDAL(string connectionString) : base(connectionString)
         {
         }
 

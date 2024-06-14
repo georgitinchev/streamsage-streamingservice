@@ -10,7 +10,7 @@ namespace DataAccessLibrary
 {
     public class MovieDAL : BaseDAL, IMovieDAL
     {
-        public MovieDAL() : base() { }
+        public MovieDAL(string connectionString) : base(connectionString) { }
 
         // Method to read all movies
         public List<MovieDTO> ReadAllMovies()
@@ -92,6 +92,119 @@ namespace DataAccessLibrary
                 throw new DataAccessException("An unexpected error occurred while reading all movies.", ex);
             }
         }
+
+        // Method to get the top rated movies
+        public List<MovieDTO> GetTopRatedMovies(int limit)
+        {
+            var movies = new List<MovieDTO>();
+            var query = @"
+    WITH TopMovies AS (
+        SELECT TOP (@Limit)
+            m.Id, 
+            m.Title, 
+            m.ReleaseDate, 
+            m.Description, 
+            m.PosterImageURL, 
+            m.TrailerURL, 
+            m.RuntimeMinutes, 
+            m.AverageRating
+        FROM Movie m
+        ORDER BY m.AverageRating DESC
+    )
+    SELECT
+        tm.Id,
+        tm.Title,
+        tm.ReleaseDate,
+        tm.Description,
+        tm.PosterImageURL,
+        tm.TrailerURL,
+        tm.RuntimeMinutes,
+        tm.AverageRating,
+        g.Name AS Genre,
+        d.Name AS Director,
+        a.Name AS Actor
+    FROM TopMovies tm
+    LEFT JOIN MovieGenre mg ON tm.ID = mg.MovieID
+    LEFT JOIN Genre g ON mg.GenreID = g.ID
+    LEFT JOIN MovieDirector md ON tm.ID = md.MovieID
+    LEFT JOIN Director d ON md.DirectorID = d.ID
+    LEFT JOIN MovieActor ma ON tm.ID = ma.MovieID
+    LEFT JOIN Actor a ON ma.ActorID = a.ID
+    ORDER BY tm.AverageRating DESC;";
+
+            try
+            {
+                using (var connection = CreateConnection())
+                {
+                    connection.Open();
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Limit", SqlDbType.Int) { Value = limit });
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            var movieDict = new Dictionary<int, MovieDTO>();
+
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0);
+
+                                if (!movieDict.TryGetValue(id, out var movie))
+                                {
+                                    movie = new MovieDTO(
+                                        id: id,
+                                        title: reader.GetString(1),
+                                        releaseDate: reader.GetDateTime(2),
+                                        description: reader.IsDBNull(3) ? null : reader.GetString(3),
+                                        posterImageURL: reader.IsDBNull(4) ? null : reader.GetString(4),
+                                        trailerURL: reader.IsDBNull(5) ? null : reader.GetString(5),
+                                        runtimeMinutes: reader.GetInt32(6),
+                                        averageRating: reader.IsDBNull(7) ? null : reader.GetDecimal(7),
+                                        genres: new List<string>(),
+                                        directors: new List<string>(),
+                                        actors: new List<string>()
+                                    );
+                                    movieDict[id] = movie;
+                                }
+                                if (!reader.IsDBNull(8))
+                                {
+                                    string genre = reader.GetString(8);
+                                    if (!movie.Genres.Contains(genre))
+                                        movie.Genres.Add(genre);
+                                }
+                                if (!reader.IsDBNull(9))
+                                {
+                                    string director = reader.GetString(9);
+                                    if (!movie.Directors.Contains(director))
+                                        movie.Directors.Add(director);
+                                }
+                                if (!reader.IsDBNull(10))
+                                {
+                                    string actor = reader.GetString(10);
+                                    if (!movie.Actors.Contains(actor))
+                                        movie.Actors.Add(actor);
+                                }
+                            }
+                            movies = movieDict.Values.ToList();
+                        }
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DataAccessException("A database error occurred while reading top rated movies.", ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new DataAccessException("An error occurred while reading top rated movies. The operation is not valid due to the current state of the object.", ex);
+            }
+            catch (System.Exception ex)
+            {
+                throw new DataAccessException("An unexpected error occurred while reading top rated movies.", ex);
+            }
+            return movies;
+        }
+
 
         // Method to update a movie
         public void UpdateMovie(MovieDTO movie)

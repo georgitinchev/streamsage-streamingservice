@@ -30,10 +30,19 @@
             <label for="registerConfirmPassword" style="font-size: 1.5rem;">Confirm Password</label>
             <input type="password" class="form-control" id="registerConfirmPassword" asp-for="registerDTO.RepeatPassword" placeholder="Confirm password" style="font-size: 1.5rem;">
         </div>
+        <div class="form-group">
+            <label for="registerFirstName" style="font-size: 1.5rem;">First Name</label>
+            <input type="text" class="form-control" id="registerFirstName" asp-for="registerDTO.FirstName" placeholder="Enter first name" style="font-size: 1.5rem;">
+        </div>
+        <div class="form-group">
+            <label for="registerLastName" style="font-size: 1.5rem;">Last Name</label>
+            <input type="text" class="form-control" id="registerLastName" asp-for="registerDTO.LastName" placeholder="Enter last name" style="font-size: 1.5rem;">
+        </div>
+
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary" style="font-size: 1.75rem;padding: 15px 40px; margin-top:15px;">Register</button>
         </div>
-        <input type="hidden" asp-for="ReturnUrl" value="@Model.ReturnUrl ?? Url.Content(" ~ /")" />
+        <input type="hidden" asp-for="ReturnUrl" />
     </form>
 
     <div class="text-center mt-4">

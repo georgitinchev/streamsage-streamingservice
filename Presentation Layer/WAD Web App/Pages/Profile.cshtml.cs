@@ -1,4 +1,5 @@
 using DTOs;
+using LogicClassLibrary.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -40,6 +41,36 @@ namespace StreamSageWAD.Pages
             catch (System.Exception ex)
             {
                 TempData["ErrorMessage"] = $"An unexpected error occurred. {ex.Message}";
+            }
+        }
+
+        public IActionResult OnPostRemoveFromWatchlist(int movieId)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _webController.UserService.RemoveFromWatchlist(userId, movieId);
+                return RedirectToPage();
+            }
+            catch (UserServiceException ex)
+            {
+                TempData["ErrorMessage"] = $"Failed to remove movie from watchlist. {ex.Message}";
+                return Page();
+            }
+        }
+
+        public IActionResult OnPostRemoveFromFavorites(int movieId)
+        {
+            try
+            {
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _webController.UserService.RemoveFromFavorites(userId, movieId);
+                return RedirectToPage();
+            }
+            catch (UserServiceException ex)
+            {
+                TempData["ErrorMessage"] = $"Failed to remove movie from favorites. {ex.Message}";
+                return Page();
             }
         }
     }

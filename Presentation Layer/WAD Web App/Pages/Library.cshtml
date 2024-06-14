@@ -1,141 +1,144 @@
 ﻿@page
 @model StreamSageWAD.Pages.LibraryModel
 @{
-    Layout = "_Layout";
+	Layout = "_Layout";
 }
 
-@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+@if (!ModelState.IsValid)
 {
-    <div class="alert alert-danger" role="alert">
-        @Model.ErrorMessage
-    </div>
+	<div class="alert alert-danger" role="alert">
+		@foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+		{
+			<p>@error.ErrorMessage</p>
+		}
+	</div>
 }
 
 <div class="container">
-    <hr style="border-top: 3px solid #7692FF;">
+	<hr style="border-top: 3px solid #7692FF;">
 
-    <h2>Featured Movies</h2>
-    <div class="row">
-        @if (Model.FeaturedMovies != null && Model.FeaturedMovies.Any())
-        {
-            foreach (var movie in Model.FeaturedMovies)
-            {
-                <div class="col-sm-3 mb-4">
-                    <div class="card">
-                        <a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
-                            <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@movie.Title</h5>
-                            </div>
-                            @if (movie.AverageRating.HasValue)
-                            {
-                                <span class="rating-star">
-                                    <i class="fas fa-star"></i> @movie.AverageRating.Value
-                                </span>
-                            }
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No featured movies to display.</p>
-        }
-    </div>
+	<h2>Featured Movies</h2>
+	<div class="row">
+		@if (Model.FeaturedMovies != null && Model.FeaturedMovies.Any())
+		{
+			foreach (var movie in Model.FeaturedMovies)
+			{
+				<div class="col-sm-3 mb-4">
+					<div class="card">
+						<a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
+							<img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+							<div class="card-body">
+								<h5 class="card-title">@movie.Title</h5>
+							</div>
+							@if (movie.AverageRating.HasValue)
+							{
+								<span class="rating-star">
+									<i class="fas fa-star"></i> @movie.AverageRating.Value
+								</span>
+							}
+						</a>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<p>No featured movies to display.</p>
+		}
+	</div>
 
-    <hr style="border-top: 3px solid #7692FF;">
+	<hr style="border-top: 3px solid #7692FF;">
 
-    <h2>Random Movies</h2>
-    <div class="row">
-        @if (Model.RandomMovies != null && Model.RandomMovies.Any())
-        {
-            foreach (var movie in Model.RandomMovies)
-            {
-                <div class="col-sm-3 mb-4">
-                    <div class="card">
-                        <a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
-                            <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@movie.Title</h5>
-                            </div>
-                            @if (movie.AverageRating.HasValue)
-                            {
-                                <span class="rating-star">
-                                    <i class="fas fa-star"></i> @movie.AverageRating.Value
-                                </span>
-                            }
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No random movies to display.</p>
-        }
-    </div>
+	<h2>Random Movies</h2>
+	<div class="row">
+		@if (Model.RandomMovies != null && Model.RandomMovies.Any())
+		{
+			foreach (var movie in Model.RandomMovies)
+			{
+				<div class="col-sm-3 mb-4">
+					<div class="card">
+						<a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
+							<img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+							<div class="card-body">
+								<h5 class="card-title">@movie.Title</h5>
+							</div>
+							@if (movie.AverageRating.HasValue)
+							{
+								<span class="rating-star">
+									<i class="fas fa-star"></i> @movie.AverageRating.Value
+								</span>
+							}
+						</a>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<p>No random movies to display.</p>
+		}
+	</div>
 
-    <hr style="border-top: 3px solid #7692FF;">
+	<hr style="border-top: 3px solid #7692FF;">
 
-    <h2>Based on Your Usage</h2>
-    <div class="row">
-        @if (Model.UsageBasedMovies != null && Model.UsageBasedMovies.Any())
-        {
-            foreach (var movie in Model.UsageBasedMovies)
-            {
-                <div class="col-sm-3 mb-4">
-                    <div class="card">
-                        <a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
-                            <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@movie.Title</h5>
-                            </div>
-                            @if (movie.AverageRating.HasValue)
-                            {
-                                <span class="rating-star">
-                                    <i class="fas fa-star"></i> @movie.AverageRating.Value
-                                </span>
-                            }
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No usage-based movies to display.</p>
-        }
-    </div>
-    <hr style="border-top: 3px solid #7692FF;">
-    <h2>Continue Watching</h2>
-    <div class="row">
-        @if (Model.ContinueWatching != null && Model.ContinueWatching.Any())
-        {
-            foreach (var movie in Model.ContinueWatching)
-            {
-                <div class="col-sm-3 mb-4">
-                    <div class="card">
-                        <a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
-                            <img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
-                            <div class="card-body">
-                                <h5 class="card-title">@movie.Title</h5>
-                            </div>
-                            @if (movie.AverageRating.HasValue)
-                            {
-                                <span class="rating-star">
-                                    <i class="fas fa-star"></i> @movie.AverageRating.Value
-                                </span>
-                            }
-                        </a>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p>No movies in your continue watching list.</p>
-        }
-    </div>
-    <hr style="border-top: 3px solid #7692FF; margin-bottom: 100px;">
+	<h2>Based on Your Usage</h2>
+	<div class="row">
+		@if (Model.UsageBasedMovies != null && Model.UsageBasedMovies.Any())
+		{
+			foreach (var movie in Model.UsageBasedMovies)
+			{
+				<div class="col-sm-3 mb-4">
+					<div class="card">
+						<a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
+							<img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+							<div class="card-body">
+								<h5 class="card-title">@movie.Title</h5>
+							</div>
+							@if (movie.AverageRating.HasValue)
+							{
+								<span class="rating-star">
+									<i class="fas fa-star"></i> @movie.AverageRating.Value
+								</span>
+							}
+						</a>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<p>No usage-based movies to display.</p>
+		}
+	</div>
+	<hr style="border-top: 3px solid #7692FF;">
+	<h2>Continue Watching</h2>
+	<div class="row">
+		@if (Model.ContinueWatching != null && Model.ContinueWatching.Any())
+		{
+			foreach (var movie in Model.ContinueWatching)
+			{
+				<div class="col-sm-3 mb-4">
+					<div class="card">
+						<a asp-page-handler="WatchMovie" asp-route-movieId="@movie.Id">
+							<img class="card-img-top" src="@movie.PosterImageURL" alt="@movie.Title">
+							<div class="card-body">
+								<h5 class="card-title">@movie.Title</h5>
+							</div>
+							@if (movie.AverageRating.HasValue)
+							{
+								<span class="rating-star">
+									<i class="fas fa-star"></i> @movie.AverageRating.Value
+								</span>
+							}
+						</a>
+					</div>
+				</div>
+			}
+		}
+		else
+		{
+			<p>No movies in your continue watching list.</p>
+		}
+	</div>
+	<hr style="border-top: 3px solid #7692FF; margin-bottom: 100px;">
 </div>

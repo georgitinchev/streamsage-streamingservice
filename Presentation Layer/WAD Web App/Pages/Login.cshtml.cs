@@ -16,7 +16,7 @@ namespace StreamSageWAD.Pages
         public IWebController webController { get; private set; }
         public string? ReturnUrl { get; set; } = null;
         [BindNever]
-        public string? Message { get; set; } = "";
+        public string? Message { get; set; } = null;
 
         public LoginModel(IWebController webController)
         {
@@ -28,18 +28,18 @@ namespace StreamSageWAD.Pages
 
         public void OnGet(string ReturnUrl, string message = "")
         {
+            ModelState.Clear();
             this.ReturnUrl = string.IsNullOrEmpty(ReturnUrl) ? "/Index" : ReturnUrl;
-            this.Message = message ?? "";
+            this.Message = message;
         }
 
         public async Task<IActionResult> OnPostAsync(string ReturnUrl = null)
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-            ReturnUrl = string.IsNullOrEmpty(ReturnUrl) ? Url.Content("~/Index") : ReturnUrl;
-
+			if (!ModelState.IsValid)
+			{
+				this.ReturnUrl = ReturnUrl ?? Url.Content("~/Index");
+				return Page();
+			}
             try
             {
                 var user = webController.loginUser(loginDTO.Username, loginDTO.Password);
@@ -54,8 +54,9 @@ namespace StreamSageWAD.Pages
             {
                 ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
             }
-            return Page();
-        }
+			this.ReturnUrl = ReturnUrl ?? Url.Content("~/Index");
+			return Page();
+		}
 
         private async Task SignInUser(UserDTO user, bool isPersistent)
         {

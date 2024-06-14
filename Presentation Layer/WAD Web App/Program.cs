@@ -1,4 +1,5 @@
 using DataAccessLibrary;
+using Microsoft.Extensions.Configuration;
 using LogicClassLibrary.Algorithmic;
 using LogicClassLibrary.Helpers;
 using LogicClassLibrary.Interface.Algorhitmic;
@@ -10,6 +11,7 @@ using LogicClassLibrary.Service_Classes;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using StreamSageWAD;
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("StreamSageDb");
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IWebController, WebController>();
 builder.Services.AddScoped<IMovieService, MovieService>();
@@ -24,11 +26,11 @@ builder.Services.AddScoped<IInterpretationManager, InterpretationManager>();
 builder.Services.AddScoped<IRecommendationManager, RecommendationManager>();
 builder.Services.AddScoped<BehaviorBasedRecommendation>();
 builder.Services.AddScoped<ContentBasedRecommendation>();
-builder.Services.AddScoped<IPasswordHelper, PasswordHelper>(); 
-builder.Services.AddScoped<IMovieDAL, MovieDAL>();
-builder.Services.AddScoped<IUserDAL, UserDAL>();
-builder.Services.AddScoped<IReviewDAL, ReviewDAL>();
-builder.Services.AddScoped<IInterpretationDAL, InterpretationDAL>();
+builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
+builder.Services.AddScoped<IMovieDAL>(serviceProvider => new MovieDAL(connectionString));
+builder.Services.AddScoped<IUserDAL>(serviceProvider => new UserDAL(connectionString));
+builder.Services.AddScoped<IInterpretationDAL>(serviceProvider => new InterpretationDAL(connectionString));
+builder.Services.AddScoped<IReviewDAL>(serviceProvider => new ReviewDAL(connectionString));
 builder.Services.AddScoped<RandomPageSelector>();
 
 

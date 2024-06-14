@@ -16,6 +16,7 @@ namespace LogicClassLibrary.Interface.Service
         int GetTotalMovies();
         List<MovieDTO> SearchMovies(string criteria, string genre);
         bool MovieExists(int movieId);
+        List<MovieDTO> GetTopRatedMovies(int limit);
         // Genre Specific Methods that can be refactored separately
         void AddGenreToMovie(int movieId, string genre);
         void AddActorToMovie(int movieId, string actor);

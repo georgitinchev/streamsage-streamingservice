@@ -8,6 +8,7 @@ namespace DataAccessLibrary
 {
     public class ReviewDAL : BaseDAL, IReviewDAL
     {
+        public ReviewDAL(string connectionString) : base(connectionString) { }
         public void CreateReview(ReviewDTO review)
         {
             try

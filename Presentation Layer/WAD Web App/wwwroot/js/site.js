@@ -37,3 +37,19 @@ function toggleEditFormInterpretation(interpretationId) {
         form.style.display = "none";
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const searchForm = document.querySelector("form[action='/Library']");
+    if (searchForm) {
+        searchForm.addEventListener("submit", function (event) {
+            const genreSelect = searchForm.querySelector("select[name='genre']");
+            const searchInput = searchForm.querySelector("input[name='searchQuery']");
+            if (genreSelect && genreSelect.value === "") {
+                genreSelect.disabled = true;
+            }
+            if (searchInput && searchInput.value.trim() === "") {
+                searchInput.disabled = true;
+            }
+        });
+    }
+});

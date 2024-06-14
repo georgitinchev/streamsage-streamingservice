@@ -25,7 +25,14 @@
         <form method="post" asp-page-handler="UploadProfilePictureAsync" enctype="multipart/form-data">
             <div class="form-group mt-4">
                 <label for="profilePicture">Profile Picture</label>
-                @* <img style="width: 100px; height: 100px; margin-bottom: 20px" src="@(@Model.UserDetailsModel?.ProfilePicture != null ? $"data:image/png;base64,{Convert.ToBase64String(Model.UserDetailsModel.ProfilePicture)}" : "/img/placeholder_pfp.jpg")" alt="Profile Picture" /> *@
+                @if (Model.UserDetailsModel?.ProfilePicture != null && Model.UserDetailsModel.ProfilePicture.Length > 0)
+                {
+                    <img style="width: 100px; height: 100px; margin-bottom: 20px" src="@($"data:image/png;base64,{Convert.ToBase64String(Model.UserDetailsModel.ProfilePicture)}")" alt="Profile Picture" />
+                }
+                else
+                {
+                    <img style="width: 100px; height: 100px; margin-bottom: 20px" src="/img/placeholder_pfp.jpg" alt="Profile Picture" />
+                }
                 <input id="profilePicture" class="form-control" type="file" asp-for="ProfilePictureModel.ProfilePicture" />
             </div>
             <div class="center-button">
