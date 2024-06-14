@@ -16,5 +16,7 @@ namespace StreamSageWAD.Models
 
 		[BindProperty, Required]
 		public string? LastName { get; set; }
+		[BindProperty]
+		public byte[]? ProfilePicture { get; set; }
 	}
 }

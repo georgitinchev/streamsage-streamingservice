@@ -13,6 +13,7 @@ namespace DataAccessLibrary
         int GetTotalMovies();
         List<MovieDTO> GetMoviesPage(int pageNum, int pageSize);
         bool MovieExists(int movieId);
+        List<MovieDTO> GetTopRatedMovies(int limit);
         // Genre Specific Methods that can be refactored separately
         List<string> GetAllGenres();
         public void AddGenreToMovie(int movieId, string genre);

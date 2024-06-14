@@ -134,7 +134,7 @@ namespace DesktopApp.Forms
                 await DisplayErrorAsync(updateStatusLabel, validationError);
                 return;
             }
-            var averageRatingError = MovieValidation.ValidateAverageRating(averageRatingTextBox.Text, out decimal averageRating);
+            var averageRatingError = MovieValidation.ValidateAverageRating(updateAverageRatingTextBox.Text, out decimal averageRating);
             if (!string.IsNullOrEmpty(averageRatingError))
             {
                 await DisplayErrorAsync(updateStatusLabel, averageRatingError);
@@ -142,7 +142,8 @@ namespace DesktopApp.Forms
             }
             try
             {
-                desktopController.MovieService.UpdateMovie(currentMovieId, movieTitleBox.Text, movieYearPicker.Value, descriptionTextBox.Text, posterUrlTextBox.Text, trailerUrlTextBox.Text, runtime, decimal.Parse(averageRatingTextBox.Text), GetSelectedGenres(updateMovieCheckListBox), new List<string>(), new List<string>());
+                var currentMovie = desktopController.MovieService.GetMovie(currentMovieId);
+                desktopController.MovieService.UpdateMovie(currentMovieId, movieTitleBox.Text, movieYearPicker.Value, descriptionTextBox.Text, posterUrlTextBox.Text, trailerUrlTextBox.Text, runtime, averageRating, GetSelectedGenres(updateMovieCheckListBox), currentMovie.Actors, currentMovie.Directors);
                 await DisplayErrorAsync(updateStatusLabel, "Movie updated successfully!");
                 LoadMoviesPage();
                 UIStyler.LoadImageIntoPictureBox(posterUrlTextBox.Text, updateMoviePictureBox);
@@ -152,7 +153,6 @@ namespace DesktopApp.Forms
                 await DisplayErrorAsync(updateStatusLabel, ex.Message);
             }
         }
-
 
         private static async Task DisplayErrorAsync(Label label, string message)
         {

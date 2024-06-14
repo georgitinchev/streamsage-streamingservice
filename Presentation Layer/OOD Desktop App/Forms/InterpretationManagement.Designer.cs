@@ -52,9 +52,6 @@
             createMovieIdNumeric = new NumericUpDown();
             previousPageBtnInterpretations = new Button();
             nextPageBtnInterpretations = new Button();
-            searchBarInterpretations = new TextBox();
-            searchBtnInterpretations = new Button();
-            filterBarInterpretations = new ComboBox();
             addInterpretationBtn = new Button();
             interpretationDashHomeBtn = new PictureBox();
             totalInterpretationsLabel = new Label();
@@ -342,35 +339,6 @@
             nextPageBtnInterpretations.UseVisualStyleBackColor = false;
             nextPageBtnInterpretations.Click += nextPageBtnInterpretations_Click;
             // 
-            // searchBarInterpretations
-            // 
-            searchBarInterpretations.Font = new Font("Rockwell", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            searchBarInterpretations.Location = new Point(307, 13);
-            searchBarInterpretations.Name = "searchBarInterpretations";
-            searchBarInterpretations.Size = new Size(773, 30);
-            searchBarInterpretations.TabIndex = 15;
-            // 
-            // searchBtnInterpretations
-            // 
-            searchBtnInterpretations.Font = new Font("Rockwell", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            searchBtnInterpretations.Location = new Point(1111, 12);
-            searchBtnInterpretations.Name = "searchBtnInterpretations";
-            searchBtnInterpretations.Size = new Size(198, 31);
-            searchBtnInterpretations.TabIndex = 16;
-            searchBtnInterpretations.Text = "Search 🔍";
-            searchBtnInterpretations.UseVisualStyleBackColor = true;
-            searchBtnInterpretations.Click += searchBtnInterpretations_Click;
-            // 
-            // filterBarInterpretations
-            // 
-            filterBarInterpretations.Font = new Font("Rockwell", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            filterBarInterpretations.FormattingEnabled = true;
-            filterBarInterpretations.Location = new Point(1328, 12);
-            filterBarInterpretations.Name = "filterBarInterpretations";
-            filterBarInterpretations.Size = new Size(319, 31);
-            filterBarInterpretations.TabIndex = 17;
-            filterBarInterpretations.SelectedIndexChanged += filterBarInterpretations_SelectedIndexChanged;
-            // 
             // addInterpretationBtn
             // 
             addInterpretationBtn.BackColor = Color.MediumTurquoise;
@@ -424,9 +392,6 @@
             Controls.Add(totalInterpretationsLabel);
             Controls.Add(interpretationDashHomeBtn);
             Controls.Add(addInterpretationBtn);
-            Controls.Add(filterBarInterpretations);
-            Controls.Add(searchBtnInterpretations);
-            Controls.Add(searchBarInterpretations);
             Controls.Add(nextPageBtnInterpretations);
             Controls.Add(previousPageBtnInterpretations);
             Controls.Add(interpretationViewTabCtrl);
@@ -449,7 +414,6 @@
             ((System.ComponentModel.ISupportInitialize)createMovieIdNumeric).EndInit();
             ((System.ComponentModel.ISupportInitialize)interpretationDashHomeBtn).EndInit();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion

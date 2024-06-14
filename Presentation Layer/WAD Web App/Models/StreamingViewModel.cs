@@ -4,7 +4,7 @@ namespace StreamSageWAD.Models
 {
     public class StreamingViewModel
     {
-        public MovieDTO MovieDetails { get; set; }
+        public MovieDTO? MovieDetails { get; set; }
         public List<ReviewDTO> UserReviews { get; set; }
         public List<ReviewDTO> OtherReviews { get; set; }
         public List<InterpretationDTO> UserInterpretations { get; set; }

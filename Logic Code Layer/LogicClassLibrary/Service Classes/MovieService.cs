@@ -133,7 +133,19 @@ namespace LogicClassLibrary.Service_Classes
             }
         }
 
-        public int GetTotalMovies()
+		public List<MovieDTO> GetTopRatedMovies(int limit)
+		{
+            try
+            {
+				var movies = movieManager.GetTopRatedMovies(limit);
+				return movies.Select(movieManager.TransformEntityToDTO).ToList();
+			}
+			catch (GetAllEntitiesError ex)
+            {
+				throw new GetAllEntitiesError("Error while getting top rated movies", ex);
+			}
+		}
+		public int GetTotalMovies()
         {
             try
             {

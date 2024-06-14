@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using StreamSageWAD.Models;
 using System.Linq;
 using System.Security.Claims;
+using LogicClassLibrary.Exceptions;
 
 namespace StreamSageWAD.Pages
 {
@@ -56,112 +57,192 @@ namespace StreamSageWAD.Pages
             {
                 return NotFound();
             }
-            webController.UserService.AddToRecentlyWatched(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), movieId);
-            return Page();
+            try
+            {
+                webController.UserService.AddToRecentlyWatched(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), movieId);
+                return Page();
+            }
+            catch (UserServiceException ex)
+            {
+                TempData["ErrorMessage"] = "An error occurred while adding to recently watched: " + ex.Message;
+                return RedirectToPage("/Error");
+            }
         }
 
-        public IActionResult OnPostSubmitReview()
+        public IActionResult OnPostSubmitReview(int movieId)
         {
-            if (!ModelState.IsValid)
+            ModelState.Clear();
+            if (!TryValidateModel(Interpretation))
             {
-                PopulatePageData(CurrentMovieId);
+                PopulatePageData(movieId);
                 return Page();
             }
 
-            Review.MovieId = CurrentMovieId; // Ensure the correct MovieId is set
-            webController.ReviewService.AddReview(new ReviewDTO(
-                0, int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), CurrentMovieId,
-                Review.Title, Review.Content, Review.Rating, DateTime.Now));
+            try
+            {
+                Review.MovieId = movieId;
+                webController.ReviewService.AddReview(new ReviewDTO(
+                    0, int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), movieId,
+                    Review.Title, Review.Content, Review.Rating, DateTime.Now));
 
-            return RedirectToPage(new { movieId = CurrentMovieId });
+                return RedirectToPage(new { movieId });
+            }
+            catch (CreateReviewError ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                PopulatePageData(movieId);
+                return Page();
+            }
         }
 
-        public IActionResult OnPostEditReview(int reviewId, string updatedTitle, string updatedContent, int updatedRating)
+        public IActionResult OnPostEditReview(int reviewId, string updatedTitle, string updatedContent, int updatedRating, int movieId)
         {
-            var review = webController.ReviewService.GetReview(reviewId);
-            if (review == null)
+            try
             {
-                ModelState.AddModelError("", "Review not found.");
+                var review = webController.ReviewService.GetReview(reviewId);
+                if (review == null)
+                {
+                    ModelState.AddModelError("", "Review not found.");
+                    PopulatePageData(movieId);
+                    return Page();
+                }
+                webController.ReviewService.UpdateReview(new ReviewDTO(
+                    reviewId, review.UserId, movieId, updatedTitle, updatedContent, updatedRating, review.ReviewDate));
+                return RedirectToPage(new { movieId = movieId });
+            }
+            catch (UpdateReviewError ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                PopulatePageData(movieId);
+                return Page();
+            }
+        }
+
+        public IActionResult OnPostDeleteReview(int reviewId, int movieId)
+        {
+            try
+            {
+                webController.ReviewService.DeleteReview(reviewId);
+                return RedirectToPage(new { movieId = movieId });
+            }
+            catch (DeleteReviewError ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                PopulatePageData(movieId);
+                return Page();
+            }
+        }
+
+        public IActionResult OnPostSubmitInterpretation(int movieId)
+        {
+            ModelState.Clear();
+            if (!TryValidateModel(Interpretation))
+            {
+                PopulatePageData(movieId);
                 return Page();
             }
 
-            webController.ReviewService.UpdateReview(new ReviewDTO(
-                reviewId, review.UserId, CurrentMovieId, updatedTitle, updatedContent, updatedRating, review.ReviewDate));
-
-            return RedirectToPage(new { movieId = CurrentMovieId });
-        }
-
-        public IActionResult OnPostDeleteReview(int reviewId)
-        {
-            webController.ReviewService.DeleteReview(reviewId);
-            return RedirectToPage(new { movieId = CurrentMovieId });
-        }
-
-        public IActionResult OnPostSubmitInterpretation()
-        {
-            if (!ModelState.IsValid)
+            try
             {
-                PopulatePageData(CurrentMovieId);
+                Interpretation.MovieId = movieId;
+                webController.InterpretationService.AddInterpretation(new InterpretationDTO(
+                    0, int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), movieId,
+                    Interpretation.InterpretationText, DateTime.Now));
+            }
+            catch (CreateInterpretationError ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                PopulatePageData(movieId);
                 return Page();
             }
 
-            Interpretation.MovieId = CurrentMovieId; // Ensure the correct MovieId is set
-            webController.InterpretationService.AddInterpretation(new InterpretationDTO(
-                0, int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), CurrentMovieId,
-                Interpretation.InterpretationText, DateTime.Now));
-
-            return RedirectToPage(new { movieId = CurrentMovieId });
+            return RedirectToPage(new { movieId = movieId });
         }
 
-        public IActionResult OnPostEditInterpretation(int interpretationId, string updatedInterpretationText)
+        public IActionResult OnPostEditInterpretation(int interpretationId, string updatedInterpretationText, int movieId)
         {
-            var interpretation = webController.InterpretationService.GetInterpretationById(interpretationId);
-            if (interpretation == null)
+            try
             {
-                ModelState.AddModelError("", "Interpretation not found.");
+                var interpretation = webController.InterpretationService.GetInterpretationById(interpretationId);
+                if (interpretation == null)
+                {
+                    ModelState.AddModelError("", "Interpretation not found.");
+                    PopulatePageData(movieId);
+                    return Page();
+                }
+                interpretation.InterpretationText = updatedInterpretationText;
+                webController.InterpretationService.UpdateInterpretation(interpretation);
+                return RedirectToPage(new { movieId = movieId });
+            }
+            catch (UpdateInterpretationError ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                PopulatePageData(movieId);
                 return Page();
             }
-
-            interpretation.InterpretationText = updatedInterpretationText;
-            webController.InterpretationService.UpdateInterpretation(interpretation);
-
-            return RedirectToPage(new { movieId = CurrentMovieId });
         }
 
-        public IActionResult OnPostDeleteInterpretation(int interpretationId)
+        public IActionResult OnPostDeleteInterpretation(int interpretationId, int movieId)
         {
-            webController.InterpretationService.DeleteInterpretation(interpretationId);
-            return RedirectToPage(new { movieId = CurrentMovieId });
+            try
+            {
+                webController.InterpretationService.DeleteInterpretation(interpretationId);
+                return RedirectToPage(new { movieId = movieId });
+            }
+            catch (DeleteInterpretationError ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                PopulatePageData(movieId);
+                return Page();
+            }
         }
 
         // OnPost method for toggling the watchlist
         public IActionResult OnPostToggleWatchlist(int movieId)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            if (ViewModel.UserWatchList.Contains(movieId))
+            try
             {
-                webController.UserService.RemoveFromWatchlist(userId, movieId);
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+                if (ViewModel.UserWatchList.Contains(movieId))
+                {
+                    webController.UserService.RemoveFromWatchlist(userId, movieId);
+                }
+                else
+                {
+                    webController.UserService.AddToWatchlist(userId, movieId);
+                }
+                return RedirectToPage(new { movieId = movieId });
             }
-            else
+            catch (UserServiceException ex)
             {
-                webController.UserService.AddToWatchlist(userId, movieId);
+                ModelState.AddModelError("", ex.Message);
+                PopulatePageData(movieId);
+                return Page();
             }
-            return RedirectToPage(new { movieId = movieId });
         }
 
         // OnPost method for toggling the favorites
         public IActionResult OnPostToggleFavorites(int movieId)
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            if (ViewModel.UserFavorites.Contains(movieId))
+            try
             {
-                webController.UserService.RemoveFromFavorites(userId, movieId);
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+                if (ViewModel.UserFavorites.Contains(movieId))
+                {
+                    webController.UserService.RemoveFromFavorites(userId, movieId);
+                }
+                else
+                {
+                    webController.UserService.AddToFavorites(userId, movieId);
+                }
+                return RedirectToPage(new { movieId = movieId });
             }
-            else
+            catch (UserServiceException ex)
             {
-                webController.UserService.AddToFavorites(userId, movieId);
+                ModelState.AddModelError("", ex.Message);
+                PopulatePageData(movieId);
+                return Page();
             }
-            return RedirectToPage(new { movieId = movieId });
         }
     }
 }

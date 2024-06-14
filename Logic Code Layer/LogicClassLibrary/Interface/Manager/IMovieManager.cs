@@ -14,6 +14,7 @@ namespace LogicClassLibrary.Interface.Manager
         void Delete(int id);
         int GetNewMovieId(MovieDTO movie);
         int GetTotalMovies();
+        List<Movie> GetTopRatedMovies(int limit);
         List<Movie> GetMoviesPage(int pageNumber, int pageSize);
         List<Movie> SearchMovies(string criteria, string genre);
         Movie TransformDTOToEntity(MovieDTO dto);

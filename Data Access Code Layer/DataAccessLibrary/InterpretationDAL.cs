@@ -9,6 +9,9 @@ namespace DataAccessLibrary
 {
     public class InterpretationDAL : BaseDAL, IInterpretationDAL
     {
+        public InterpretationDAL(string connectionString) : base(connectionString)
+        {
+        }
         public List<InterpretationDTO> ReadAllInterpretations()
         {
             try

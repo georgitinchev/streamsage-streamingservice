@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using LogicClassLibrary.Service_Classes;
+using LogicClassLibrary.Exceptions;
 
 namespace StreamSageWAD.Pages
 {
@@ -44,23 +46,33 @@ namespace StreamSageWAD.Pages
         public async Task<IActionResult> OnPostUploadProfilePictureAsync()
         {
             ModelState.Clear();
-            if (ProfilePictureModel.ProfilePicture != null && ProfilePictureModel.ProfilePicture.Length > 0)
+            if(!TryValidateModel(ProfilePictureModel))
             {
-                var supportedTypes = new[] { "jpg", "jpeg", "png" };
-                var fileExt = Path.GetExtension(ProfilePictureModel.ProfilePicture.FileName).Substring(1);
-                if (!supportedTypes.Contains(fileExt))
+                return Page();
+            }
+            try
+            {
+                if (ProfilePictureModel.ProfilePicture != null && ProfilePictureModel.ProfilePicture.Length > 0)
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid file type. Only jpg, jpeg, and png files are supported.");
-                    return Page();
+                    var supportedTypes = new[] { "jpg", "jpeg", "png" };
+                    var fileExt = Path.GetExtension(ProfilePictureModel.ProfilePicture.FileName).Substring(1);
+                    if (!supportedTypes.Contains(fileExt))
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid file type. Only jpg, jpeg, and png files are supported.");
+                        return Page();
+                    }
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await ProfilePictureModel.ProfilePicture.CopyToAsync(memoryStream);
+                        var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                        var user = _webController.UserService.Read(userId);
+                        _webController.UserService.UpdateProfilePicture(userId, memoryStream.ToArray());
+                    }
                 }
-
-                using (var memoryStream = new MemoryStream())
-                {
-                    await ProfilePictureModel.ProfilePicture.CopyToAsync(memoryStream);
-                    var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                    var user = _webController.UserService.Read(userId);
-                    _webController.UserService.UpdateProfilePicture(userId, memoryStream.ToArray());
-                }
+            } catch(UserServiceException e)
+            {
+                TempData["ErrorMessage"] = $"An error occurred. Please try again. {e.Message}";
+                return Page();
             }
             TempData["SuccessMessage"] = "Profile picture uploaded successfully.";
             return RedirectToPage();
@@ -70,12 +82,10 @@ namespace StreamSageWAD.Pages
         public async Task<IActionResult> OnPostUpdateUserDetails()
         {
             ModelState.Clear();
-            TryValidateModel(UserDetailsModel);
-            if (!ModelState.IsValid)
+            if (!TryValidateModel(UserDetailsModel))
             {
                 return Page();
             }
-
             try
             {
                 var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -114,7 +124,10 @@ namespace StreamSageWAD.Pages
             {
                 TempData["ErrorMessage"] = $"An error occurred. Please try again. {e.Message}";
             }
-
+            catch (UserServiceException e)
+            {
+                TempData["ErrorMessage"] = $"An error occurred. Please try again. {e.Message}";
+            }
             return Page();
         }
 
@@ -123,8 +136,7 @@ namespace StreamSageWAD.Pages
         public IActionResult OnPostChangePassword()
         {
             ModelState.Clear();
-            TryValidateModel(ChangePasswordModel);
-            if (!ModelState.IsValid)
+            if (!TryValidateModel(ChangePasswordModel))
             {
                 return Page();
             }
@@ -143,20 +155,33 @@ namespace StreamSageWAD.Pages
             {
                 TempData["ErrorMessage"] = $"An error occurred. Please try again. {e.Message}";
             }
+            catch(UserServiceException e)
+            {
+                TempData["ErrorMessage"] = $"An error occurred. Please try again. {e.Message}";
+            }
 
             return Page();
         }
 
         private void LoadUserDetails()
         {
-            var user = _webController.UserService.Read(int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value));
-            UserDetailsModel = new UserDetailsModel
+            try
             {
-                Username = user.Username,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-            };
+                var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var user = _webController.UserService.Read(userId);
+                UserDetailsModel = new UserDetailsModel
+                {
+                    Username = user.Username,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    ProfilePicture = user.ProfilePictureURL
+                };
+            }
+            catch (UserServiceException e)
+            {
+                TempData["ErrorMessage"] = $"An error occurred. Please try again. {e.Message}";
+            }
         }
     }
 }

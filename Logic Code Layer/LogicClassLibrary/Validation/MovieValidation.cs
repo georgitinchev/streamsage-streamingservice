@@ -57,7 +57,6 @@ namespace LogicClassLibrary.Validation
             }
             return string.Empty;
         }
-
     }
 }
 
