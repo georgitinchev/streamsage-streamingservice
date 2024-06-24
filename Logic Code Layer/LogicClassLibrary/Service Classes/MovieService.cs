@@ -32,6 +32,10 @@ namespace LogicClassLibrary.Service_Classes
         {
             try
             {
+                if(id < 1 || id > 3000)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(id), "Movie ID must be between 1 and 3000.");
+                }
                 return movieManager.Read(id);
             }
             catch (Exception ex)

@@ -6,13 +6,8 @@ $(document).ready(function () {
     $('.edit-button').click(function () {
         $(this).next('.edit-form').show();
     });
-
     // Hide the loading spinner
     $('#loadingSpinner').hide();
-});
-
-$('form[asp-page-handler="ChangePassword"]').on('submit', function () {
-    return confirm('Are you sure you want to change your password?');
 });
 
 function toggleEditForm(reviewId) {

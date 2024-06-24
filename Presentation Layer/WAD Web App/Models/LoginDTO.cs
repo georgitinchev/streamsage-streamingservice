@@ -4,7 +4,7 @@ namespace StreamSageWAD.Models
 {
 	public class LoginDTO
 	{
-		[Required(ErrorMessage = "Username is required.")]
+		[Required(ErrorMessage = "Username is required."), MinLength(5)]
 		public string? Username { get; set; }
 
 		[Required(ErrorMessage = "Password is required.")]

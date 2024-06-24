@@ -4,9 +4,9 @@ namespace StreamSageWAD.Models
 {
     public class RegisterDTO
     {
-        [Required(ErrorMessage = "Username is required.")]
+        [Required(ErrorMessage = "Username is required."), MinLength(5)]
         public string? Username { get; set; }
-        [Required(ErrorMessage = "Password is required.")]
+        [Required(ErrorMessage = "Password is required."), MinLength(5)]
         [DataType(DataType.Password)]
         public string? Password { get; set; }
         [Required(ErrorMessage = "Repeat Password is required.")]
@@ -18,10 +18,10 @@ namespace StreamSageWAD.Models
         [EmailAddress(ErrorMessage = "Invalid Email Address.")]
         public string? Email { get; set; }
 
-        [Required(ErrorMessage = "First Name is required.")]
+        [Required(ErrorMessage = "First Name is required."), MinLength(3)]
         public string? FirstName { get; set; }
 
-        [Required(ErrorMessage = "Last Name is required.")]
+        [Required(ErrorMessage = "Last Name is required."),  MinLength(3)]
         public string? LastName { get; set; }
     }
 }
