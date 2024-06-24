@@ -10,8 +10,8 @@ namespace StreamSageWAD.Models
 
         public int MovieId { get; set; }
 
-        [Required]
-        public string InterpretationText { get; set; }
+        [Required(ErrorMessage = "Interpretation text is required")]
+        public string? InterpretationText { get; set; }
 
         public DateTime InterpretationDate { get; set; }
     }

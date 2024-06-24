@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Data Access Code Layer\DataAccessLibrary\DataAccessLibrary.csproj" />
+    <ProjectReference Include="..\DTOs\DTOs.csproj" />
+    <ProjectReference Include="..\Logic Code Layer\LogicClassLibrary\LogicClassLibrary.csproj" />
+    <ProjectReference Include="..\Presentation Layer\WAD Web App\StreamSageWAD.csproj" />
+  </ItemGroup>
+
+</Project>

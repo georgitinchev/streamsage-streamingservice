@@ -1,0 +1,424 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="DataAccessLibrary.BaseDAL">
+    <Position X="6.25" Y="8.5" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DataAccessLibrary.MovieDAL">
+    <Position X="1.5" Y="11.25" Width="2.25" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DataAccessLibrary.ReviewDAL">
+    <Position X="4.5" Y="12" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DataAccessLibrary.UserDAL">
+    <Position X="7.25" Y="11.5" Width="3" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DataAccessLibrary.InterpretationDAL">
+    <Position X="11.25" Y="12" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DataAccessLibrary.Exception.DataAccessException">
+    <Position X="41.75" Y="0.5" Width="3.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DTOs.InterpretationDTO">
+    <Position X="15" Y="13.75" Width="3.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DTOs.MovieDTO">
+    <Position X="18.75" Y="13.75" Width="2.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DTOs.ReviewDTO">
+    <Position X="22.25" Y="13.75" Width="2.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DTOs.UserDTO">
+    <Position X="25.75" Y="13.75" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="DTOs.UserSettingsDTO">
+    <Position X="28.75" Y="13.75" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Algorithmic.BehaviorBasedRecommendation">
+    <Position X="4.75" Y="18.25" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogicClassLibrary.Algorithmic.ContentBasedRecommendation">
+    <Position X="9" Y="18.25" Width="3" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogicClassLibrary.Entities.Entity">
+    <Position X="35.75" Y="9.75" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Entities.Interpretation">
+    <Position X="32" Y="12.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Entities.Movie">
+    <Position X="34.5" Y="12.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Entities.Review">
+    <Position X="39.75" Y="12.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Entities.User">
+    <Position X="37" Y="12.5" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Entities.UserSettings">
+    <Position X="42.5" Y="12.75" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.InvalidGenreException" Collapsed="true">
+    <Position X="51.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.UpdateEntityError" Collapsed="true">
+    <Position X="57" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.SearchCriteriaError" Collapsed="true">
+    <Position X="53.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.PopulatingEntityError" Collapsed="true">
+    <Position X="57" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.DeleteEntityError" Collapsed="true">
+    <Position X="57" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.NotFoundException" Collapsed="true">
+    <Position X="53.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.CreateEntityError" Collapsed="true">
+    <Position X="50" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.PaginatorException" Collapsed="true">
+    <Position X="55.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.InvalidException" Collapsed="true">
+    <Position X="50" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.TransformationException" Collapsed="true">
+    <Position X="55.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.ReadEntityError" Collapsed="true">
+    <Position X="58.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetTotalEntitiesError" Collapsed="true">
+    <Position X="55.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetAllEntitiesError" Collapsed="true">
+    <Position X="51.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.AuthException" Collapsed="true">
+    <Position X="48.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.RegistrationException" Collapsed="true">
+    <Position X="51.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.UserServiceException" Collapsed="true">
+    <Position X="46.25" Y="2" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.UserAuthenticationException" Collapsed="true">
+    <Position X="46.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.ReadReviewError" Collapsed="true">
+    <Position X="50" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetAllReviewsError" Collapsed="true">
+    <Position X="57" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetReviewsPageError" Collapsed="true">
+    <Position X="53.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetReviewsByMovieIdError" Collapsed="true">
+    <Position X="51.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.CreateReviewError" Collapsed="true">
+    <Position X="55.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.UpdateReviewError" Collapsed="true">
+    <Position X="50" Y="5.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.DeleteReviewError" Collapsed="true">
+    <Position X="50" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetTotalReviewsError" Collapsed="true">
+    <Position X="48.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.ReadInterpretationError" Collapsed="true">
+    <Position X="48.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetAllInterpretationsError" Collapsed="true">
+    <Position X="53.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetInterpretationsPageError" Collapsed="true">
+    <Position X="48.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetInterpretationsByMovieIdError" Collapsed="true">
+    <Position X="58.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.CreateInterpretationError" Collapsed="true">
+    <Position X="51.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.UpdateInterpretationError" Collapsed="true">
+    <Position X="58.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.DeleteInterpretationError" Collapsed="true">
+    <Position X="58.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetTotalInterpretationsError" Collapsed="true">
+    <Position X="57" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.CreateMovieError" Collapsed="true">
+    <Position X="53.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.UpdateMovieError" Collapsed="true">
+    <Position X="48.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.DeleteMovieError" Collapsed="true">
+    <Position X="48.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetMovieError" Collapsed="true">
+    <Position X="50" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetAllMoviesError" Collapsed="true">
+    <Position X="55.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Exceptions.GetTotalMoviesError" Collapsed="true">
+    <Position X="58.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Helpers.AnalyticsHelper">
+    <Position X="19.25" Y="9.75" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Helpers.PasswordHelper">
+    <Position X="21.75" Y="9.75" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogicClassLibrary.Helpers.RandomPageSelector">
+    <Position X="24" Y="9.75" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Managers.GeneralManager&lt;TDto, TEntity&gt;">
+    <Position X="17.5" Y="18.75" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Managers.InterpretationManager">
+    <Position X="13.25" Y="22.25" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogicClassLibrary.Managers.MovieManager">
+    <Position X="18.75" Y="22.25" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogicClassLibrary.Managers.RecommendationManager">
+    <Position X="21.5" Y="19.25" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogicClassLibrary.Managers.ReviewManager">
+    <Position X="16.25" Y="22.25" Width="2.25" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogicClassLibrary.Managers.UserManager">
+    <Position X="21.5" Y="22.25" Width="3" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LogicClassLibrary.Service_Classes.InterpretationService" BaseTypeListCollapsed="true">
+    <Position X="1.25" Y="21" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LogicClassLibrary.Service_Classes.MovieService" BaseTypeListCollapsed="true">
+    <Position X="4.25" Y="21" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LogicClassLibrary.Service_Classes.RecommendationService" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="21" Width="2.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LogicClassLibrary.Service_Classes.ReviewService" BaseTypeListCollapsed="true">
+    <Position X="1.25" Y="24" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LogicClassLibrary.Service_Classes.UserService" BaseTypeListCollapsed="true">
+    <Position X="7.25" Y="22.5" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LogicClassLibrary.Validation.InterpretationValidation">
+    <Position X="30.5" Y="21" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Validation.MovieAdditionalsValidation">
+    <Position X="32.25" Y="21" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Validation.MovieValidation">
+    <Position X="34.75" Y="21" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.Validation.ReviewValidation">
+    <Position X="34.5" Y="22.75" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="LogicClassLibrary.NewFolder.UserValidation">
+    <Position X="31.5" Y="22.75" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="StreamSageWAD.WebController">
+    <Position X="41.25" Y="5" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DesktopApp.DesktopController" BaseTypeListCollapsed="true">
+    <Position X="32" Y="26.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>GQAAgBAIQACgGAAEgAAAgAAAA4AAxCAoIQAgIAEQAFE=</HashCode>
+      <FileName>DesktopController.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DesktopApp.UIStyler">
+    <Position X="35" Y="26.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>EAAIgAQAAAAAAEAAAACACAQAAAAAABEAACMAAAAAAAA=</HashCode>
+      <FileName>UIStyler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="DataAccessLibrary.IInterpretationDAL">
+    <Position X="0.75" Y="0.75" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DataAccessLibrary.IMovieDAL">
+    <Position X="3.5" Y="0.75" Width="2.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DataAccessLibrary.IUserDAL">
+    <Position X="6.75" Y="0.75" Width="3" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DataAccessLibrary.IReviewDAL">
+    <Position X="10" Y="0.75" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Algorhitmic.IRecommendationStrategy">
+    <Position X="14.5" Y="1.75" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Helpers.IPasswordHelper">
+    <Position X="14.5" Y="3" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Manager.IInterpretationManager">
+    <Position X="20.75" Y="0.75" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Manager.IMovieManager">
+    <Position X="23.25" Y="0.75" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Manager.IRecommendationManager">
+    <Position X="20.75" Y="4" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Manager.IReviewManager">
+    <Position X="20.75" Y="5.5" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Manager.IUserManager">
+    <Position X="18.25" Y="0.75" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Service.IInterpretationService">
+    <Position X="27.5" Y="3.75" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Service.IMovieService">
+    <Position X="32.5" Y="0.75" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Service.IRecommendationService">
+    <Position X="30" Y="5.25" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Service.IReviewService">
+    <Position X="27.75" Y="1" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="LogicClassLibrary.Interface.Service.IUserService">
+    <Position X="30" Y="1" Width="2.25" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="StreamSageWAD.IWebController">
+    <Position X="38.75" Y="5" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="DesktopApp.IDesktopController">
+    <Position X="27.75" Y="25.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>GQAAgBAIQACgGAAEgAAAgAAAAYAAxCAoIQAgIAEQAEE=</HashCode>
+      <FileName>IDesktopController.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

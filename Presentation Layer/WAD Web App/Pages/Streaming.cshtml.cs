@@ -29,38 +29,22 @@ namespace StreamSageWAD.Pages
             ViewModel = new StreamingViewModel();
         }
 
-        private void PopulatePageData(int movieId)
-        {
-            ViewModel.MovieDetails = webController.MovieService.GetMovie(movieId);
-            if (ViewModel.MovieDetails != null)
-            {
-                CurrentMovieId = ViewModel.MovieDetails.Id;
-                UserDTO user = webController.UserService.Read(User.Identity.Name);
-                if (user != null)
-                {
-                    var allReviews = webController.ReviewService.GetReviewsByMovieId(CurrentMovieId);
-                    var allInterpretations = webController.InterpretationService.GetInterpretationsByMovieId(CurrentMovieId);
-                    ViewModel.UserReviews = allReviews.Where(r => r.UserId == user.Id).ToList();
-                    ViewModel.OtherReviews = allReviews.Except(ViewModel.UserReviews).ToList();
-                    ViewModel.UserInterpretations = allInterpretations.Where(i => i.UserId == user.Id).ToList();
-                    ViewModel.OtherInterpretations = allInterpretations.Except(ViewModel.UserInterpretations).ToList();
-                    ViewModel.UserWatchList = user.WatchList?.Select(w => w.Id).ToList() ?? new List<int>();
-                    ViewModel.UserFavorites = user.FavoriteMovies?.Select(f => f.Id).ToList() ?? new List<int>();
-                }
-            }
-        }
-
         public IActionResult OnGet(int movieId)
         {
-            PopulatePageData(movieId);
-            if (ViewModel.MovieDetails == null)
-            {
-                return NotFound();
-            }
             try
             {
+                PopulatePageData(movieId);
+                if (ViewModel.MovieDetails == null)
+                {
+                    return NotFound();
+                }
                 webController.UserService.AddToRecentlyWatched(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), movieId);
                 return Page();
+            }
+            catch (ReadEntityError ex) when (ex.InnerException is ArgumentOutOfRangeException)
+            {
+                TempData["ErrorMessage"] = "Specified movie does not exist: " + ex.InnerException.Message;
+                return RedirectToPage("/Error");
             }
             catch (UserServiceException ex)
             {
@@ -72,24 +56,22 @@ namespace StreamSageWAD.Pages
         public IActionResult OnPostSubmitReview(int movieId)
         {
             ModelState.Clear();
-            if (!TryValidateModel(Interpretation))
+            if (!TryValidateModel(Review))
             {
                 PopulatePageData(movieId);
                 return Page();
             }
-
             try
             {
                 Review.MovieId = movieId;
                 webController.ReviewService.AddReview(new ReviewDTO(
                     0, int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), movieId,
                     Review.Title, Review.Content, Review.Rating, DateTime.Now));
-
                 return RedirectToPage(new { movieId });
             }
             catch (CreateReviewError ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                ModelState.AddModelError(Review.Title, ex.Message);
                 PopulatePageData(movieId);
                 return Page();
             }
@@ -108,11 +90,11 @@ namespace StreamSageWAD.Pages
                 }
                 webController.ReviewService.UpdateReview(new ReviewDTO(
                     reviewId, review.UserId, movieId, updatedTitle, updatedContent, updatedRating, review.ReviewDate));
-                return RedirectToPage(new { movieId = movieId });
+                return RedirectToPage(new { movieId });
             }
             catch (UpdateReviewError ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                ModelState.AddModelError(Review.Title, ex.Message);
                 PopulatePageData(movieId);
                 return Page();
             }
@@ -123,11 +105,11 @@ namespace StreamSageWAD.Pages
             try
             {
                 webController.ReviewService.DeleteReview(reviewId);
-                return RedirectToPage(new { movieId = movieId });
+                return RedirectToPage(new { movieId });
             }
             catch (DeleteReviewError ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                ModelState.AddModelError(Review.Title, ex.Message);
                 PopulatePageData(movieId);
                 return Page();
             }
@@ -151,12 +133,12 @@ namespace StreamSageWAD.Pages
             }
             catch (CreateInterpretationError ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                ModelState.AddModelError(Interpretation.InterpretationText, ex.Message);
                 PopulatePageData(movieId);
                 return Page();
             }
 
-            return RedirectToPage(new { movieId = movieId });
+            return RedirectToPage(new { movieId });
         }
 
         public IActionResult OnPostEditInterpretation(int interpretationId, string updatedInterpretationText, int movieId)
@@ -172,11 +154,11 @@ namespace StreamSageWAD.Pages
                 }
                 interpretation.InterpretationText = updatedInterpretationText;
                 webController.InterpretationService.UpdateInterpretation(interpretation);
-                return RedirectToPage(new { movieId = movieId });
+                return RedirectToPage(new { movieId });
             }
             catch (UpdateInterpretationError ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                ModelState.AddModelError(Interpretation.InterpretationText, ex.Message);
                 PopulatePageData(movieId);
                 return Page();
             }
@@ -187,11 +169,11 @@ namespace StreamSageWAD.Pages
             try
             {
                 webController.InterpretationService.DeleteInterpretation(interpretationId);
-                return RedirectToPage(new { movieId = movieId });
+                return RedirectToPage(new { movieId });
             }
             catch (DeleteInterpretationError ex)
             {
-                ModelState.AddModelError("", ex.Message);
+                ModelState.AddModelError(Interpretation.InterpretationText, ex.Message);
                 PopulatePageData(movieId);
                 return Page();
             }
@@ -211,7 +193,7 @@ namespace StreamSageWAD.Pages
                 {
                     webController.UserService.AddToWatchlist(userId, movieId);
                 }
-                return RedirectToPage(new { movieId = movieId });
+                return RedirectToPage(new { movieId });
             }
             catch (UserServiceException ex)
             {
@@ -242,6 +224,26 @@ namespace StreamSageWAD.Pages
                 ModelState.AddModelError("", ex.Message);
                 PopulatePageData(movieId);
                 return Page();
+            }
+        }
+        private void PopulatePageData(int movieId)
+        {
+            ViewModel.MovieDetails = webController.MovieService.GetMovie(movieId);
+            if (ViewModel.MovieDetails != null)
+            {
+                CurrentMovieId = ViewModel.MovieDetails.Id;
+                UserDTO user = webController.UserService.Read(User.Identity.Name);
+                if (user != null)
+                {
+                    var allReviews = webController.ReviewService.GetReviewsByMovieId(CurrentMovieId);
+                    var allInterpretations = webController.InterpretationService.GetInterpretationsByMovieId(CurrentMovieId);
+                    ViewModel.UserReviews = allReviews.Where(r => r.UserId == user.Id).ToList();
+                    ViewModel.OtherReviews = allReviews.Except(ViewModel.UserReviews).ToList();
+                    ViewModel.UserInterpretations = allInterpretations.Where(i => i.UserId == user.Id).ToList();
+                    ViewModel.OtherInterpretations = allInterpretations.Except(ViewModel.UserInterpretations).ToList();
+                    ViewModel.UserWatchList = user.WatchList?.Select(w => w.Id).ToList() ?? new List<int>();
+                    ViewModel.UserFavorites = user.FavoriteMovies?.Select(f => f.Id).ToList() ?? new List<int>();
+                }
             }
         }
     }

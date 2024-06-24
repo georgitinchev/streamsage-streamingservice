@@ -4,19 +4,26 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="container text-center mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <img src="~/img/error_img.png" alt="Error" class="img-fluid mb-4" style="max-width: 200px;" />
+            <h1 class="text-danger">Oops! Something went wrong.</h1>
+            <h2 class="text-danger">An error occurred while processing your request.</h2>
 
-@if (Model.ErrorMessage != null) 
-{
-    <div class="alert alert-danger" role="alert">
-        @Model.ErrorMessage
+            @if (Model.ErrorMessage != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @Model.ErrorMessage
+                </div>
+            }
+
+            @if (Model.ShowRequestId)
+            {
+                <p>
+                    <strong>Request ID:</strong> <code>@Model.RequestId</code>
+                </p>
+            }
+        </div>
     </div>
-}
-
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+</div>

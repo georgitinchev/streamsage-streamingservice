@@ -11,12 +11,10 @@ namespace StreamSageWAD.Models
 		[BindProperty, Required, EmailAddress]
 		public string? Email { get; set; }
 
-		[BindProperty, Required]
+		[BindProperty, Required, MinLength(3)]
 		public string? FirstName { get; set; }
 
-		[BindProperty, Required]
+		[BindProperty, Required, MinLength(3)]
 		public string? LastName { get; set; }
-		[BindProperty]
-		public byte[]? ProfilePicture { get; set; }
 	}
 }

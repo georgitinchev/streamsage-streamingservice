@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBFiller", "DBFiller\DBFill
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamSageWAD", "Presentation Layer\WAD Web App\StreamSageWAD.csproj", "{CFDAF36B-B449-45B2-9C96-9E56D987CAE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unit Tests", "Unit Tests\Unit Tests.csproj", "{915FC3E0-E863-438C-A6E5-1A9FC75A5CCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unit Tests", "Unit Tests\Unit Tests.csproj", "{915FC3E0-E863-438C-A6E5-1A9FC75A5CCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Class Diagram", "ClassLibrary\Class Diagram.csproj", "{70E4B9E0-D0A5-4FFC-97E5-946D80AF9938}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{915FC3E0-E863-438C-A6E5-1A9FC75A5CCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{915FC3E0-E863-438C-A6E5-1A9FC75A5CCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{915FC3E0-E863-438C-A6E5-1A9FC75A5CCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70E4B9E0-D0A5-4FFC-97E5-946D80AF9938}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70E4B9E0-D0A5-4FFC-97E5-946D80AF9938}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70E4B9E0-D0A5-4FFC-97E5-946D80AF9938}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70E4B9E0-D0A5-4FFC-97E5-946D80AF9938}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

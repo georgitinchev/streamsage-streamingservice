@@ -17,14 +17,17 @@
         <div class="form-group">
             <label for="registerUsername" style="font-size: 1.5rem;">Username</label>
             <input type="text" class="form-control" id="registerUsername" asp-for="registerDTO.Username" placeholder="Enter username" style="font-size: 1.5rem;">
+            <span asp-validation-for="registerDTO.Username" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="registerEmail" style="font-size: 1.5rem;">Email</label>
             <input type="email" class="form-control" id="registerEmail" asp-for="registerDTO.Email" placeholder="Enter email" style="font-size: 1.5rem;">
+            <span asp-validation-for="registerDTO.Email" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="registerPassword" style="font-size: 1.5rem;">Password</label>
             <input type="password" class="form-control" id="registerPassword" asp-for="registerDTO.Password" placeholder="Enter password" style="font-size: 1.5rem;">
+            <span asp-validation-for="registerDTO.Password" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="registerConfirmPassword" style="font-size: 1.5rem;">Confirm Password</label>
@@ -33,10 +36,12 @@
         <div class="form-group">
             <label for="registerFirstName" style="font-size: 1.5rem;">First Name</label>
             <input type="text" class="form-control" id="registerFirstName" asp-for="registerDTO.FirstName" placeholder="Enter first name" style="font-size: 1.5rem;">
+            <span asp-validation-for="registerDTO.FirstName" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label for="registerLastName" style="font-size: 1.5rem;">Last Name</label>
             <input type="text" class="form-control" id="registerLastName" asp-for="registerDTO.LastName" placeholder="Enter last name" style="font-size: 1.5rem;">
+            <span asp-validation-for="registerDTO.LastName" class="text-danger"></span>
         </div>
 
         <div class="text-center mt-3">
@@ -47,17 +52,5 @@
 
     <div class="text-center mt-4">
         <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" style="color: white">Have an account? Login</a>
-    </div>
-
-    <div class="mt-4">
-        @if (!ModelState.IsValid)
-        {
-            <div class="alert alert-danger">
-                @foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    <p>@error.ErrorMessage</p>
-                }
-            </div>
-        }
     </div>
 </div>
