@@ -16,8 +16,3 @@ unauthenticateddata placeholder by one of the classes
 
 Link to Repo:
 https://git.fhict.nl/I524441/individual-project-sem2
-
-
-shadow master
-legends of the guardians
-
