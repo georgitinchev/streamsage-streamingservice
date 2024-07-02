@@ -1,6 +1,6 @@
 Please ensure that your display's DPI scaling is <= 125% before attempting use (For OOD only)
 
-Link to Luna:
+Link to Luna where the Website can be tested:
 https://i524441.luna.fhict.nl/
 
 Credentials that can be used:
