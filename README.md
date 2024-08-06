@@ -1,4 +1,4 @@
-**Please ensure that your display's DPI scaling is <= 125% before attempting use (For OOD only)
+**Please ensure that your display's DPI scaling is <= 125% before attempting use (For OOD Desktop App only)
 For users and testers outside of Fontys, you need a VPN connection to vdi.fhict.nl for the MS SQL link**
 
 Link to Luna where the Website can be tested:
