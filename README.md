@@ -12,7 +12,7 @@ georgitin , georgi.tinchev.124@gmail.com e9999619
 Normal user
 ivan.angelov23 , ivan.angelov23@gmail.com , e9999619
 
-DO NOT CHANGE name for said user, as he isused as an
+DO NOT CHANGE name for said user, as he is used as an
 unauthenticateddata placeholder by one of the classes
 
 Link to Repo:
