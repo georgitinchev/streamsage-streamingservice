@@ -12,7 +12,7 @@ demo-admin , demo@example.invalid REMOVED_PASSWORD
 Normal user
 demo-user , demo-user@gmail.com , REMOVED_PASSWORD
 
-DO NOT CHANGE name for said user, as he isused as an
+DO NOT CHANGE name for said user, as he is used as an
 unauthenticateddata placeholder by one of the classes
 
 Link to Repo:
