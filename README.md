@@ -6,8 +6,8 @@ https://i524441.luna.fhict.nl/
 
 Credentials that can be used:
 
-In order -> Username, Email, Password, FirstName, LastName
-('demo-admin', 'demo@example.invalid, 'REMOVED_PASSWORD', 'Georgi', 'Tinchev'); 
+Admin User
+demo-admin , demo@example.invalid REMOVED_PASSWORD
 
 Normal user
 demo-user , demo-user@gmail.com , REMOVED_PASSWORD
