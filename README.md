@@ -6,8 +6,8 @@ https://i524441.luna.fhict.nl/
 
 Credentials that can be used:
 
-In order -> Username, Email, Password, FirstName, LastName
-('georgitin', 'georgi.tinchev.124@gmail.com, 'e9999619', 'Georgi', 'Tinchev'); 
+Admin User
+georgitin , georgi.tinchev.124@gmail.com e9999619
 
 Normal user
 ivan.angelov23 , ivan.angelov23@gmail.com , e9999619
