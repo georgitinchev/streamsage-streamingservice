@@ -18,7 +18,7 @@ This project demonstrates my proficiency in **software development**, **database
 
 ### Prerequisites
 
-- **VPN Connection**: For users and testers outside of Fontys, ensure you have an active VPN connection to `vdi.fhict.nl` to connect to the MS SQL database. **This is a note for the desktop app only**
+- **VPN Connection**: For users and testers outside of Fontys, ensure you have an active VPN connection to `vdi.fhict.nl` to connect to the MS SQL database. <u>This is a note for the desktop app only</u>
 - **Display DPI Scaling**: Please ensure that your display's DPI scaling is set to **<= 125%** before using the application (applicable for the OOD Desktop App only).
 
 ### Testing Link
