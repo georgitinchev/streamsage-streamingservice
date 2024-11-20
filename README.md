@@ -45,11 +45,11 @@ You can test the web version of StreamSage at the following URL:
 The project repository can be accessed here:
 [StreamSage GitHub Repository](https://git.fhict.nl/I524441/individual-project-sem2)
 
-## Screenshots
+### Web Application Demo
+![Web App Demo](IMG%20Assets/demo_web.gif)
 
-![Library Interface](images/library_app1.png)
-![Search Functionality](images/library_app2.png)
-![Admin Panel](images/library_app3.png)
+### Desktop Application Demo
+![Desktop App Demo](IMG%20Assets/demo_desktop.gif)
 
 ## License
 
